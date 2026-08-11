@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Archigraph: Automatically extract, map, and visualize organizational structures and professional relationship networks over time.">
+  <title>Archigraph | Temporal Org Network Intelligence</title>
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="/static/style.css">
+  
+  <!-- D3.js Library -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  
+  <!-- Client Logic -->
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header class="app-header">
+    <div class="logo-area">
+      <div class="logo-mark"></div>
+      <h1 class="logo-text">Archigraph</h1>
+      <span class="badge">V1.0 PROTOTYPE</span>
+    </div>
+    
+    <!-- Extraction Controller Form -->
+    <form id="extract-form" class="extract-controls">
+      <div class="input-wrapper">
+        <label for="url-input" class="sr-only">Target Team Page URL</label>
+        <input 
+          type="url" 
+          id="url-input" 
+          placeholder="https://replit.com/about" 
+          value="https://replit.com/about" 
+          required
+        >
+      </div>
+      
+      <div class="select-wrapper">
+        <label for="limit-select" class="sr-only">Snapshot Limit</label>
+        <select id="limit-select">
+          <option value="1">1 Snapshot</option>
+          <option value="2" selected>2 Snapshots</option>
+          <option value="3">3 Snapshots</option>
+          <option value="5">5 Snapshots</option>
+        </select>
+      </div>
+      
+      <button type="submit" id="submit-btn" class="gradient-btn">
+        <span class="btn-text">Extract Network</span>
+        <div class="loader-ring hidden" id="btn-loader"></div>
+      </button>
+    </form>
+  </header>
+
+  <!-- Main Application Workspace -->
+  <main class="app-workspace">
+    
+    <!-- Left: Network Interactive Area -->
+    <section class="visualization-panel" aria-label="Organization structure visualization">
+      <div class="panel-header">
+        <div class="active-metadata">
+          <span class="domain-label">Domain:</span>
+          <span id="display-domain" class="highlight-text">No active target</span>
+          <span id="display-date" class="date-badge hidden">Current</span>
+        </div>
+        <div class="search-overlay-container">
+          <input type="text" id="node-search" placeholder="Search expertise or name..." disabled>
+        </div>
+      </div>
+      
+      <!-- Visualization Canvas -->
+      <div class="canvas-wrapper" id="canvas-container">
+        <!-- SVG Tree will be injected here -->
+        <div class="placeholder-overlay" id="placeholder-view">
+          <div class="placeholder-icon"></div>
+          <h2>Enter a target URL to map</h2>
+          <p>Archigraph will fetch historical snapshots and visualize the organizational reporting network over time.</p>
+        </div>
+        
+        <!-- Processing loading state indicator -->
+        <div class="loading-overlay hidden" id="loading-view">
+          <div class="spinner"></div>
+          <h3>Running Ingestion Pipeline</h3>
+          <p id="loading-status">Querying CDX index archive...</p>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Right: Contextual Details Sidebar -->
+    <aside class="detail-sidebar" id="detail-panel" aria-label="Contextual node details">
+      <div class="sidebar-header">
+        <h2>Node Profile</h2>
+      </div>
+      
+      <div class="profile-card-empty" id="profile-empty">
+        <div class="empty-icon"></div>
+        <p>Click a node in the tree structure to view profile details, manager reporting lines, and expertise keywords.</p>
+      </div>
+      
+      <div class="profile-card hidden" id="profile-card">
+        <div class="profile-header">
+          <div class="avatar" id="prof-avatar"></div>
+          <div class="title-block">
+            <h3 id="prof-name">John Doe</h3>
+            <p id="prof-title">Senior VP of Product</p>
+          </div>
+        </div>
+        
+        <div class="profile-details">
+          <div class="detail-row">
+            <span class="detail-label">Department</span>
+            <span class="detail-value" id="prof-dept">Engineering</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Reports To</span>
+            <span class="detail-value highlight-link" id="prof-manager">Amjad Masad</span>
+          </div>
+          
+          <div class="bio-block">
+            <h4 class="section-title">Biography Summary</h4>
+            <p id="prof-bio">No bio available for this snapshot.</p>
+          </div>
+          
+          <div class="skills-block">
+            <h4 class="section-title">Extracted Expertise</h4>
+            <div class="tags-container" id="prof-skills">
+              <span class="skill-tag">Product Management</span>
+              <span class="skill-tag">UI/UX</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- Bottom: Temporal Time Machine Slider Controls -->
+  <footer class="time-machine-footer">
+    <div class="time-machine-container">
+      <div class="playback-controls">
+        <button id="play-btn" class="circle-btn" aria-label="Play timeline animation" disabled>
+          <svg class="play-icon" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          <svg class="pause-icon hidden" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+        </button>
+        <span class="slider-label">Time Machine</span>
+      </div>
+      
+      <div class="slider-wrapper">
+        <input 
+          type="range" 
+          id="timeline-slider" 
+          min="0" 
+          max="0" 
+          value="0" 
+          disabled
+        >
+        <div class="timeline-ticks" id="timeline-ticks">
+          <!-- Ticks will be dynamically injected here -->
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
