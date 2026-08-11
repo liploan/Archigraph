@@ -5,47 +5,20 @@
     {
       "id": "larry-page",
       "full_name": "Larry Page",
-      "job_title": "CEO",
+      "job_title": "CEO of Alphabet",
       "department": "Executive",
       "manager_name_or_id": null,
-      "expertise_keywords": ["Leadership", "Search Engines", "Computer Science"],
-      "bio_summary": "Co-founder of Google and active Chief Executive Officer."
-    },
-    {
-      "id": "sergey-brin",
-      "full_name": "Sergey Brin",
-      "job_title": "Co-Founder",
-      "department": "Executive",
-      "manager_name_or_id": null,
-      "expertise_keywords": ["Algorithm Design", "Special Projects", "Computer Science"],
-      "bio_summary": "Co-founder of Google driving technical vision and advanced research."
+      "expertise_keywords": ["Corporate Strategy", "Capital Allocation", "Search Architecture"],
+      "bio_summary": "Co-founder of Google, currently serving as CEO of Alphabet overseeing holding operations."
     },
     {
       "id": "sundar-pichai",
       "full_name": "Sundar Pichai",
-      "job_title": "SVP of Product",
-      "department": "Product",
-      "manager_name_or_id": "larry-page",
-      "expertise_keywords": ["Product Strategy", "Chrome", "Android", "User Experience"],
-      "bio_summary": "SVP overseeing product management and engineering of Google's core user services."
-    },
-    {
-      "id": "jeff-dean",
-      "full_name": "Jeff Dean",
-      "job_title": "Lead AI Researcher",
-      "department": "Artificial Intelligence",
-      "manager_name_or_id": "sundar-pichai",
-      "expertise_keywords": ["Deep Learning", "Neural Networks", "Distributed Systems", "TensorFlow"],
-      "bio_summary": "Lead software architect driving Google Brain and AI research initiatives."
-    },
-    {
-      "id": "susan-wojcicki",
-      "full_name": "Susan Wojcicki",
-      "job_title": "CEO of YouTube",
+      "job_title": "CEO of Google",
       "department": "Executive",
       "manager_name_or_id": "larry-page",
-      "expertise_keywords": ["Video Infrastructure", "Online Advertising", "Strategic Acquisitions"],
-      "bio_summary": "CEO of YouTube driving monetization, content policy, and creator platforms."
+      "expertise_keywords": ["Product Operations", "SaaS", "Chrome OS", "Android Ecosystem"],
+      "bio_summary": "CEO of Google overseeing core search, advertising, maps, and product engineering."
     },
     {
       "id": "ben-gomes",
@@ -53,8 +26,80 @@
       "job_title": "VP of Search Engineering",
       "department": "Engineering",
       "manager_name_or_id": "sundar-pichai",
-      "expertise_keywords": ["Information Retrieval", "Search Quality", "Query Parsing"],
-      "bio_summary": "VP leading the core search algorithms and ranking engineering teams."
+      "expertise_keywords": ["Information Retrieval", "Search Quality", "Query Parsing", "Ranking Algorithms"],
+      "bio_summary": "VP of Search leading core search algorithms, ranking updates, and search quality teams."
+    },
+    {
+      "id": "pandu-nayak",
+      "full_name": "Pandu Nayak",
+      "job_title": "Director of Search Quality",
+      "department": "Engineering",
+      "manager_name_or_id": "ben-gomes",
+      "expertise_keywords": ["Search Ranking", "Algorithmic Fairness", "Evaluation Systems", "Semantic Search"],
+      "bio_summary": "Director managing search evaluation and spam filtering operations under Ben Gomes."
+    },
+    {
+      "id": "cathy-edwards",
+      "full_name": "Cathy Edwards",
+      "job_title": "Lead Product Manager, Search Experience",
+      "department": "Product",
+      "manager_name_or_id": "pandu-nayak",
+      "expertise_keywords": ["Mobile Search", "Visual Search", "Product Strategy", "User Interfaces"],
+      "bio_summary": "Lead PM designing visual features, mobile search formats, and image search updates."
+    },
+    {
+      "id": "hiroshi-lockheimer",
+      "full_name": "Hiroshi Lockheimer",
+      "job_title": "VP of Android & Chrome",
+      "department": "Engineering",
+      "manager_name_or_id": "sundar-pichai",
+      "expertise_keywords": ["Operating Systems", "Mobile Partnerships", "Chrome Browser", "OEM Relations"],
+      "bio_summary": "VP leading engineering and product strategy for Android, Chrome, and Google Play platforms."
+    },
+    {
+      "id": "sameer-samat",
+      "full_name": "Sameer Samat",
+      "job_title": "Director of Android Product Management",
+      "department": "Product",
+      "manager_name_or_id": "hiroshi-lockheimer",
+      "expertise_keywords": ["Mobile Product Strategy", "App Store Operations", "Developer Ecosystem"],
+      "bio_summary": "Director overseeing the Android OS product roadmap and core developer APIs."
+    },
+    {
+      "id": "sandeep-waraich",
+      "full_name": "Sandeep Waraich",
+      "job_title": "Product Manager, Wear OS",
+      "department": "Product",
+      "manager_name_or_id": "sameer-samat",
+      "expertise_keywords": ["Smartwatches", "Wearable Technology", "IoT Systems", "Sensor Fusion"],
+      "bio_summary": "Product Manager coordinating features and OEM releases for the Wear OS platform."
+    },
+    {
+      "id": "jeff-dean",
+      "full_name": "Jeff Dean",
+      "job_title": "VP of Google Brain",
+      "department": "Artificial Intelligence",
+      "manager_name_or_id": "sundar-pichai",
+      "expertise_keywords": ["Deep Learning", "TensorFlow", "Distributed Infrastructure", "Neural Networks"],
+      "bio_summary": "VP leading research at Google Brain, focusing on deep learning frameworks and hardware."
+    },
+    {
+      "id": "rajat-monga",
+      "full_name": "Rajat Monga",
+      "job_title": "Director of TensorFlow Engineering",
+      "department": "Engineering",
+      "manager_name_or_id": "jeff-dean",
+      "expertise_keywords": ["Open Source Software", "Machine Learning Compiler", "GPU Optimization"],
+      "bio_summary": "Engineering Director leading the open-source development and release cycles of TensorFlow."
+    },
+    {
+      "id": "geoffrey-hinton",
+      "full_name": "Geoffrey Hinton",
+      "job_title": "Principal Scientist",
+      "department": "Artificial Intelligence",
+      "manager_name_or_id": "jeff-dean",
+      "expertise_keywords": ["Backpropagation", "Deep Belief Networks", "Neural Nets Research"],
+      "bio_summary": "Principal Research Scientist conducting fundamental neural network theoretical research."
     }
   ]
 }

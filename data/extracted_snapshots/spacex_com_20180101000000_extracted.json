@@ -9,7 +9,7 @@
       "department": "Executive",
       "manager_name_or_id": null,
       "expertise_keywords": ["Rocket Design", "Systems Engineering", "Mars Colonization Strategy"],
-      "bio_summary": "CEO and Lead Designer driving mission architecture for launch vehicles."
+      "bio_summary": "CEO and Lead Designer directing rocket design and multiplanetary strategy."
     },
     {
       "id": "gwynne-shotwell",
@@ -18,7 +18,7 @@
       "department": "Executive",
       "manager_name_or_id": "elon-musk",
       "expertise_keywords": ["Operations Management", "Sales Strategy", "Commercial Launches", "Government Contracts"],
-      "bio_summary": "President and COO responsible for day-to-day operations and customer contracts."
+      "bio_summary": "President and COO managing day-to-day business operations and launch contracts."
     },
     {
       "id": "tom-mueller",
@@ -30,6 +30,15 @@
       "bio_summary": "VP of Propulsion designing core rocket engines for Falcon 9 and Falcon Heavy."
     },
     {
+      "id": "john-connery",
+      "full_name": "John Connery",
+      "job_title": "Director of Raptor Engine Development",
+      "department": "Engineering",
+      "manager_name_or_id": "tom-mueller",
+      "expertise_keywords": ["Methane Combustion", "Turbo-pumps", "Metallurgy", "High-Pressure Cycles"],
+      "bio_summary": "Director overseeing the engineering team designing the next-generation Raptor methane engine."
+    },
+    {
       "id": "hans-koenigsmann",
       "full_name": "Hans Koenigsmann",
       "job_title": "VP of Mission Assurance",
@@ -37,6 +46,42 @@
       "manager_name_or_id": "gwynne-shotwell",
       "expertise_keywords": ["Launch Operations", "Mission Safety", "Avionics Control", "Failure Analysis"],
       "bio_summary": "VP managing launch safety, mission risk analysis, and quality assurance."
+    },
+    {
+      "id": "bill-gerstenmaier",
+      "full_name": "Bill Gerstenmaier",
+      "job_title": "Director of Launch Operations",
+      "department": "Engineering",
+      "manager_name_or_id": "hans-koenigsmann",
+      "expertise_keywords": ["NASA Standards", "Flight Readiness Reviews", "Crew Safety", "Pad Operations"],
+      "bio_summary": "Director managing launch sequences, pad coordination, and flight safety clearances."
+    },
+    {
+      "id": "mark-juncosa",
+      "full_name": "Mark Juncosa",
+      "job_title": "VP of Starlink Engineering",
+      "department": "Engineering",
+      "manager_name_or_id": "gwynne-shotwell",
+      "expertise_keywords": ["Constellation Management", "Phased Array Antennas", "Satellite Assembly"],
+      "bio_summary": "VP directing design, launching, and orbital management of Starlink communication satellites."
+    },
+    {
+      "id": "jonathan-hofeller",
+      "full_name": "Jonathan Hofeller",
+      "job_title": "Director of Satellite Architecture",
+      "department": "Engineering",
+      "manager_name_or_id": "mark-juncosa",
+      "expertise_keywords": ["Chassis Design", "Solar Arrays", "Laser Inter-Satellite Links"],
+      "bio_summary": "Director leading the hardware engineering team for the Starlink satellite platform."
+    },
+    {
+      "id": "sara-spangelo",
+      "full_name": "Sara Spangelo",
+      "job_title": "Product Manager, Starlink Enterprise Solutions",
+      "department": "Product",
+      "manager_name_or_id": "jonathan-hofeller",
+      "expertise_keywords": ["Enterprise Sales", "Regulatory Compliance", "Signal Quality Tools"],
+      "bio_summary": "Product Manager designing commercial plans, client dashboard portals, and terminal offerings."
     }
   ]
 }

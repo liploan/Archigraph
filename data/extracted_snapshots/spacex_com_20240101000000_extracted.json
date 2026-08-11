@@ -9,7 +9,7 @@
       "department": "Executive",
       "manager_name_or_id": null,
       "expertise_keywords": ["Starship Architecture", "Multiplanetary Logistics", "Systems Integration"],
-      "bio_summary": "CEO leading SpaceX's long-term goal of enabling human life on Mars."
+      "bio_summary": "CEO directing the Starship test flight program and Mars base planning."
     },
     {
       "id": "gwynne-shotwell",
@@ -18,7 +18,7 @@
       "department": "Executive",
       "manager_name_or_id": "elon-musk",
       "expertise_keywords": ["Global Operations", "Regulatory Affairs", "Business Development", "NASA Partnerships"],
-      "bio_summary": "President and COO leading Starlink commercial expansion and government flights."
+      "bio_summary": "President and COO leading commercial contracts, government deals, and global launch pads."
     },
     {
       "id": "mark-juncosa",
@@ -30,6 +30,33 @@
       "bio_summary": "VP of Engineering leading the Starship launch system design and testing in Starbase."
     },
     {
+      "id": "john-connery",
+      "full_name": "John Connery",
+      "job_title": "Director of Starship Propulsion",
+      "department": "Engineering",
+      "manager_name_or_id": "mark-juncosa",
+      "expertise_keywords": ["Raptor 3 Engine", "Vacuum Engines", "Gimbal Actuators", "Autogenous Pressurization"],
+      "bio_summary": "Director managing the development and production of Raptor engines for Starship."
+    },
+    {
+      "id": "bill-gerstenmaier",
+      "full_name": "Bill Gerstenmaier",
+      "job_title": "Director of Starbase Launch Ops",
+      "department": "Engineering",
+      "manager_name_or_id": "mark-juncosa",
+      "expertise_keywords": ["Pad Systems", "Orbital Launch Mount", "Tower Catch Arms", "Starbase Operations"],
+      "bio_summary": "Director managing Starbase launch sequences, orbital mount staging, and flight compliance."
+    },
+    {
+      "id": "jessica-anderson",
+      "full_name": "Jessica Anderson",
+      "job_title": "Senior Product Manager, Starship Payloads",
+      "department": "Product",
+      "manager_name_or_id": "mark-juncosa",
+      "expertise_keywords": ["Satellite Deployers", "Payload Fairings", "Cleanroom Integration", "Customer Specs"],
+      "bio_summary": "Senior PM managing integration of commercial and satellite payloads inside the Starship fairing."
+    },
+    {
       "id": "jonathan-hofeller",
       "full_name": "Jonathan Hofeller",
       "job_title": "VP of Starlink Commercial Operations",
@@ -37,6 +64,24 @@
       "manager_name_or_id": "gwynne-shotwell",
       "expertise_keywords": ["Satellite Broadband", "Starlink Terminals", "Enterprise Sales", "Spectrum Rights"],
       "bio_summary": "VP driving the global deployment and enterprise sales of the Starlink network."
+    },
+    {
+      "id": "sara-spangelo",
+      "full_name": "Sara Spangelo",
+      "job_title": "Director of Starlink Global Sales",
+      "department": "Product",
+      "manager_name_or_id": "jonathan-hofeller",
+      "expertise_keywords": ["Global Market Access", "Direct-to-Cell Partnerships", "GovDeals"],
+      "bio_summary": "Director driving international market expansion and telecommunication carrier agreements."
+    },
+    {
+      "id": "chad-gibbs",
+      "full_name": "Chad Gibbs",
+      "job_title": "Product Lead, Starlink Direct-to-Cell",
+      "department": "Product",
+      "manager_name_or_id": "sara-spangelo",
+      "expertise_keywords": ["Direct-to-Cell", "LTE Protocols", "Satellite Handsets", "Frequency Sharing"],
+      "bio_summary": "Product Lead managing cell signal coverage protocols from Starlink V2 Mini satellites."
     }
   ]
 }

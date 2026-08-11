@@ -9,7 +9,7 @@
       "department": "Executive",
       "manager_name_or_id": null,
       "expertise_keywords": ["Big Data Analytics", "Defense Technology", "Philosophy", "Corporate Leadership"],
-      "bio_summary": "Co-founder and CEO leading Palantir's strategic expansion into defense sectors."
+      "bio_summary": "Co-founder and CEO leading Palantir's strategic expansion into defense and enterprise sectors."
     },
     {
       "id": "stephen-cohen",
@@ -18,7 +18,7 @@
       "department": "Executive",
       "manager_name_or_id": "alex-karp",
       "expertise_keywords": ["Software Architecture", "Product Design", "Talent Acquisition", "Technical Strategy"],
-      "bio_summary": "Co-founder and President driving product vision and technical leadership."
+      "bio_summary": "Co-founder and President driving product vision, developer operations, and recruiting."
     },
     {
       "id": "shyam-sankar",
@@ -30,13 +30,49 @@
       "bio_summary": "Chief Operating Officer managing Palantir's global deployments and customer success."
     },
     {
-      "id": "david-glazer",
-      "full_name": "David Glazer",
-      "job_title": "CFO",
-      "department": "Executive",
-      "manager_name_or_id": "alex-karp",
-      "expertise_keywords": ["Financial Operations", "Accounting", "SEC Compliance", "Growth Strategy"],
-      "bio_summary": "CFO directing financial planning, analysis, and capital allocation."
+      "id": "akash-jain",
+      "full_name": "Akash Jain",
+      "job_title": "VP of Commercial Sales",
+      "department": "Business",
+      "manager_name_or_id": "shyam-sankar",
+      "expertise_keywords": ["Enterprise Contracts", "B2B SaaS Sales", "Strategic Accounts"],
+      "bio_summary": "VP leading Palantir's expansion into commercial verticals including banking, logistics, and healthcare."
+    },
+    {
+      "id": "ryan-taylor",
+      "full_name": "Ryan Taylor",
+      "job_title": "Director of Product, Foundry",
+      "department": "Product",
+      "manager_name_or_id": "akash-jain",
+      "expertise_keywords": ["Foundry Platform", "Data Pipelines", "Graph Ontologies", "Enterprise Search"],
+      "bio_summary": "Product Director overseeing the initial design and release iterations of Palantir Foundry."
+    },
+    {
+      "id": "dave-cole",
+      "full_name": "Dave Cole",
+      "job_title": "Lead PM, Data Integration Engines",
+      "department": "Product",
+      "manager_name_or_id": "ryan-taylor",
+      "expertise_keywords": ["Data Connectors", "ETL Pipelines", "Data Ingestion", "JDBC Sync"],
+      "bio_summary": "Lead Product Manager directing the development of core ingestion tools and ERP adapters."
+    },
+    {
+      "id": "john-harris",
+      "full_name": "John Harris",
+      "job_title": "VP of Defense Deployment",
+      "department": "Business",
+      "manager_name_or_id": "shyam-sankar",
+      "expertise_keywords": ["Military Tech", "DoD Compliance", "Classified Software Deployment"],
+      "bio_summary": "VP overseeing classified deployments, military intelligence systems, and federal agencies."
+    },
+    {
+      "id": "matthew-long",
+      "full_name": "Matthew Long",
+      "job_title": "Director of Gotham Deployments",
+      "department": "Engineering",
+      "manager_name_or_id": "john-harris",
+      "expertise_keywords": ["Tactical Operations", "Palantir Gotham", "Offline GIS Sync", "Edge Servers"],
+      "bio_summary": "Director leading tactical team deployments and field testing of the Gotham intelligence interface."
     }
   ]
 }

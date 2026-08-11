@@ -9,7 +9,7 @@
       "department": "Executive",
       "manager_name_or_id": null,
       "expertise_keywords": ["Social Networks", "Corporate Strategy", "Product Vision"],
-      "bio_summary": "Co-founder and CEO of Meta, leading the global product strategies."
+      "bio_summary": "Co-founder and CEO of Meta, leading global product strategies and platform scaling."
     },
     {
       "id": "sheryl-sandberg",
@@ -18,7 +18,25 @@
       "department": "Executive",
       "manager_name_or_id": "mark-zuckerberg",
       "expertise_keywords": ["Operations", "Advertising Sales", "Business Development", "Monetization"],
-      "bio_summary": "Chief Operating Officer managing the business division, global sales, and advertising."
+      "bio_summary": "Chief Operating Officer managing business divisions, global sales, policy, and monetization."
+    },
+    {
+      "id": "marne-levine",
+      "full_name": "Marne Levine",
+      "job_title": "VP of Global Business",
+      "department": "Business",
+      "manager_name_or_id": "sheryl-sandberg",
+      "expertise_keywords": ["Global Operations", "Partnerships", "Brand Strategy"],
+      "bio_summary": "VP coordinating advertiser relations, corporate partnerships, and brand strategies."
+    },
+    {
+      "id": "kelly-zhang",
+      "full_name": "Kelly Zhang",
+      "job_title": "Director of Advertising Product",
+      "department": "Product",
+      "manager_name_or_id": "marne-levine",
+      "expertise_keywords": ["Direct Response Ads", "Pixel Tracking", "Ad Auctions"],
+      "bio_summary": "Director managing development of targeted, conversion-focused advertising models."
     },
     {
       "id": "chris-cox",
@@ -30,22 +48,67 @@
       "bio_summary": "CPO managing core applications including Facebook, Instagram, and Messenger."
     },
     {
+      "id": "kevin-systrom",
+      "full_name": "Kevin Systrom",
+      "job_title": "VP & Co-founder of Instagram",
+      "department": "Product",
+      "manager_name_or_id": "chris-cox",
+      "expertise_keywords": ["Photo Sharing", "Instagram Stories", "User Filters"],
+      "bio_summary": "Co-founder and VP leading product design, engineering, and scaling of Instagram."
+    },
+    {
+      "id": "jan-koum",
+      "full_name": "Jan Koum",
+      "job_title": "VP & Co-founder of WhatsApp",
+      "department": "Engineering",
+      "manager_name_or_id": "chris-cox",
+      "expertise_keywords": ["Encryption", "VoIP Protocols", "High Concurrency Scaling"],
+      "bio_summary": "VP directing WhatsApp development, focusing on end-to-end security and clean message relays."
+    },
+    {
+      "id": "stan-chudnovsky",
+      "full_name": "Stan Chudnovsky",
+      "job_title": "Director of Messenger Product",
+      "department": "Product",
+      "manager_name_or_id": "chris-cox",
+      "expertise_keywords": ["Chat Platforms", "P2P Payments", "Instant Games"],
+      "bio_summary": "Director overseeing the user interface, platform additions, and integrations on Messenger."
+    },
+    {
+      "id": "loren-cheng",
+      "full_name": "Loren Cheng",
+      "job_title": "Product Manager Lead, Messenger Kids",
+      "department": "Product",
+      "manager_name_or_id": "stan-chudnovsky",
+      "expertise_keywords": ["Child Safety Systems", "Parental Controls", "COPPA Compliance"],
+      "bio_summary": "Lead PM designing safety-first chat apps for minors, including extensive parental control boards."
+    },
+    {
       "id": "mike-schroepfer",
       "full_name": "Mike Schroepfer",
       "job_title": "CTO",
       "department": "Engineering",
       "manager_name_or_id": "mark-zuckerberg",
       "expertise_keywords": ["Engineering Leadership", "Infrastructure Scaling", "Technical Vision"],
-      "bio_summary": "Chief Technology Officer leading the backend scaling, networks, and engineering divisions."
+      "bio_summary": "Chief Technology Officer leading backend scaling, server networks, and engineering divisions."
     },
     {
-      "id": "hugo-barra",
-      "full_name": "Hugo Barra",
-      "job_title": "VP of Oculus VR",
-      "department": "Design",
-      "manager_name_or_id": "chris-cox",
-      "expertise_keywords": ["Virtual Reality", "Hardware Products", "Mobile Technologies", "UI Design"],
-      "bio_summary": "VP driving the design and launch of Oculus virtual reality consumer headsets."
+      "id": "andrew-bosworth",
+      "full_name": "Andrew Bosworth",
+      "job_title": "VP of Reality Labs (AR/VR)",
+      "department": "Engineering",
+      "manager_name_or_id": "mike-schroepfer",
+      "expertise_keywords": ["Virtual Reality", "Hardware Design", "Optical Systems", "Oculus Integration"],
+      "bio_summary": "VP directing hardware and graphics engineering for virtual reality headsets."
+    },
+    {
+      "id": "jay-parikh",
+      "full_name": "Jay Parikh",
+      "job_title": "Director of Infrastructure Engineering",
+      "department": "Engineering",
+      "manager_name_or_id": "mike-schroepfer",
+      "expertise_keywords": ["Global Data Centers", "Load Balancing", "Fiber Networks"],
+      "bio_summary": "Director managing Meta's global data center footprint and high-capacity network fabrics."
     }
   ]
 }

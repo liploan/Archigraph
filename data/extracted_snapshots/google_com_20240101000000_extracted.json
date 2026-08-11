@@ -8,8 +8,44 @@
       "job_title": "CEO",
       "department": "Executive",
       "manager_name_or_id": null,
-      "expertise_keywords": ["Global Leadership", "Corporate Strategy", "Fintech", "Cloud Platform"],
-      "bio_summary": "CEO of Alphabet and Google, leading the organization's shift to an AI-first company."
+      "expertise_keywords": ["Global Leadership", "Corporate Strategy", "Fintech", "AI Infrastructure"],
+      "bio_summary": "CEO of Alphabet and Google, directing the overall strategy toward an AI-first paradigm."
+    },
+    {
+      "id": "prabhakar-raghavan",
+      "full_name": "Prabhakar Raghavan",
+      "job_title": "SVP of Search, Ads & Assistant",
+      "department": "Executive",
+      "manager_name_or_id": "sundar-pichai",
+      "expertise_keywords": ["Computational Advertising", "Information Retrieval", "Executive Leadership"],
+      "bio_summary": "SVP leading Google's key consumer monetization products and search engines."
+    },
+    {
+      "id": "pandu-nayak",
+      "full_name": "VP of Search Quality & Ranking",
+      "job_title": "VP of Search Quality",
+      "department": "Engineering",
+      "manager_name_or_id": "prabhakar-raghavan",
+      "expertise_keywords": ["BERT Integration", "RankBrain", "Core Ranking Systems", "Semantic Understanding"],
+      "bio_summary": "VP of Engineering leading Google's core search query parsing and quality evaluation systems."
+    },
+    {
+      "id": "cathy-edwards",
+      "full_name": "Cathy Edwards",
+      "job_title": "Director of Search Experience Product",
+      "department": "Product",
+      "manager_name_or_id": "prabhakar-raghavan",
+      "expertise_keywords": ["Multimodal Search", "SGE Product Strategy", "UI Layouts", "Generative UX"],
+      "bio_summary": "Director overseeing the product experience for generative search models and responsive layouts."
+    },
+    {
+      "id": "liz-reid",
+      "full_name": "Liz Reid",
+      "job_title": "Product Manager Lead, AI Overviews",
+      "department": "Product",
+      "manager_name_or_id": "cathy-edwards",
+      "expertise_keywords": ["AI Overviews", "Large Language Model Integration", "LLM Citations", "Product Launch"],
+      "bio_summary": "Lead PM directing the design and release of LLM-generated search summarizations."
     },
     {
       "id": "demis-hassabis",
@@ -17,26 +53,35 @@
       "job_title": "CEO of Google DeepMind",
       "department": "Artificial Intelligence",
       "manager_name_or_id": "sundar-pichai",
-      "expertise_keywords": ["Artificial Intelligence", "Deep Reinforcement Learning", "Neural Networks", "AlphaFold"],
-      "bio_summary": "Co-founder of DeepMind, now leading Google's unified AI division."
+      "expertise_keywords": ["Deep Reinforcement Learning", "AGI Architecture", "Protein Folding", "AI Ethics"],
+      "bio_summary": "Co-founder of DeepMind, now leading Google's unified artificial intelligence research division."
     },
     {
-      "id": "jeff-dean",
-      "full_name": "Jeff Dean",
-      "job_title": "Chief Scientist",
+      "id": "koray-kavukcuoglu",
+      "full_name": "Koray Kavukcuoglu",
+      "job_title": "VP of AI Research",
       "department": "Artificial Intelligence",
-      "manager_name_or_id": "sundar-pichai",
-      "expertise_keywords": ["Generative AI", "Large Language Models", "Systems Design", "Gemini"],
-      "bio_summary": "Chief Scientist of Google, designing unified infrastructure for model training."
+      "manager_name_or_id": "demis-hassabis",
+      "expertise_keywords": ["Unsupervised Learning", "Neural Network Scaling", "Reinforcement Systems"],
+      "bio_summary": "VP managing core AI modeling research and basic sciences division under Hassabis."
     },
     {
-      "id": "prabhakar-raghavan",
-      "full_name": "Prabhakar Raghavan",
-      "job_title": "SVP of Search & Ads",
-      "department": "Engineering",
-      "manager_name_or_id": "sundar-pichai",
-      "expertise_keywords": ["Search Systems", "Computational Advertising", "AI Integration", "Ranking Platforms"],
-      "bio_summary": "SVP directing Google's Search, Assistant, Maps, and Advertising engineering."
+      "id": "eli-collins",
+      "full_name": "Eli Collins",
+      "job_title": "VP of Product, Gemini",
+      "department": "Product",
+      "manager_name_or_id": "demis-hassabis",
+      "expertise_keywords": ["Large Language Models", "Multimodal APIs", "Enterprise AI", "Product Strategy"],
+      "bio_summary": "VP managing the product architecture and API deployment for Gemini LLM models."
+    },
+    {
+      "id": "jack-krawczyk",
+      "full_name": "Jack Krawczyk",
+      "job_title": "Senior Product Manager, Gemini App",
+      "department": "Product",
+      "manager_name_or_id": "eli-collins",
+      "expertise_keywords": ["Chatbot UX", "Consumer AI", "Voice Interaction", "Generative Writing"],
+      "bio_summary": "Senior PM managing the consumer interface, onboarding, and chat loops of the Gemini web application."
     },
     {
       "id": "thomas-kurian",
@@ -48,13 +93,31 @@
       "bio_summary": "CEO leading Google Cloud Platform's enterprise digital transformation services."
     },
     {
-      "id": "ruth-porat",
-      "full_name": "Ruth Porat",
-      "job_title": "President & Chief Investment Officer",
-      "department": "Executive",
-      "manager_name_or_id": "sundar-pichai",
-      "expertise_keywords": ["Capital Allocation", "Financial Operations", "Investment Strategy", "Public Policy"],
-      "bio_summary": "President and CIO managing Google and Alphabet's global investment portfolios."
+      "id": "andi-gutmans",
+      "full_name": "Andi Gutmans",
+      "job_title": "VP of Databases",
+      "department": "Engineering",
+      "manager_name_or_id": "thomas-kurian",
+      "expertise_keywords": ["Distributed Databases", "AlloyDB", "Bigtable Orchestration", "SQL Engines"],
+      "bio_summary": "VP of Engineering leading cloud database infrastructure, data storage, and analytics systems."
+    },
+    {
+      "id": "chen-goldberg",
+      "full_name": "Chen Goldberg",
+      "job_title": "Director of Kubernetes Engine Product",
+      "department": "Product",
+      "manager_name_or_id": "thomas-kurian",
+      "expertise_keywords": ["Kubernetes", "Container Orchestration", "Serverless Infrastructure", "Cloud Native"],
+      "bio_summary": "Director managing GKE product features, container systems, and multi-cloud architectures."
+    },
+    {
+      "id": "wyatt-coleman",
+      "full_name": "Wyatt Coleman",
+      "job_title": "Product Manager, GKE Autopilot",
+      "department": "Product",
+      "manager_name_or_id": "chen-goldberg",
+      "expertise_keywords": ["Autopilot Mode", "Serverless Billing", "Cluster Autoscaling"],
+      "bio_summary": "PM directing user experience and automatic scaling mechanisms for serverless Kubernetes."
     }
   ]
 }

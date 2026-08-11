@@ -9,7 +9,7 @@
       "department": "Executive",
       "manager_name_or_id": null,
       "expertise_keywords": ["Artificial Intelligence", "Sovereign Tech", "Data Privacy", "Geopolitics"],
-      "bio_summary": "CEO leading Palantir's Artificial Intelligence Platform (AIP) rollout."
+      "bio_summary": "CEO leading Palantir's Artificial Intelligence Platform (AIP) rollout for defense and enterprise."
     },
     {
       "id": "stephen-cohen",
@@ -30,22 +30,58 @@
       "bio_summary": "COO managing operational strategies and expanding defense partnerships."
     },
     {
+      "id": "ryan-taylor",
+      "full_name": "Ryan Taylor",
+      "job_title": "Head of AI Research & AIP Product",
+      "department": "Product",
+      "manager_name_or_id": "shyam-sankar",
+      "expertise_keywords": ["Generative AI", "AIP Software", "Agentic Pipelines", "Model Fine-tuning"],
+      "bio_summary": "Head of AI leading development and customer integration of Palantir AIP."
+    },
+    {
+      "id": "matthew-long",
+      "full_name": "Matthew Long",
+      "job_title": "Director of AIP Solutions",
+      "department": "Engineering",
+      "manager_name_or_id": "ryan-taylor",
+      "expertise_keywords": ["RAG Architecture", "Vector Databases", "Prompt Engineering"],
+      "bio_summary": "Director designing custom retrieval augmented generation (RAG) models for enterprise users."
+    },
+    {
+      "id": "dave-cole",
+      "full_name": "Dave Cole",
+      "job_title": "Product Lead, AIP Agents",
+      "department": "Product",
+      "manager_name_or_id": "ryan-taylor",
+      "expertise_keywords": ["Agentic Workflows", "Autonomous Actions", "Tool Calling Integration"],
+      "bio_summary": "Product Lead managing orchestration APIs and safe tool-execution bounds for AI agents."
+    },
+    {
       "id": "akash-jain",
       "full_name": "Akash Jain",
       "job_title": "CTO",
-      "department": "Engineering",
+      "department": "Executive",
       "manager_name_or_id": "alex-karp",
       "expertise_keywords": ["Systems Architecture", "Enterprise Security", "Data Governance", "Palantir Foundry"],
       "bio_summary": "CTO leading engineering roadmap, backend integrations, and foundry developments."
     },
     {
-      "id": "ryan-taylor",
-      "full_name": "Ryan Taylor",
-      "job_title": "Head of AI Research & AIP Product",
-      "department": "Artificial Intelligence",
-      "manager_name_or_id": "shyam-sankar",
-      "expertise_keywords": ["Generative AI", "AIP Software", "Agentic Pipelines", "Model Fine-tuning"],
-      "bio_summary": "Head of AI leading development and customer integration of Palantir AIP."
+      "id": "john-harris",
+      "full_name": "John Harris",
+      "job_title": "VP of Foundry Engineering",
+      "department": "Engineering",
+      "manager_name_or_id": "akash-jain",
+      "expertise_keywords": ["Scalable Pipelines", "Multiplexing Graph Databases", "Ontology Management"],
+      "bio_summary": "VP of Engineering leading the scalability and database storage layers of Palantir Foundry."
+    },
+    {
+      "id": "daniel-golding",
+      "full_name": "Daniel Golding",
+      "job_title": "Director of US Government Systems",
+      "department": "Engineering",
+      "manager_name_or_id": "john-harris",
+      "expertise_keywords": ["FedRAMP High", "Classified Clusters", "Mil-Spec Hardware"],
+      "bio_summary": "Director managing cloud deployments for federal government intelligence agencies."
     }
   ]
 }

@@ -8,17 +8,35 @@
       "job_title": "CEO",
       "department": "Executive",
       "manager_name_or_id": null,
-      "expertise_keywords": ["Social Platforms", "Metaverse Strategy", "AI Integration"],
-      "bio_summary": "CEO of Meta, leading the company's focus on AI and spatial computing."
+      "expertise_keywords": ["Metaverse Strategy", "Generative AI", "Social Platforms"],
+      "bio_summary": "CEO of Meta, steering investments toward foundational AI research and spatial computing."
     },
     {
       "id": "andrew-bosworth",
       "full_name": "Andrew Bosworth",
       "job_title": "CTO",
-      "department": "Engineering",
+      "department": "Executive",
       "manager_name_or_id": "mark-zuckerberg",
-      "expertise_keywords": ["Hardware Architecture", "Reality Labs", "Spatial Computing", "Meta Quest"],
-      "bio_summary": "Chief Technology Officer leading Reality Labs and the company's technological hardware vision."
+      "expertise_keywords": ["Reality Labs", "Oculus hardware", "Technical Roadmap", "Spatial Computing"],
+      "bio_summary": "CTO leading core product engineering and the hardware research labs."
+    },
+    {
+      "id": "vishal-shah",
+      "full_name": "Vishal Shah",
+      "job_title": "VP of Horizon Worlds",
+      "department": "Product",
+      "manager_name_or_id": "andrew-bosworth",
+      "expertise_keywords": ["Avatars", "Creator Economics", "Virtual Worlds", "VR Product Design"],
+      "bio_summary": "VP managing the user growth, creator economy models, and avatar engines of Horizon Worlds."
+    },
+    {
+      "id": "alexis-bjorlin",
+      "full_name": "Alexis Black Bjorlin",
+      "job_title": "Director of AI Silicon Engineering",
+      "department": "Engineering",
+      "manager_name_or_id": "andrew-bosworth",
+      "expertise_keywords": ["Custom Silicon", "MTIA Architectures", "GPU Accelerators", "ASIC Design"],
+      "bio_summary": "Director leading the design of custom AI accelerator chips (MTIA) for internal data centers."
     },
     {
       "id": "chris-cox",
@@ -26,8 +44,35 @@
       "job_title": "Chief Product Officer",
       "department": "Product",
       "manager_name_or_id": "mark-zuckerberg",
-      "expertise_keywords": ["Generative AI Products", "Instagram Reels", "Threads App", "UX Strategy"],
-      "bio_summary": "CPO coordinating the integration of generative AI features across Meta's app family."
+      "expertise_keywords": ["Product Coordination", "Family of Apps", "Recommendation Engines"],
+      "bio_summary": "CPO coordinating monetization and features across Facebook, WhatsApp, and Instagram."
+    },
+    {
+      "id": "adam-mosseri",
+      "full_name": "Adam Mosseri",
+      "job_title": "VP of Instagram",
+      "department": "Product",
+      "manager_name_or_id": "chris-cox",
+      "expertise_keywords": ["Algorithm Curation", "Reels Video Feed", "Creator Economy", "Safety Filters"],
+      "bio_summary": "VP leading Instagram product design, social feeds, Reels, and community algorithms."
+    },
+    {
+      "id": "connor-hayes",
+      "full_name": "Connor Hayes",
+      "job_title": "Product Manager Lead, Threads",
+      "department": "Product",
+      "manager_name_or_id": "adam-mosseri",
+      "expertise_keywords": ["Threads UI", "ActivityPub Integration", "Fediverse Protocols"],
+      "bio_summary": "Lead PM directing product rollout and decentralized protocol integration for Threads."
+    },
+    {
+      "id": "loredana-crisan",
+      "full_name": "Loredana Crisan",
+      "job_title": "VP of Messenger",
+      "department": "Product",
+      "manager_name_or_id": "chris-cox",
+      "expertise_keywords": ["End-to-End Encryption", "Cross-App Messaging", "Design Systems"],
+      "bio_summary": "VP leading the Messenger app, security engineering, and design integrations."
     },
     {
       "id": "yann-lecun",
@@ -35,17 +80,35 @@
       "job_title": "Chief AI Scientist",
       "department": "Artificial Intelligence",
       "manager_name_or_id": "mark-zuckerberg",
-      "expertise_keywords": ["Convolutional Networks", "Self-Supervised Learning", "LLaMA Models", "AI Research"],
-      "bio_summary": "Chief AI Scientist leading Meta's Fundamental AI Research (FAIR) lab."
+      "expertise_keywords": ["Neural Networks", "LLaMA Architectures", "Academic Research Partnerships"],
+      "bio_summary": "Chief Scientist directing the Fundamental AI Research (FAIR) lab."
     },
     {
-      "id": "susan-li",
-      "full_name": "Susan Li",
-      "job_title": "CFO",
-      "department": "Executive",
-      "manager_name_or_id": "mark-zuckerberg",
-      "expertise_keywords": ["Financial Strategy", "Ad Revenue Growth", "Corporate Finance", "Operational Capital"],
-      "bio_summary": "Chief Financial Officer managing global finance, audit, and capital investments."
+      "id": "joelle-pineau",
+      "full_name": "Joelle Pineau",
+      "job_title": "VP of AI Research (FAIR)",
+      "department": "Artificial Intelligence",
+      "manager_name_or_id": "yann-lecun",
+      "expertise_keywords": ["Robotics", "Reinforcement Learning", "Model Reproducibility"],
+      "bio_summary": "VP managing the open-science research labs and academic models under Yann LeCun."
+    },
+    {
+      "id": "ahmad-aldahle",
+      "full_name": "Ahmad Al-Dahle",
+      "job_title": "Director of Product, Generative AI",
+      "department": "Product",
+      "manager_name_or_id": "yann-lecun",
+      "expertise_keywords": ["Meta AI Assistant", "LLaMA Fine-Tuning", "Multimodal Generation"],
+      "bio_summary": "Director managing productization of large foundation models into chat assistant features."
+    },
+    {
+      "id": "angela-fan",
+      "full_name": "Angela Fan",
+      "job_title": "Lead PM, LLaMA Translation Models",
+      "department": "Product",
+      "manager_name_or_id": "ahmad-aldahle",
+      "expertise_keywords": ["Multilingual Translation", "Low-Resource Languages", "No Language Left Behind"],
+      "bio_summary": "Lead PM driving training parameters and data quality for multilingual models."
     }
   ]
 }
