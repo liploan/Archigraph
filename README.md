@@ -1,7 +1,7 @@
 # Archigraph 🌐🕒
 *Temporal Org Chart & Relationship Network Mapping Platform*
 
-🌐 **[Live Hosted Dashboard](https://archigraph.liploan.com)**
+🌐 **[Live Hosted Dashboard](https://liploan.github.io/Archigraph/)**
 
 Archigraph is a platform designed to automatically extract, map, and visualize organizational hierarchies and professional relationship networks over time. By ingesting public web data—including historical snapshots via internet archives like the Wayback Machine and current live websites—Archigraph reconstructs reporting lines, team evolutions, and expertise distributions.
 
