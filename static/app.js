@@ -543,6 +543,15 @@ document.addEventListener("DOMContentLoaded", () => {
       );
 
       return nameMatch || titleMatch || deptMatch || skillsMatch;
+  });
+
+  // Handle Demo Pill Clicks
+  document.querySelectorAll(".demo-pill").forEach(pill => {
+    pill.addEventListener("click", () => {
+      urlInput.value = pill.getAttribute("data-url");
+      limitSelect.value = "2"; // Demo snapshots are pre-generated with limit=2
+      // Programmatically trigger search form submission
+      extractForm.dispatchEvent(new Event("submit"));
     });
   });
 });
