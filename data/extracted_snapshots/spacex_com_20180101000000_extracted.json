@@ -1,0 +1,42 @@
+{
+  "snapshot_timestamp": "20180101000000",
+  "organization_name": "spacex.com",
+  "entities": [
+    {
+      "id": "elon-musk",
+      "full_name": "Elon Musk",
+      "job_title": "CEO & Lead Designer",
+      "department": "Executive",
+      "manager_name_or_id": null,
+      "expertise_keywords": ["Rocket Design", "Systems Engineering", "Mars Colonization Strategy"],
+      "bio_summary": "CEO and Lead Designer driving mission architecture for launch vehicles."
+    },
+    {
+      "id": "gwynne-shotwell",
+      "full_name": "Gwynne Shotwell",
+      "job_title": "President & COO",
+      "department": "Executive",
+      "manager_name_or_id": "elon-musk",
+      "expertise_keywords": ["Operations Management", "Sales Strategy", "Commercial Launches", "Government Contracts"],
+      "bio_summary": "President and COO responsible for day-to-day operations and customer contracts."
+    },
+    {
+      "id": "tom-mueller",
+      "full_name": "Tom Mueller",
+      "job_title": "VP of Propulsion Development",
+      "department": "Engineering",
+      "manager_name_or_id": "gwynne-shotwell",
+      "expertise_keywords": ["Merlin Engine", "Kestrel Engine", "Rocket Propulsion", "Fluid Dynamics"],
+      "bio_summary": "VP of Propulsion designing core rocket engines for Falcon 9 and Falcon Heavy."
+    },
+    {
+      "id": "hans-koenigsmann",
+      "full_name": "Hans Koenigsmann",
+      "job_title": "VP of Mission Assurance",
+      "department": "Executive",
+      "manager_name_or_id": "gwynne-shotwell",
+      "expertise_keywords": ["Launch Operations", "Mission Safety", "Avionics Control", "Failure Analysis"],
+      "bio_summary": "VP managing launch safety, mission risk analysis, and quality assurance."
+    }
+  ]
+}

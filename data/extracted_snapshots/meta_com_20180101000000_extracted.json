@@ -1,0 +1,51 @@
+{
+  "snapshot_timestamp": "20180101000000",
+  "organization_name": "meta.com",
+  "entities": [
+    {
+      "id": "mark-zuckerberg",
+      "full_name": "Mark Zuckerberg",
+      "job_title": "CEO",
+      "department": "Executive",
+      "manager_name_or_id": null,
+      "expertise_keywords": ["Social Networks", "Corporate Strategy", "Product Vision"],
+      "bio_summary": "Co-founder and CEO of Meta, leading the global product strategies."
+    },
+    {
+      "id": "sheryl-sandberg",
+      "full_name": "Sheryl Sandberg",
+      "job_title": "COO",
+      "department": "Executive",
+      "manager_name_or_id": "mark-zuckerberg",
+      "expertise_keywords": ["Operations", "Advertising Sales", "Business Development", "Monetization"],
+      "bio_summary": "Chief Operating Officer managing the business division, global sales, and advertising."
+    },
+    {
+      "id": "chris-cox",
+      "full_name": "Chris Cox",
+      "job_title": "Chief Product Officer",
+      "department": "Product",
+      "manager_name_or_id": "mark-zuckerberg",
+      "expertise_keywords": ["Product Design", "News Feed", "Core Apps", "User Growth"],
+      "bio_summary": "CPO managing core applications including Facebook, Instagram, and Messenger."
+    },
+    {
+      "id": "mike-schroepfer",
+      "full_name": "Mike Schroepfer",
+      "job_title": "CTO",
+      "department": "Engineering",
+      "manager_name_or_id": "mark-zuckerberg",
+      "expertise_keywords": ["Engineering Leadership", "Infrastructure Scaling", "Technical Vision"],
+      "bio_summary": "Chief Technology Officer leading the backend scaling, networks, and engineering divisions."
+    },
+    {
+      "id": "hugo-barra",
+      "full_name": "Hugo Barra",
+      "job_title": "VP of Oculus VR",
+      "department": "Design",
+      "manager_name_or_id": "chris-cox",
+      "expertise_keywords": ["Virtual Reality", "Hardware Products", "Mobile Technologies", "UI Design"],
+      "bio_summary": "VP driving the design and launch of Oculus virtual reality consumer headsets."
+    }
+  ]
+}

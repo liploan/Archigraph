@@ -1,0 +1,42 @@
+{
+  "snapshot_timestamp": "20240101000000",
+  "organization_name": "spacex.com",
+  "entities": [
+    {
+      "id": "elon-musk",
+      "full_name": "Elon Musk",
+      "job_title": "CEO & Lead Designer",
+      "department": "Executive",
+      "manager_name_or_id": null,
+      "expertise_keywords": ["Starship Architecture", "Multiplanetary Logistics", "Systems Integration"],
+      "bio_summary": "CEO leading SpaceX's long-term goal of enabling human life on Mars."
+    },
+    {
+      "id": "gwynne-shotwell",
+      "full_name": "Gwynne Shotwell",
+      "job_title": "President & COO",
+      "department": "Executive",
+      "manager_name_or_id": "elon-musk",
+      "expertise_keywords": ["Global Operations", "Regulatory Affairs", "Business Development", "NASA Partnerships"],
+      "bio_summary": "President and COO leading Starlink commercial expansion and government flights."
+    },
+    {
+      "id": "mark-juncosa",
+      "full_name": "Mark Juncosa",
+      "job_title": "VP of Starship Engineering",
+      "department": "Engineering",
+      "manager_name_or_id": "gwynne-shotwell",
+      "expertise_keywords": ["Starship Structural Design", "Super Heavy Booster", "Thermal Protection", "Fast Iteration"],
+      "bio_summary": "VP of Engineering leading the Starship launch system design and testing in Starbase."
+    },
+    {
+      "id": "jonathan-hofeller",
+      "full_name": "Jonathan Hofeller",
+      "job_title": "VP of Starlink Commercial Operations",
+      "department": "Engineering",
+      "manager_name_or_id": "gwynne-shotwell",
+      "expertise_keywords": ["Satellite Broadband", "Starlink Terminals", "Enterprise Sales", "Spectrum Rights"],
+      "bio_summary": "VP driving the global deployment and enterprise sales of the Starlink network."
+    }
+  ]
+}

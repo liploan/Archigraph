@@ -1,0 +1,83 @@
+{
+  "snapshot_timestamp": "current",
+  "organization_name": "replit.com",
+  "entities": [
+    {
+      "id": "amjad-masad",
+      "full_name": "Amjad Masad",
+      "job_title": "Founder & CEO",
+      "department": "Executive",
+      "manager_name_or_id": null,
+      "expertise_keywords": [
+        "Entrepreneurship",
+        "Software Engineering",
+        "Cloud IDEs",
+        "AI Agents",
+        "Product Strategy",
+        "Venture Capital"
+      ],
+      "bio_summary": "Founder and CEO of Replit, focusing on empowering the next billion software creators."
+    },
+    {
+      "id": "haya-odeh",
+      "full_name": "Haya Odeh",
+      "job_title": "Co-Founder, Design",
+      "department": "Design",
+      "manager_name_or_id": "amjad-masad",
+      "expertise_keywords": [
+        "Product Design",
+        "User Experience (UX)",
+        "User Interface (UI)",
+        "Brand Identity",
+        "Creative Direction"
+      ],
+      "bio_summary": "Co-Founder and Design lead at Replit, shaping the visual and interactive experience of the platform."
+    },
+    {
+      "id": "luis-hector-chavez",
+      "full_name": "Luis Héctor Chávez",
+      "job_title": "CTO",
+      "department": "Engineering",
+      "manager_name_or_id": "amjad-masad",
+      "expertise_keywords": [
+        "Software Architecture",
+        "Infrastructure",
+        "Cloud Computing",
+        "Technical Leadership",
+        "Scalability",
+        "Systems Programming"
+      ],
+      "bio_summary": "Chief Technology Officer at Replit, overseeing the technical direction and platform infrastructure."
+    },
+    {
+      "id": "michele-catasta",
+      "full_name": "Michele Catasta",
+      "job_title": "President",
+      "department": "Executive",
+      "manager_name_or_id": "amjad-masad",
+      "expertise_keywords": [
+        "Business Operations",
+        "Strategic Partnerships",
+        "Artificial Intelligence",
+        "Product Management",
+        "Organizational Leadership"
+      ],
+      "bio_summary": "President at Replit, driving business growth, operations, and strategic initiatives."
+    },
+    {
+      "id": "scott-kennedy",
+      "full_name": "Scott Kennedy",
+      "job_title": "VP of Engineering",
+      "department": "Engineering",
+      "manager_name_or_id": "luis-hector-chavez",
+      "expertise_keywords": [
+        "Engineering Management",
+        "Software Delivery",
+        "Agile Methodologies",
+        "Team Building",
+        "Scalable Systems"
+      ],
+      "bio_summary": "VP of Engineering at Replit, leading the engineering teams to build intuitive software creation tools."
+    }
+  ]
+}

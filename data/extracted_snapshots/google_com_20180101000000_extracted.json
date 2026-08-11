@@ -1,0 +1,60 @@
+{
+  "snapshot_timestamp": "20180101000000",
+  "organization_name": "google.com",
+  "entities": [
+    {
+      "id": "larry-page",
+      "full_name": "Larry Page",
+      "job_title": "CEO",
+      "department": "Executive",
+      "manager_name_or_id": null,
+      "expertise_keywords": ["Leadership", "Search Engines", "Computer Science"],
+      "bio_summary": "Co-founder of Google and active Chief Executive Officer."
+    },
+    {
+      "id": "sergey-brin",
+      "full_name": "Sergey Brin",
+      "job_title": "Co-Founder",
+      "department": "Executive",
+      "manager_name_or_id": null,
+      "expertise_keywords": ["Algorithm Design", "Special Projects", "Computer Science"],
+      "bio_summary": "Co-founder of Google driving technical vision and advanced research."
+    },
+    {
+      "id": "sundar-pichai",
+      "full_name": "Sundar Pichai",
+      "job_title": "SVP of Product",
+      "department": "Product",
+      "manager_name_or_id": "larry-page",
+      "expertise_keywords": ["Product Strategy", "Chrome", "Android", "User Experience"],
+      "bio_summary": "SVP overseeing product management and engineering of Google's core user services."
+    },
+    {
+      "id": "jeff-dean",
+      "full_name": "Jeff Dean",
+      "job_title": "Lead AI Researcher",
+      "department": "Artificial Intelligence",
+      "manager_name_or_id": "sundar-pichai",
+      "expertise_keywords": ["Deep Learning", "Neural Networks", "Distributed Systems", "TensorFlow"],
+      "bio_summary": "Lead software architect driving Google Brain and AI research initiatives."
+    },
+    {
+      "id": "susan-wojcicki",
+      "full_name": "Susan Wojcicki",
+      "job_title": "CEO of YouTube",
+      "department": "Executive",
+      "manager_name_or_id": "larry-page",
+      "expertise_keywords": ["Video Infrastructure", "Online Advertising", "Strategic Acquisitions"],
+      "bio_summary": "CEO of YouTube driving monetization, content policy, and creator platforms."
+    },
+    {
+      "id": "ben-gomes",
+      "full_name": "Ben Gomes",
+      "job_title": "VP of Search Engineering",
+      "department": "Engineering",
+      "manager_name_or_id": "sundar-pichai",
+      "expertise_keywords": ["Information Retrieval", "Search Quality", "Query Parsing"],
+      "bio_summary": "VP leading the core search algorithms and ranking engineering teams."
+    }
+  ]
+}

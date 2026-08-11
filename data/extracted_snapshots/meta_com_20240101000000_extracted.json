@@ -1,0 +1,51 @@
+{
+  "snapshot_timestamp": "20240101000000",
+  "organization_name": "meta.com",
+  "entities": [
+    {
+      "id": "mark-zuckerberg",
+      "full_name": "Mark Zuckerberg",
+      "job_title": "CEO",
+      "department": "Executive",
+      "manager_name_or_id": null,
+      "expertise_keywords": ["Social Platforms", "Metaverse Strategy", "AI Integration"],
+      "bio_summary": "CEO of Meta, leading the company's focus on AI and spatial computing."
+    },
+    {
+      "id": "andrew-bosworth",
+      "full_name": "Andrew Bosworth",
+      "job_title": "CTO",
+      "department": "Engineering",
+      "manager_name_or_id": "mark-zuckerberg",
+      "expertise_keywords": ["Hardware Architecture", "Reality Labs", "Spatial Computing", "Meta Quest"],
+      "bio_summary": "Chief Technology Officer leading Reality Labs and the company's technological hardware vision."
+    },
+    {
+      "id": "chris-cox",
+      "full_name": "Chris Cox",
+      "job_title": "Chief Product Officer",
+      "department": "Product",
+      "manager_name_or_id": "mark-zuckerberg",
+      "expertise_keywords": ["Generative AI Products", "Instagram Reels", "Threads App", "UX Strategy"],
+      "bio_summary": "CPO coordinating the integration of generative AI features across Meta's app family."
+    },
+    {
+      "id": "yann-lecun",
+      "full_name": "Yann LeCun",
+      "job_title": "Chief AI Scientist",
+      "department": "Artificial Intelligence",
+      "manager_name_or_id": "mark-zuckerberg",
+      "expertise_keywords": ["Convolutional Networks", "Self-Supervised Learning", "LLaMA Models", "AI Research"],
+      "bio_summary": "Chief AI Scientist leading Meta's Fundamental AI Research (FAIR) lab."
+    },
+    {
+      "id": "susan-li",
+      "full_name": "Susan Li",
+      "job_title": "CFO",
+      "department": "Executive",
+      "manager_name_or_id": "mark-zuckerberg",
+      "expertise_keywords": ["Financial Strategy", "Ad Revenue Growth", "Corporate Finance", "Operational Capital"],
+      "bio_summary": "Chief Financial Officer managing global finance, audit, and capital investments."
+    }
+  ]
+}

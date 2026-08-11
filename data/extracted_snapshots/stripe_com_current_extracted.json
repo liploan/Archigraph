@@ -1,0 +1,21 @@
+{
+  "snapshot_timestamp": "current",
+  "organization_name": "stripe.com",
+  "entities": [
+    {
+      "id": "john-collison",
+      "full_name": "John Collison",
+      "job_title": "Co-founder",
+      "department": "Executive",
+      "manager_name_or_id": null,
+      "expertise_keywords": [
+        "Fintech",
+        "Global Commerce",
+        "Payment Infrastructure",
+        "Entrepreneurship",
+        "Strategic Partnerships"
+      ],
+      "bio_summary": "Co-founder of Stripe who helps shape the future of global commerce and the internet economy."
+    }
+  ]
+}

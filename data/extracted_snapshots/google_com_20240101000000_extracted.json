@@ -1,0 +1,60 @@
+{
+  "snapshot_timestamp": "20240101000000",
+  "organization_name": "google.com",
+  "entities": [
+    {
+      "id": "sundar-pichai",
+      "full_name": "Sundar Pichai",
+      "job_title": "CEO",
+      "department": "Executive",
+      "manager_name_or_id": null,
+      "expertise_keywords": ["Global Leadership", "Corporate Strategy", "Fintech", "Cloud Platform"],
+      "bio_summary": "CEO of Alphabet and Google, leading the organization's shift to an AI-first company."
+    },
+    {
+      "id": "demis-hassabis",
+      "full_name": "Demis Hassabis",
+      "job_title": "CEO of Google DeepMind",
+      "department": "Artificial Intelligence",
+      "manager_name_or_id": "sundar-pichai",
+      "expertise_keywords": ["Artificial Intelligence", "Deep Reinforcement Learning", "Neural Networks", "AlphaFold"],
+      "bio_summary": "Co-founder of DeepMind, now leading Google's unified AI division."
+    },
+    {
+      "id": "jeff-dean",
+      "full_name": "Jeff Dean",
+      "job_title": "Chief Scientist",
+      "department": "Artificial Intelligence",
+      "manager_name_or_id": "sundar-pichai",
+      "expertise_keywords": ["Generative AI", "Large Language Models", "Systems Design", "Gemini"],
+      "bio_summary": "Chief Scientist of Google, designing unified infrastructure for model training."
+    },
+    {
+      "id": "prabhakar-raghavan",
+      "full_name": "Prabhakar Raghavan",
+      "job_title": "SVP of Search & Ads",
+      "department": "Engineering",
+      "manager_name_or_id": "sundar-pichai",
+      "expertise_keywords": ["Search Systems", "Computational Advertising", "AI Integration", "Ranking Platforms"],
+      "bio_summary": "SVP directing Google's Search, Assistant, Maps, and Advertising engineering."
+    },
+    {
+      "id": "thomas-kurian",
+      "full_name": "Thomas Kurian",
+      "job_title": "CEO of Google Cloud",
+      "department": "Executive",
+      "manager_name_or_id": "sundar-pichai",
+      "expertise_keywords": ["Enterprise Software", "Cloud Infrastructure", "B2B Sales", "SaaS Solutions"],
+      "bio_summary": "CEO leading Google Cloud Platform's enterprise digital transformation services."
+    },
+    {
+      "id": "ruth-porat",
+      "full_name": "Ruth Porat",
+      "job_title": "President & Chief Investment Officer",
+      "department": "Executive",
+      "manager_name_or_id": "sundar-pichai",
+      "expertise_keywords": ["Capital Allocation", "Financial Operations", "Investment Strategy", "Public Policy"],
+      "bio_summary": "President and CIO managing Google and Alphabet's global investment portfolios."
+    }
+  ]
+}

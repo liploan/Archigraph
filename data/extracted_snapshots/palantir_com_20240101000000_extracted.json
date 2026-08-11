@@ -1,0 +1,51 @@
+{
+  "snapshot_timestamp": "20240101000000",
+  "organization_name": "palantir.com",
+  "entities": [
+    {
+      "id": "alex-karp",
+      "full_name": "Alex Karp",
+      "job_title": "CEO",
+      "department": "Executive",
+      "manager_name_or_id": null,
+      "expertise_keywords": ["Artificial Intelligence", "Sovereign Tech", "Data Privacy", "Geopolitics"],
+      "bio_summary": "CEO leading Palantir's Artificial Intelligence Platform (AIP) rollout."
+    },
+    {
+      "id": "stephen-cohen",
+      "full_name": "Stephen Cohen",
+      "job_title": "Co-Founder & President",
+      "department": "Executive",
+      "manager_name_or_id": "alex-karp",
+      "expertise_keywords": ["Technical Scaling", "Recruiting Strategy", "Governance Systems"],
+      "bio_summary": "Co-founder advising on product strategy, engineering scale, and core values."
+    },
+    {
+      "id": "shyam-sankar",
+      "full_name": "Shyam Sankar",
+      "job_title": "COO",
+      "department": "Executive",
+      "manager_name_or_id": "alex-karp",
+      "expertise_keywords": ["Industrial AI", "Defense Operations", "Hardware Integration", "B2B SaaS Sales"],
+      "bio_summary": "COO managing operational strategies and expanding defense partnerships."
+    },
+    {
+      "id": "akash-jain",
+      "full_name": "Akash Jain",
+      "job_title": "CTO",
+      "department": "Engineering",
+      "manager_name_or_id": "alex-karp",
+      "expertise_keywords": ["Systems Architecture", "Enterprise Security", "Data Governance", "Palantir Foundry"],
+      "bio_summary": "CTO leading engineering roadmap, backend integrations, and foundry developments."
+    },
+    {
+      "id": "ryan-taylor",
+      "full_name": "Ryan Taylor",
+      "job_title": "Head of AI Research & AIP Product",
+      "department": "Artificial Intelligence",
+      "manager_name_or_id": "shyam-sankar",
+      "expertise_keywords": ["Generative AI", "AIP Software", "Agentic Pipelines", "Model Fine-tuning"],
+      "bio_summary": "Head of AI leading development and customer integration of Palantir AIP."
+    }
+  ]
+}

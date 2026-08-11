@@ -1,0 +1,96 @@
+{
+  "snapshot_timestamp": "20240612214257",
+  "organization_name": "replit.com",
+  "entities": [
+    {
+      "id": "amjad-masad",
+      "full_name": "Amjad Masad",
+      "job_title": "Founder & CEO",
+      "department": "Executive",
+      "manager_name_or_id": null,
+      "expertise_keywords": [
+        "Entrepreneurship",
+        "Cloud Infrastructure",
+        "Developer Tools",
+        "Software Development",
+        "Community Building"
+      ],
+      "bio_summary": "Founder and CEO of Replit, building a powerful and simple platform for software development and deployment."
+    },
+    {
+      "id": "haya-odeh",
+      "full_name": "Haya Odeh",
+      "job_title": "Co-Founder, Design",
+      "department": "Design",
+      "manager_name_or_id": "amjad-masad",
+      "expertise_keywords": [
+        "Product Design",
+        "User Experience",
+        "Creative Direction",
+        "UI Design",
+        "Co-Founding"
+      ],
+      "bio_summary": "Co-Founder leading the design efforts to build simple yet scalable infrastructure primitives for creators."
+    },
+    {
+      "id": "luis-hector-chavez",
+      "full_name": "Luis Héctor Chávez",
+      "job_title": "CTO",
+      "department": "Engineering",
+      "manager_name_or_id": "amjad-masad",
+      "expertise_keywords": [
+        "Software Architecture",
+        "Technical Leadership",
+        "Cloud Infrastructure",
+        "Systems Engineering",
+        "Scalability"
+      ],
+      "bio_summary": "Chief Technology Officer driving the technical vision and architecture of the Replit platform."
+    },
+    {
+      "id": "michele-catasta",
+      "full_name": "Michele Catasta",
+      "job_title": "VP of AI",
+      "department": "Artificial Intelligence",
+      "manager_name_or_id": "amjad-masad",
+      "expertise_keywords": [
+        "Artificial Intelligence",
+        "Machine Learning",
+        "Large Language Models",
+        "AI Research",
+        "Code Generation"
+      ],
+      "bio_summary": "VP of AI leading the development of intelligent features and LLMs for code repair."
+    },
+    {
+      "id": "john-agan",
+      "full_name": "John Agan",
+      "job_title": "VP of Product & Data",
+      "department": "Product",
+      "manager_name_or_id": "amjad-masad",
+      "expertise_keywords": [
+        "Product Management",
+        "Data Analytics",
+        "Product Strategy",
+        "Data Science",
+        "User Growth"
+      ],
+      "bio_summary": "VP of Product & Data overseeing product strategy and data-driven decision making."
+    },
+    {
+      "id": "scott-kennedy",
+      "full_name": "Scott Kennedy",
+      "job_title": "VP of Engineering",
+      "department": "Engineering",
+      "manager_name_or_id": "amjad-masad",
+      "expertise_keywords": [
+        "Engineering Management",
+        "Software Engineering",
+        "Infrastructure",
+        "Scalable Systems",
+        "Team Leadership"
+      ],
+      "bio_summary": "VP of Engineering managing the development and scaling of Replit's core infrastructure."
+    }
+  ]
+}

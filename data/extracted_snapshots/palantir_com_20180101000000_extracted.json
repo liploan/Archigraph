@@ -1,0 +1,42 @@
+{
+  "snapshot_timestamp": "20180101000000",
+  "organization_name": "palantir.com",
+  "entities": [
+    {
+      "id": "alex-karp",
+      "full_name": "Alex Karp",
+      "job_title": "CEO",
+      "department": "Executive",
+      "manager_name_or_id": null,
+      "expertise_keywords": ["Big Data Analytics", "Defense Technology", "Philosophy", "Corporate Leadership"],
+      "bio_summary": "Co-founder and CEO leading Palantir's strategic expansion into defense sectors."
+    },
+    {
+      "id": "stephen-cohen",
+      "full_name": "Stephen Cohen",
+      "job_title": "Co-Founder & President",
+      "department": "Executive",
+      "manager_name_or_id": "alex-karp",
+      "expertise_keywords": ["Software Architecture", "Product Design", "Talent Acquisition", "Technical Strategy"],
+      "bio_summary": "Co-founder and President driving product vision and technical leadership."
+    },
+    {
+      "id": "shyam-sankar",
+      "full_name": "Shyam Sankar",
+      "job_title": "COO",
+      "department": "Executive",
+      "manager_name_or_id": "alex-karp",
+      "expertise_keywords": ["Operations", "Business Strategy", "Government Sales", "Palantir Gotham"],
+      "bio_summary": "Chief Operating Officer managing Palantir's global deployments and customer success."
+    },
+    {
+      "id": "david-glazer",
+      "full_name": "David Glazer",
+      "job_title": "CFO",
+      "department": "Executive",
+      "manager_name_or_id": "alex-karp",
+      "expertise_keywords": ["Financial Operations", "Accounting", "SEC Compliance", "Growth Strategy"],
+      "bio_summary": "CFO directing financial planning, analysis, and capital allocation."
+    }
+  ]
+}
