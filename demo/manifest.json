@@ -1,0 +1,32 @@
+{
+  "google": {
+    "label": "Google",
+    "domain": "google.com",
+    "prefix": "google_com",
+    "kind": "illustrative"
+  },
+  "meta": {
+    "label": "Meta",
+    "domain": "meta.com",
+    "prefix": "meta_com",
+    "kind": "illustrative"
+  },
+  "spacex": {
+    "label": "SpaceX",
+    "domain": "spacex.com",
+    "prefix": "spacex_com",
+    "kind": "illustrative"
+  },
+  "palantir": {
+    "label": "Palantir",
+    "domain": "palantir.com",
+    "prefix": "palantir_com",
+    "kind": "illustrative"
+  },
+  "replit": {
+    "label": "Replit (extracted)",
+    "domain": "replit.com",
+    "prefix": "replit_com",
+    "kind": "extracted"
+  }
+}

@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: archigraph
+    runtime: docker
+    plan: free
+    healthCheckPath: /healthz
+    autoDeploy: true
+    envVars:
+      # Demos work with live extraction off. To enable live extraction, set this to "true"
+      # and provide GEMINI_API_KEY below.
+      - key: ENABLE_LIVE_EXTRACTION
+        value: "false"
+      - key: GEMINI_API_KEY
+        sync: false          # you will be prompted for this; never commit it
+      - key: ARCHIGRAPH_ACCESS_TOKEN
+        generateValue: true  # Render generates a random token; view it in the dashboard
+      - key: MAX_EXTRACTIONS_PER_DAY
+        value: "40"
+      - key: MAX_SNAPSHOTS_PER_REQUEST
+        value: "5"
+      - key: TRUSTED_PROXY_HOPS
+        value: "1"

@@ -48,41 +48,95 @@ document.addEventListener("DOMContentLoaded", () => {
   let g = null;
   let zoomBehavior = null;
 
-  // Handle Form Submission
-  extractForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const targetUrl = urlInput.value.trim();
-    const limit = limitSelect.value;
-    
-    if (!targetUrl) return;
-    
-    // Set UI to loading state
+  const sampleBanner = document.getElementById("sample-banner");
+
+  // Deployment capabilities (live extraction may be disabled on hosted instances)
+  let liveEnabled = true;
+
+  fetch("/api/config")
+    .then(r => r.json())
+    .then(cfg => {
+      liveEnabled = !!cfg.live_extraction;
+      if (!liveEnabled) {
+        urlInput.value = "";
+        urlInput.disabled = true;
+        limitSelect.disabled = true;
+        submitBtn.disabled = true;
+        submitBtn.title = "Live extraction is disabled on this deployment. Try a demo.";
+        urlInput.placeholder = "Live extraction disabled. Try a demo above";
+      }
+    })
+    .catch(() => {});
+
+  async function apiJson(url, options) {
+    const response = await fetch(url, options);
+    let body = {};
+    try { body = await response.json(); } catch (_) { /* non-JSON error body */ }
+    if (!response.ok) {
+      const err = new Error(body.error || `Request failed (${response.status})`);
+      err.status = response.status;
+      throw err;
+    }
+    return body;
+  }
+
+  async function extractLive(targetUrl, limit, retried = false) {
+    const headers = { "Content-Type": "application/json" };
+    const token = sessionStorage.getItem("archigraph_token");
+    if (token) headers["X-Access-Token"] = token;
+    try {
+      return await apiJson("/api/extract", {
+        method: "POST",
+        headers,
+        body: JSON.stringify({ url: targetUrl, limit: parseInt(limit, 10) })
+      });
+    } catch (err) {
+      if (err.status === 401 && !retried) {
+        const entered = window.prompt("Enter the access token for live extraction:");
+        if (entered) {
+          sessionStorage.setItem("archigraph_token", entered.trim());
+          return extractLive(targetUrl, limit, true);
+        }
+      }
+      throw err;
+    }
+  }
+
+  function showBanner(result) {
+    let text = result.note || "";
+    let info = false;
+    if (!result.sample_data) {
+      // Live result: always disclose how the reporting lines were produced.
+      text = (text ? text + " " : "") +
+        "Extracted automatically by an LLM; reporting lines are inferred from page layout and are unverified.";
+      info = true;
+    } else if (result.sample_data === "extracted") {
+      info = true;
+    }
+    sampleBanner.innerText = text;
+    sampleBanner.classList.toggle("info", info);
+    sampleBanner.classList.toggle("hidden", !text);
+  }
+
+  // Shared loader for live extraction and demos
+  async function loadResult(fetcher) {
+    sampleBanner.classList.add("hidden");
     setLoadingState(true);
     resetState();
-    
+
     try {
-      loadingStatus.innerText = "Querying CDX index and extracting historical pages...";
-      const response = await fetch("/api/extract", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: targetUrl, limit: limit })
-      });
-      
-      const result = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(result.error || "An error occurred during extraction.");
-      }
-      
+      const result = await fetcher();
+
       historicalSnapshots = result.data;
       displayDomain.innerText = result.domain;
-      
+      showBanner(result);
+
       // Initialize Timeline slider
       setupTimeline();
-      
+
       // Render first snapshot
       selectSnapshot(0);
-      
+
       // Enable inputs
       nodeSearchInput.disabled = false;
       setLoadingState(false);
@@ -91,6 +145,16 @@ document.addEventListener("DOMContentLoaded", () => {
       setLoadingState(false);
       resetToPlaceholder();
     }
+  }
+
+  // Handle Form Submission (live extraction)
+  extractForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    if (!liveEnabled) return;
+    const targetUrl = urlInput.value.trim();
+    if (!targetUrl) return;
+    loadingStatus.innerText = "Querying CDX index and extracting historical pages...";
+    loadResult(() => extractLive(targetUrl, limitSelect.value));
   });
 
   function setLoadingState(isLoading) {
@@ -101,7 +165,7 @@ document.addEventListener("DOMContentLoaded", () => {
       placeholderView.classList.add("hidden");
       canvasContainer.querySelectorAll("svg").forEach(s => s.remove());
     } else {
-      submitBtn.disabled = false;
+      submitBtn.disabled = !liveEnabled;
       btnLoader.classList.add("hidden");
       loadingView.classList.add("hidden");
     }
@@ -546,13 +610,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Handle Demo Pill Clicks
+  // Handle Demo Pill Clicks (pre-built fixtures: no network or API key needed)
   document.querySelectorAll(".demo-pill").forEach(pill => {
     pill.addEventListener("click", () => {
-      urlInput.value = pill.getAttribute("data-url");
-      limitSelect.value = "2"; // Demo snapshots are pre-generated with limit=2
-      // Programmatically trigger search form submission using the button click
-      submitBtn.click();
+      const key = pill.getAttribute("data-demo");
+      loadingStatus.innerText = "Loading demo...";
+      loadResult(() => apiJson(`/api/demo/${encodeURIComponent(key)}`));
     });
   });
 });

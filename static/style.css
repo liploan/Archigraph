@@ -151,6 +151,22 @@ h1, h2, h3, h4 {
   transform: translateY(-0.5px);
 }
 
+/* Data provenance banner */
+.sample-banner {
+  padding: 8px 20px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #fde68a;
+  background: rgba(245, 158, 11, 0.08);
+  border-bottom: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+.sample-banner.info {
+  color: #a5b4fc;
+  background: rgba(99, 102, 241, 0.08);
+  border-bottom-color: rgba(99, 102, 241, 0.25);
+}
+
 /* Control Form */
 .extract-controls {
   display: flex;

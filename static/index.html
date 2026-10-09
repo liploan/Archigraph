@@ -33,10 +33,11 @@
     <!-- Quick Demo Pills -->
     <div class="demo-pills" aria-label="Quick Demos">
       <span class="demo-label">Demos:</span>
-      <button type="button" class="demo-pill" data-url="https://google.com/about">Google</button>
-      <button type="button" class="demo-pill" data-url="https://meta.com/about">Meta</button>
-      <button type="button" class="demo-pill" data-url="https://spacex.com/about">SpaceX</button>
-      <button type="button" class="demo-pill" data-url="https://palantir.com/about">Palantir</button>
+      <button type="button" class="demo-pill" data-demo="google">Google</button>
+      <button type="button" class="demo-pill" data-demo="meta">Meta</button>
+      <button type="button" class="demo-pill" data-demo="spacex">SpaceX</button>
+      <button type="button" class="demo-pill" data-demo="palantir">Palantir</button>
+      <button type="button" class="demo-pill" data-demo="replit">Replit (extracted)</button>
     </div>
     
     <!-- Extraction Controller Form -->
@@ -84,6 +85,8 @@
           <input type="text" id="node-search" placeholder="Search expertise or name..." disabled>
         </div>
       </div>
+      
+      <div class="sample-banner hidden" id="sample-banner" role="status"></div>
       
       <!-- Visualization Canvas -->
       <div class="canvas-wrapper" id="canvas-container">

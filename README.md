@@ -1,7 +1,12 @@
 # Archigraph 🌐🕒
 *Temporal Org Chart & Relationship Network Mapping Platform*
 
-🌐 **[Live Hosted Dashboard](https://liploan.github.io/Archigraph/)**
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/liploan/Archigraph)
+
+> **Hosting note:** Archigraph needs a Python backend, so it cannot run on GitHub Pages
+> (`liploan.github.io/Archigraph` only renders this README). See [Deploying](#-deploying-fully-hosted)
+> to run the full app. Once deployed, add your service URL here.
+
 
 Archigraph is a platform designed to automatically extract, map, and visualize organizational hierarchies and professional relationship networks over time. By ingesting public web data—including historical snapshots via internet archives like the Wayback Machine and current live websites—Archigraph reconstructs reporting lines, team evolutions, and expertise distributions.
 
@@ -24,12 +29,17 @@ Archigraph is a platform designed to automatically extract, map, and visualize o
 
 ```
 Archigraph/
-├── app.py                   # Flask Web Server & API Router
+├── app.py                   # Flask server: pages, /api/demo, /api/extract, /healthz
+├── Dockerfile               # Production image (gunicorn)
+├── render.yaml              # Render blueprint (one-click deploy)
 ├── docker-compose.yml       # Local Neo4j community database container setup
 ├── requirements.txt         # Project-wide Python dependencies
 ├── .gitignore               # Safe Git tracking excludes (ignores caches and credentials)
+├── demo/                    # Demo fixtures + manifest (labelled illustrative vs extracted)
+├── tests/                   # App, auth, rate-limit and SSRF tests
 ├── src/
-│   ├── config.py            # Base directories, loading variables, and credentials verification
+│   ├── config.py            # Base directories, env settings, and credentials verification
+│   ├── security.py          # URL validation and SSRF-safe fetching
 │   ├── ingestor.py          # Wayback Crawler, HTML cleaner, and live fallback
 │   ├── extractor.py         # Pydantic schemas and Gemini structured output extraction
 │   ├── main.py              # Ingestion & extraction CLI runner
@@ -41,6 +51,44 @@ Archigraph/
     ├── style.css            # Dark mode glassmorphism layout and D3 node styling
     └── app.js               # Visualizer controller, search engine, and D3 tree renderer
 ```
+
+---
+
+## 🚀 Deploying (Fully Hosted)
+
+The repo includes a [`render.yaml`](render.yaml) blueprint and a [`Dockerfile`](Dockerfile), so it deploys
+to [Render](https://render.com) in a few clicks (any Docker host works too).
+
+1. Push this repo to GitHub, then click **Deploy to Render** above (or *New → Blueprint* and pick the repo).
+2. When prompted for `GEMINI_API_KEY`, enter your key (or leave it for now; demos don't need it).
+3. Open the service URL. The demo pills work immediately.
+
+**Live extraction is OFF by default.** It calls Gemini (which costs money) and fetches third-party pages,
+so enable it deliberately: in the Render dashboard set `ENABLE_LIVE_EXTRACTION=true` and make sure
+`GEMINI_API_KEY` is set. Visitors then need the generated `ARCHIGRAPH_ACCESS_TOKEN` (shown in the
+dashboard) to run live extractions; the page prompts for it.
+
+| Variable | Default | Purpose |
+|---|---|---|
+| `ENABLE_LIVE_EXTRACTION` | `false` | Turn on `/api/extract` (Gemini + web fetching) |
+| `GEMINI_API_KEY` | _unset_ | Required only for live extraction |
+| `ARCHIGRAPH_ACCESS_TOKEN` | _unset_ | If set, live extraction requires `X-Access-Token` |
+| `MAX_EXTRACTIONS_PER_DAY` | `40` | Hard daily cap on Gemini-backed extractions (spend guard) |
+| `MAX_SNAPSHOTS_PER_REQUEST` | `5` | Upper bound on `limit` per request |
+| `TRUSTED_PROXY_HOPS` | `0` | Set to `1` behind a single reverse proxy so rate limits see real client IPs |
+| `FLASK_DEBUG` | `false` | **Never enable on a public host** (exposes an interactive debugger) |
+
+**Built-in protections:** SSRF-safe URL validation (public `http(s)` hosts only, redirects re-checked,
+5 MB response cap), per-IP rate limiting (6 live requests / 10 min), a daily extraction budget, and
+standard security headers. Rate limits and the budget are in-memory, which is why the container runs a
+single gunicorn worker.
+
+**Free-tier caveats:** Render's free plan sleeps after inactivity (first request can take ~30-60 s) and
+has an ephemeral disk, so cached extractions are lost on restart.
+
+**About the demo data:** the Google, Meta, SpaceX and Palantir demos are **illustrative, hand-assembled
+samples**, not verified or extracted from sources, and may contain inaccuracies. The UI labels them as
+such. The "Replit (extracted)" demo is a real Gemini extraction of an archive.org snapshot (unverified).
 
 ---
 
@@ -79,6 +127,10 @@ Open your web browser and navigate to:
 👉 **[http://127.0.0.1:5001](http://127.0.0.1:5001)**
 
 Input a target URL (e.g. `https://replit.com/about`) and select the number of historical snapshots to crawl.
+
+> Live extraction is disabled by default. To use the URL form locally, add
+> `ENABLE_LIVE_EXTRACTION=true` to your `.env` (demo pills work without it). Run the test suite with
+> `python3 -m unittest discover -s tests -t .`
 
 ### Option B: Run via CLI Engine
 To run the crawler and LLM extractor pipeline directly inside your terminal, execute:

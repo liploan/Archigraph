@@ -4,6 +4,7 @@ from pathlib import Path
 import requests
 from bs4 import BeautifulSoup
 from src.config import CACHE_DIR
+from src.security import safe_get
 
 def get_wayback_snapshots(url: str, limit: int = 10) -> list:
     """
@@ -12,31 +13,6 @@ def get_wayback_snapshots(url: str, limit: int = 10) -> list:
     """
     # Clean URL
     encoded_url = urllib.parse.quote(url)
-    
-    # Intercept demo domains to load pre-populated static local data instantly
-    parsed = urllib.parse.urlparse(url)
-    domain = parsed.netloc or url
-    if domain.startswith("www."):
-        domain = domain[4:]
-    domain = domain.split("/")[0].lower()
-    
-    DEMO_DOMAINS = ["google.com", "meta.com", "spacex.com", "palantir.com"]
-    if domain in DEMO_DOMAINS:
-        print(f"Loading local static demo snapshots for: {domain}")
-        return [
-            {
-                "timestamp": "20180101000000",
-                "original_url": f"https://{domain}/about",
-                "archive_url": f"https://{domain}/about",
-                "digest": "demo-2018"
-            },
-            {
-                "timestamp": "20240101000000",
-                "original_url": f"https://{domain}/about",
-                "archive_url": f"https://{domain}/about",
-                "digest": "demo-2024"
-            }
-        ][:limit]
     
     # Restrict search limits at CDX server level to avoid scan timeouts on popular domains
     cdx_url = (
@@ -123,9 +99,13 @@ def fetch_snapshot_html(archive_url: str, timestamp: str, domain: str) -> str:
                 "Chrome/115.0.0.0 Safari/537.36"
             )
         }
-        response = requests.get(archive_url, headers=headers, timeout=20)
-        response.raise_for_status()
-        html = response.text
+        response = safe_get(archive_url, headers=headers, timeout=20)
+        encoding = response.encoding
+        if not encoding or encoding.lower() == "iso-8859-1":
+            # requests defaults to ISO-8859-1 when no charset is declared, which
+            # corrupts UTF-8 pages (accented names, etc.). Detect instead.
+            encoding = response.apparent_encoding or "utf-8"
+        html = response.content.decode(encoding, errors="replace").replace("\x00", "")
         
         # Save to cache
         cache_path.write_text(html, encoding="utf-8")
