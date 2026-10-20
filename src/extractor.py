@@ -19,6 +19,14 @@ class PersonEntity(BaseModel):
         None,
         description="The name or ID of the manager they report to, if explicitly mentioned, or clearly inferred from nested list/table structure"
     )
+    reporting_confidence: Optional[str] = Field(
+        "inferred",
+        description="Confidence in the reporting line: 'explicit' if directly stated in text, 'inferred' if deduced from layout/title hierarchy, or 'none' if top-level root"
+    )
+    reporting_evidence: Optional[str] = Field(
+        None,
+        description="Short quote or structural clue from the page justifying the reporting line or role level"
+    )
     expertise_keywords: List[str] = Field(
         default_factory=list,
         description="List of 3-7 specific skill, project, or domain expertise keywords extracted from their bio or description"
@@ -51,9 +59,10 @@ def extract_org_structure(cleaned_content: str, timestamp: str, domain: str) -> 
         "1. Identify every person mentioned with their corresponding title and department.\n"
         "2. Parse reporting lines: If Person A is listed under a header for Person B (e.g. 'Engineering led by Jane'), "
         "set Person A's manager to 'Jane'. If Person C is listed as 'reporting to the CEO', set their manager accordingly.\n"
-        "3. Generate unique lower-case slug IDs for each person based on their name (e.g., 'Jane Smith' becomes 'jane-smith'). "
+        "3. For each reporting relationship, set reporting_confidence to 'explicit' if the text directly states who they report to, 'inferred' if deduced from page layout or title hierarchy, or 'none' for top-level executives, and provide a concise reporting_evidence explanation.\n"
+        "4. Generate unique lower-case slug IDs for each person based on their name (e.g., 'Jane Smith' becomes 'jane-smith'). "
         "Keep these slugs consistent if the same person is mentioned multiple times.\n"
-        "4. Extract 3-7 technical or domain expertise keywords for each person based on their bio summary (e.g., 'Kubernetes', 'Go', 'Mergers & Acquisitions')."
+        "5. Extract 3-7 technical or domain expertise keywords for each person based on their bio summary (e.g., 'Kubernetes', 'Go', 'Mergers & Acquisitions')."
     )
     
     user_prompt = (

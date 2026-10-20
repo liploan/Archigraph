@@ -8,6 +8,8 @@
       "job_title": "Founder & CEO",
       "department": "Executive",
       "manager_name_or_id": null,
+      "reporting_confidence": "none",
+      "reporting_evidence": "Listed first under Leadership as Founder & CEO.",
       "expertise_keywords": [
         "Entrepreneurship",
         "Cloud Infrastructure",
@@ -23,6 +25,8 @@
       "job_title": "Co-Founder, Design",
       "department": "Design",
       "manager_name_or_id": "amjad-masad",
+      "reporting_confidence": "inferred",
+      "reporting_evidence": "Listed in Leadership grid directly alongside CEO Amjad Masad as Co-Founder, Design.",
       "expertise_keywords": [
         "Product Design",
         "User Experience",
@@ -38,6 +42,8 @@
       "job_title": "CTO",
       "department": "Engineering",
       "manager_name_or_id": "amjad-masad",
+      "reporting_confidence": "inferred",
+      "reporting_evidence": "Listed in executive leadership section as Chief Technology Officer.",
       "expertise_keywords": [
         "Software Architecture",
         "Technical Leadership",
@@ -53,6 +59,8 @@
       "job_title": "VP of AI",
       "department": "Artificial Intelligence",
       "manager_name_or_id": "amjad-masad",
+      "reporting_confidence": "inferred",
+      "reporting_evidence": "Listed in Leadership grid as VP of AI.",
       "expertise_keywords": [
         "Artificial Intelligence",
         "Machine Learning",
@@ -68,6 +76,8 @@
       "job_title": "VP of Product & Data",
       "department": "Product",
       "manager_name_or_id": "amjad-masad",
+      "reporting_confidence": "inferred",
+      "reporting_evidence": "Listed in Leadership grid as VP of Product & Data.",
       "expertise_keywords": [
         "Product Management",
         "Data Analytics",
@@ -83,6 +93,8 @@
       "job_title": "VP of Engineering",
       "department": "Engineering",
       "manager_name_or_id": "amjad-masad",
+      "reporting_confidence": "inferred",
+      "reporting_evidence": "Listed in Leadership grid as VP of Engineering.",
       "expertise_keywords": [
         "Engineering Management",
         "Software Engineering",

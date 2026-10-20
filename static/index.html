@@ -21,17 +21,18 @@
   <script src="/static/app.js" defer></script>
 </head>
 <body>
+  <a href="#main-workspace" class="skip-link visually-hidden">Skip to main workspace</a>
 
   <!-- Top Navigation Header -->
   <header class="app-header">
     <div class="logo-area">
-      <div class="logo-mark"></div>
+      <div class="logo-mark" aria-hidden="true"></div>
       <h1 class="logo-text">Archigraph</h1>
-      <span class="badge">V1.0 PROTOTYPE</span>
+      <span class="badge">V1.1 TEMPORAL</span>
     </div>
     
     <!-- Quick Demo Pills -->
-    <div class="demo-pills" aria-label="Quick Demos">
+    <div class="demo-pills" role="group" aria-label="Quick Demos">
       <span class="demo-label">Demos:</span>
       <button type="button" class="demo-pill" data-demo="google">Google</button>
       <button type="button" class="demo-pill" data-demo="meta">Meta</button>
@@ -43,7 +44,7 @@
     <!-- Extraction Controller Form -->
     <form id="extract-form" class="extract-controls">
       <div class="input-wrapper">
-        <label for="url-input" class="sr-only">Target Team Page URL</label>
+        <label for="url-input" class="visually-hidden">Target Team Page URL</label>
         <input 
           type="url" 
           id="url-input" 
@@ -54,7 +55,7 @@
       </div>
       
       <div class="select-wrapper">
-        <label for="limit-select" class="sr-only">Snapshot Limit</label>
+        <label for="limit-select" class="visually-hidden">Snapshot Limit</label>
         <select id="limit-select">
           <option value="1">1 Snapshot</option>
           <option value="2" selected>2 Snapshots</option>
@@ -65,13 +66,13 @@
       
       <button type="submit" id="submit-btn" class="gradient-btn">
         <span class="btn-text">Extract Network</span>
-        <div class="loader-ring hidden" id="btn-loader"></div>
+        <div class="loader-ring hidden" id="btn-loader" aria-hidden="true"></div>
       </button>
     </form>
   </header>
 
   <!-- Main Application Workspace -->
-  <main class="app-workspace">
+  <main id="main-workspace" class="app-workspace" tabindex="-1">
     
     <!-- Left: Network Interactive Area -->
     <section class="visualization-panel" aria-label="Organization structure visualization">
@@ -80,51 +81,79 @@
           <span class="domain-label">Domain:</span>
           <span id="display-domain" class="highlight-text">No active target</span>
           <span id="display-date" class="date-badge hidden">Current</span>
+          <div id="diff-kpi-bar" class="diff-kpi-bar hidden" aria-label="Snapshot change counts"></div>
         </div>
-        <div class="search-overlay-container">
-          <input type="text" id="node-search" placeholder="Search expertise or name..." disabled>
+
+        <div class="canvas-controls">
+          <div class="view-mode-group" role="group" aria-label="Visualization layout mode">
+            <button type="button" id="mode-tree-btn" class="mode-btn" aria-pressed="true">Org Tree</button>
+            <button type="button" id="mode-mesh-btn" class="mode-btn" aria-pressed="false">Relationship Mesh</button>
+          </div>
+
+          <button type="button" id="toggle-departed-btn" class="mode-btn departed-toggle" aria-pressed="false" disabled>
+            Show Departed
+          </button>
+
+          <search class="search-overlay-container">
+            <label for="node-search" class="visually-hidden">Search expertise, role, or name</label>
+            <input type="search" id="node-search" placeholder="Filter by skill, role, or name..." disabled>
+          </search>
         </div>
       </div>
       
-      <div class="sample-banner hidden" id="sample-banner" role="status"></div>
+      <div class="sample-banner hidden" id="sample-banner" role="status" aria-live="polite"></div>
       
       <!-- Visualization Canvas -->
       <div class="canvas-wrapper" id="canvas-container">
-        <!-- SVG Tree will be injected here -->
+        <!-- SVG Tree/Mesh will be injected here -->
         <div class="placeholder-overlay" id="placeholder-view">
-          <div class="placeholder-icon"></div>
-          <h2>Enter a target URL to map</h2>
-          <p>Archigraph will fetch historical snapshots and visualize the organizational reporting network over time.</p>
+          <div class="placeholder-icon" aria-hidden="true"></div>
+          <h2>Select a Demo or Enter a Target URL</h2>
+          <p>Archigraph maps organizational hierarchies across time, highlights promotions, re-orgs, and departures, and discovers warm connection paths.</p>
         </div>
         
         <!-- Processing loading state indicator -->
         <div class="loading-overlay hidden" id="loading-view">
-          <div class="spinner"></div>
+          <div class="spinner" aria-hidden="true"></div>
           <h3>Running Ingestion Pipeline</h3>
           <p id="loading-status">Querying CDX index archive...</p>
+        </div>
+
+        <!-- Legend Overlay -->
+        <div class="canvas-legend hidden" id="canvas-legend" aria-label="Graph legend">
+          <span class="legend-item"><span class="legend-dot status-joined" aria-hidden="true"></span>Joined</span>
+          <span class="legend-item"><span class="legend-dot status-promoted" aria-hidden="true"></span>Promoted</span>
+          <span class="legend-item"><span class="legend-dot status-moved" aria-hidden="true"></span>Moved</span>
+          <span class="legend-item"><span class="legend-dot status-departed" aria-hidden="true"></span>Departed</span>
+          <span class="legend-item"><span class="legend-line-dashed" aria-hidden="true"></span>Inferred / Skill Link</span>
         </div>
       </div>
     </section>
     
-    <!-- Right: Contextual Details Sidebar -->
-    <aside class="detail-sidebar" id="detail-panel" aria-label="Contextual node details">
+    <!-- Right: Contextual Details & Temporal Intelligence Sidebar -->
+    <aside class="detail-sidebar" id="detail-panel" aria-label="Contextual node details and temporal analysis">
       <div class="sidebar-header">
         <h2>Node Profile</h2>
       </div>
       
       <div class="profile-card-empty" id="profile-empty">
-        <div class="empty-icon"></div>
-        <p>Click a node in the tree structure to view profile details, manager reporting lines, and expertise keywords.</p>
+        <div class="empty-icon" aria-hidden="true"></div>
+        <p>Click any person in the graph or in the Temporal Changes list below to inspect their reporting line, confidence evidence, and career shifts.</p>
       </div>
       
       <div class="profile-card hidden" id="profile-card">
         <div class="profile-header">
-          <div class="avatar" id="prof-avatar"></div>
+          <div class="avatar" id="prof-avatar" aria-hidden="true"></div>
           <div class="title-block">
-            <h3 id="prof-name">John Doe</h3>
+            <div class="name-badge-row">
+              <h3 id="prof-name">John Doe</h3>
+              <span id="prof-diff-badge" class="diff-badge hidden">Baseline</span>
+            </div>
             <p id="prof-title">Senior VP of Product</p>
           </div>
         </div>
+
+        <div id="prof-diff-summary" class="prof-diff-box hidden"></div>
         
         <div class="profile-details">
           <div class="detail-row">
@@ -133,9 +162,18 @@
           </div>
           <div class="detail-row">
             <span class="detail-label">Reports To</span>
-            <span class="detail-value highlight-link" id="prof-manager">Amjad Masad</span>
+            <button type="button" class="link-btn" id="prof-manager">Amjad Masad</button>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Line Confidence</span>
+            <span class="confidence-pill" id="prof-confidence">Inferred</span>
           </div>
           
+          <div class="evidence-block">
+            <h4 class="section-title">Extraction Evidence</h4>
+            <p id="prof-evidence" class="evidence-text">Inferred from organizational hierarchy and title tier.</p>
+          </div>
+
           <div class="bio-block">
             <h4 class="section-title">Biography Summary</h4>
             <p id="prof-bio">No bio available for this snapshot.</p>
@@ -143,12 +181,47 @@
           
           <div class="skills-block">
             <h4 class="section-title">Extracted Expertise</h4>
-            <div class="tags-container" id="prof-skills">
-              <span class="skill-tag">Product Management</span>
-              <span class="skill-tag">UI/UX</span>
-            </div>
+            <div class="tags-container" id="prof-skills"></div>
+          </div>
+
+          <div class="profile-actions">
+            <button type="button" id="trace-from-root-btn" class="secondary-btn">
+              Find Warm Path from Top Executive
+            </button>
           </div>
         </div>
+      </div>
+
+      <!-- Temporal Diff Breakdown (Native <details> disclosures keep content searchable) -->
+      <div class="sidebar-section hidden" id="diff-section">
+        <div class="sidebar-header">
+          <h2>What Changed</h2>
+          <p class="sidebar-subtitle" id="diff-subtitle">Compared to previous snapshot</p>
+        </div>
+        <div id="diff-accordions" class="diff-accordions"></div>
+      </div>
+
+      <!-- Warm Path Connection Finder -->
+      <div class="sidebar-section hidden" id="warm-path-section">
+        <div class="sidebar-header">
+          <h2>Warm Path Finder</h2>
+          <p class="sidebar-subtitle">Discover shortest reporting or shared-skill bridges</p>
+        </div>
+        <div class="warm-path-controls">
+          <div class="warm-field">
+            <label for="warm-source-select" class="detail-label">From</label>
+            <select id="warm-source-select"></select>
+          </div>
+          <div class="warm-field">
+            <label for="warm-target-select" class="detail-label">To</label>
+            <select id="warm-target-select"></select>
+          </div>
+          <div class="warm-btn-row">
+            <button type="button" id="find-path-btn" class="secondary-btn">Highlight Path</button>
+            <button type="button" id="clear-path-btn" class="ghost-btn">Clear</button>
+          </div>
+        </div>
+        <div id="warm-path-result" class="warm-path-result hidden" role="status" aria-live="polite"></div>
       </div>
     </aside>
   </main>
@@ -157,14 +230,15 @@
   <footer class="time-machine-footer">
     <div class="time-machine-container">
       <div class="playback-controls">
-        <button id="play-btn" class="circle-btn" aria-label="Play timeline animation" disabled>
-          <svg class="play-icon" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-          <svg class="pause-icon hidden" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+        <button type="button" id="play-btn" class="circle-btn" aria-label="Play timeline animation" disabled>
+          <svg class="play-icon" aria-hidden="true" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          <svg class="pause-icon hidden" aria-hidden="true" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
         </button>
         <span class="slider-label">Time Machine</span>
       </div>
       
       <div class="slider-wrapper">
+        <label for="timeline-slider" class="visually-hidden">Snapshot timeline position</label>
         <input 
           type="range" 
           id="timeline-slider" 

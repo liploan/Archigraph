@@ -19,6 +19,7 @@ from src.config import (
 )
 from src.ingestor import get_wayback_snapshots, fetch_snapshot_html, clean_html_content, delete_raw_snapshot
 from src.extractor import extract_org_structure
+from src.diff_engine import enrich_snapshots_with_diffs, find_warm_path
 from src.security import validate_public_url, UnsafeURLError
 
 import os
@@ -132,6 +133,7 @@ def _load_demo(key: str):
         with open(path, "r", encoding="utf-8") as f:
             snapshots.append(json.load(f))
     snapshots.sort(key=lambda s: s.get("snapshot_timestamp", ""))
+    snapshots = enrich_snapshots_with_diffs(snapshots)
     return {
         "success": True,
         "domain": entry["domain"],
@@ -261,6 +263,9 @@ def api_extract():
             return jsonify({"error": "Today's live-extraction budget has been used up. Please try a demo or come back tomorrow."}), 429
         return jsonify({"error": "Failed to extract organizational entities from any snapshots."}), 502
 
+    results.sort(key=lambda s: s.get("snapshot_timestamp", ""))
+    results = enrich_snapshots_with_diffs(results)
+
     return jsonify({
         "success": True,
         "domain": domain,
@@ -269,6 +274,25 @@ def api_extract():
         "note": "Partial result: daily extraction budget reached." if budget_exhausted else "",
         "data": results,
     })
+
+
+@app.route("/api/warm-path", methods=["POST"])
+def api_warm_path():
+    """Compute the shortest warm introduction path between two entities in a snapshot."""
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+        return jsonify({"error": "Request body must be a JSON object."}), 400
+
+    entities = data.get("entities")
+    source_id = data.get("source_id")
+    target_id = data.get("target_id")
+    if not isinstance(entities, list) or not source_id or not target_id:
+        return jsonify({"error": "entities, source_id, and target_id are required."}), 400
+
+    path = find_warm_path(entities, str(source_id), str(target_id))
+    if path is None:
+        return jsonify({"error": "No connection path found between the selected people."}), 404
+    return jsonify({"success": True, "path": path})
 
 
 if __name__ == "__main__":

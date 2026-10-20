@@ -4,6 +4,11 @@ from unittest.mock import patch, MagicMock
 import app as app_module
 from src import security
 from src.security import UnsafeURLError, validate_public_url, safe_get
+from src.diff_engine import (
+    enrich_snapshots_with_diffs,
+    find_warm_path,
+    resolve_entities_across_snapshots,
+)
 
 # example.com's address; a public IP literal avoids needing DNS in tests
 PUBLIC_URL = "http://93.184.216.34/team"
@@ -31,6 +36,11 @@ class TestDemos(AppTestCase):
     def test_extracted_demo_is_labelled_differently(self):
         body = self.client.get("/api/demo/replit").get_json()
         self.assertEqual(body["sample_data"], "extracted")
+        self.assertEqual(body["snapshots_processed"], 2)
+        second_snap = body["data"][1]
+        self.assertIn("diff_summary", second_snap)
+        self.assertGreaterEqual(second_snap["diff_summary"]["counts"]["promoted"], 1)
+        self.assertGreaterEqual(second_snap["diff_summary"]["counts"]["departed"], 1)
 
     def test_unknown_and_traversal_keys_404(self):
         self.assertEqual(self.client.get("/api/demo/nope").status_code, 404)
@@ -125,6 +135,99 @@ class TestSSRF(AppTestCase):
         with patch.object(security.requests, "get", return_value=redirect):
             with self.assertRaises(UnsafeURLError):
                 safe_get(PUBLIC_URL)
+
+
+class TestDiffEngineAndWarmPath(AppTestCase):
+    def test_entity_resolution_handles_accents_and_nicknames(self):
+        snapshots = [
+            {
+                "snapshot_timestamp": "20240101000000",
+                "entities": [
+                    {
+                        "id": "luis-hector-chavez-old",
+                        "full_name": "Luis Héctor Chávez",
+                        "job_title": "VP of Engineering",
+                        "department": "Engineering",
+                        "manager_name_or_id": None,
+                        "expertise_keywords": ["Infrastructure"],
+                    },
+                    {
+                        "id": "jon-smith",
+                        "full_name": "Jon Smith",
+                        "job_title": "Director of Infrastructure",
+                        "department": "Engineering",
+                        "manager_name_or_id": "Luis Hector Chavez",
+                        "expertise_keywords": ["Kubernetes", "Infrastructure"],
+                    },
+                ],
+            },
+            {
+                "snapshot_timestamp": "20250101000000",
+                "entities": [
+                    {
+                        "id": "luis-chavez-new-slug",
+                        "full_name": "Luis Hector Chavez",
+                        "job_title": "CTO",
+                        "department": "Engineering",
+                        "manager_name_or_id": None,
+                        "expertise_keywords": ["Infrastructure"],
+                    },
+                    {
+                        "id": "jonathan-smith-new",
+                        "full_name": "Jonathan Smith",
+                        "job_title": "VP of Infrastructure",
+                        "department": "Engineering",
+                        "manager_name_or_id": "luis-chavez-new-slug",
+                        "expertise_keywords": ["Kubernetes"],
+                    },
+                ],
+            },
+        ]
+        resolved = resolve_entities_across_snapshots(snapshots)
+        snap0_ids = {e["id"] for e in resolved[0]["entities"]}
+        snap1_ids = {e["id"] for e in resolved[1]["entities"]}
+        self.assertEqual(snap0_ids, snap1_ids)
+        jon_s1 = next(e for e in resolved[1]["entities"] if "Smith" in e["full_name"])
+        self.assertEqual(jon_s1["manager_name_or_id"], "luis-hector-chavez-old")
+
+    def test_diff_classification_and_warm_path_endpoint(self):
+        snapshots = [
+            {
+                "snapshot_timestamp": "20240101000000",
+                "entities": [
+                    {"id": "ceo", "full_name": "Alice CEO", "job_title": "CEO", "department": "Executive", "manager_name_or_id": None, "expertise_keywords": ["Strategy"]},
+                    {"id": "vp-eng", "full_name": "Bob Eng", "job_title": "Director of Engineering", "department": "Engineering", "manager_name_or_id": "ceo", "expertise_keywords": ["Rust", "Systems"]},
+                    {"id": "pm-lead", "full_name": "Carol PM", "job_title": "Group PM", "department": "Product", "manager_name_or_id": "ceo", "expertise_keywords": ["Systems"]},
+                    {"id": "leaver", "full_name": "Dave Departed", "job_title": "VP Sales", "department": "Sales", "manager_name_or_id": "ceo", "expertise_keywords": ["GTM"]},
+                ],
+            },
+            {
+                "snapshot_timestamp": "20250101000000",
+                "entities": [
+                    {"id": "ceo", "full_name": "Alice CEO", "job_title": "CEO", "department": "Executive", "manager_name_or_id": None, "expertise_keywords": ["Strategy"]},
+                    {"id": "vp-eng", "full_name": "Bob Eng", "job_title": "SVP of Engineering", "department": "Engineering", "manager_name_or_id": "ceo", "expertise_keywords": ["Rust", "Systems"]},
+                    {"id": "pm-lead", "full_name": "Carol PM", "job_title": "Group PM", "department": "Engineering", "manager_name_or_id": "vp-eng", "expertise_keywords": ["Systems"]},
+                    {"id": "new-hire", "full_name": "Eve New", "job_title": "Staff Engineer", "department": "Engineering", "manager_name_or_id": "vp-eng", "expertise_keywords": ["Rust"]},
+                ],
+            },
+        ]
+        enriched = enrich_snapshots_with_diffs(snapshots)
+        counts = enriched[1]["diff_summary"]["counts"]
+        self.assertEqual(counts["promoted"], 1)   # Bob Director -> SVP
+        self.assertEqual(counts["moved"], 1)      # Carol moved under Bob
+        self.assertEqual(counts["joined"], 1)     # Eve joined
+        self.assertEqual(counts["departed"], 1)   # Dave departed
+
+        # Test Warm Path API
+        resp = self.client.post("/api/warm-path", json={
+            "entities": enriched[1]["entities"],
+            "source_id": "ceo",
+            "target_id": "new-hire",
+        })
+        self.assertEqual(resp.status_code, 200)
+        path = resp.get_json()["path"]
+        self.assertEqual(path["node_ids"], ["ceo", "vp-eng", "new-hire"])
+        self.assertEqual([step["id"] for step in path["steps"]], ["ceo", "vp-eng", "new-hire"])
 
 
 if __name__ == "__main__":
