@@ -1,19 +1,29 @@
 import datetime
-from neo4j import GraphDatabase
+from typing import List
 from src.config import NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD
+from src.diff_engine import enrich_snapshots_with_diffs
+
+try:
+    from neo4j import GraphDatabase
+except ImportError:
+    GraphDatabase = None
+
 
 def parse_timestamp(ts: str) -> str:
     """Converts Wayback YYYYMMDDHHMMSS format to ISO-8601 YYYY-MM-DDTHH:MM:SSZ."""
     if ts == "current" or not ts:
-        return datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+        return datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     if len(ts) >= 14:
         return f"{ts[0:4]}-{ts[4:6]}-{ts[6:8]}T{ts[8:10]}:{ts[10:12]}:{ts[12:14]}Z"
     if len(ts) >= 8:
         return f"{ts[0:4]}-{ts[4:6]}-{ts[6:8]}T00:00:00Z"
     return ts
 
+
 class TemporalGraphSeeder:
     def __init__(self):
+        if GraphDatabase is None:
+            raise RuntimeError("The 'neo4j' Python package is required to connect to Neo4j.")
         self.driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD))
         
     def close(self):
@@ -24,6 +34,16 @@ class TemporalGraphSeeder:
         with self.driver.session() as session:
             session.run("MATCH (n) DETACH DELETE n")
             print("✔ Database cleared.")
+
+    def sync_snapshots(self, snapshots: List[dict]) -> List[dict]:
+        """Resolve entities across chronological snapshots, compute diffs, and sync all into Neo4j."""
+        if not snapshots:
+            return []
+        ordered = sorted(snapshots, key=lambda s: s.get("snapshot_timestamp", ""))
+        enriched = enrich_snapshots_with_diffs(ordered)
+        for snap in enriched:
+            self.sync_snapshot(snap)
+        return enriched
             
     def sync_snapshot(self, snapshot_data: dict):
         """
@@ -53,6 +73,9 @@ class TemporalGraphSeeder:
                 department = entity.get("department") or "Other"
                 manager_id = entity.get("manager_name_or_id")
                 expertise = entity.get("expertise_keywords", [])
+                confidence = entity.get("reporting_confidence") or ("inferred" if manager_id else "none")
+                evidence = entity.get("reporting_evidence") or ""
+                diff_status = (entity.get("diff") or {}).get("status", "baseline")
                 
                 # Merge person node
                 session.run(
@@ -97,6 +120,7 @@ class TemporalGraphSeeder:
                             CREATE (p)-[:BELONGS_TO {
                                 role_title: $job_title,
                                 department: $department,
+                                diff_status: $diff_status,
                                 valid_from: datetime($timestamp),
                                 valid_to: null
                             }]->(o)
@@ -105,6 +129,7 @@ class TemporalGraphSeeder:
                             org_name=org_name,
                             job_title=job_title,
                             department=department,
+                            diff_status=diff_status,
                             timestamp=timestamp
                         )
                 else:
@@ -115,6 +140,7 @@ class TemporalGraphSeeder:
                         CREATE (p)-[:BELONGS_TO {
                             role_title: $job_title,
                             department: $department,
+                            diff_status: $diff_status,
                             valid_from: datetime($timestamp),
                             valid_to: null
                         }]->(o)
@@ -123,6 +149,7 @@ class TemporalGraphSeeder:
                         org_name=org_name,
                         job_title=job_title,
                         department=department,
+                        diff_status=diff_status,
                         timestamp=timestamp
                     )
                 
@@ -159,22 +186,36 @@ class TemporalGraphSeeder:
                             session.run(
                                 """
                                 MATCH (p:Person {id: $person_id}), (m:Person {id: $manager_id})
-                                CREATE (p)-[:REPORTS_TO {valid_from: datetime($timestamp), valid_to: null}]->(m)
+                                CREATE (p)-[:REPORTS_TO {
+                                    valid_from: datetime($timestamp),
+                                    valid_to: null,
+                                    confidence: $confidence,
+                                    evidence: $evidence
+                                }]->(m)
                                 """,
                                 person_id=person_id,
                                 manager_id=manager_id,
-                                timestamp=timestamp
+                                timestamp=timestamp,
+                                confidence=confidence,
+                                evidence=evidence,
                             )
                     else:
                         # Create new active reporting relationship
                         session.run(
                             """
                             MATCH (p:Person {id: $person_id}), (m:Person {id: $manager_id})
-                            CREATE (p)-[:REPORTS_TO {valid_from: datetime($timestamp), valid_to: null}]->(m)
+                            CREATE (p)-[:REPORTS_TO {
+                                valid_from: datetime($timestamp),
+                                valid_to: null,
+                                confidence: $confidence,
+                                evidence: $evidence
+                            }]->(m)
                             """,
                             person_id=person_id,
                             manager_id=manager_id,
-                            timestamp=timestamp
+                            timestamp=timestamp,
+                            confidence=confidence,
+                            evidence=evidence,
                         )
                 else:
                     # If no manager, close any active reports to someone else

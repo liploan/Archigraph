@@ -70,5 +70,77 @@ class TestTemporalGraphSeeder(unittest.TestCase):
         # Verify belongs_to edge closing query was triggered
         self.assertTrue(any("SET r.valid_to = datetime($timestamp)" in c for c in calls))
 
+    def test_sync_snapshots_enriches_diffs_and_stores_provenance(self):
+        snapshots = [
+            {
+                "snapshot_timestamp": "20240101000000",
+                "organization_name": "replit.com",
+                "entities": [
+                    {
+                        "id": "amjad-masad",
+                        "full_name": "Amjad Masad",
+                        "job_title": "Founder & CEO",
+                        "department": "Executive",
+                        "manager_name_or_id": None,
+                        "expertise_keywords": ["AI"],
+                    },
+                    {
+                        "id": "michele-catasta",
+                        "full_name": "Michele Catasta",
+                        "job_title": "VP of AI",
+                        "department": "AI",
+                        "manager_name_or_id": "Amjad Masad",
+                        "reporting_confidence": "explicit",
+                        "reporting_evidence": "Reports directly to CEO Amjad Masad.",
+                        "expertise_keywords": ["LLMs"],
+                    },
+                ],
+            },
+            {
+                "snapshot_timestamp": "20250101000000",
+                "organization_name": "replit.com",
+                "entities": [
+                    {
+                        "id": "amjad-masad",
+                        "full_name": "Amjad Masad",
+                        "job_title": "Founder & CEO",
+                        "department": "Executive",
+                        "manager_name_or_id": None,
+                        "expertise_keywords": ["AI"],
+                    },
+                    {
+                        "id": "michele-catasta-new-slug",
+                        "full_name": "Michele Catasta",
+                        "job_title": "President & Head of AI",
+                        "department": "AI",
+                        "manager_name_or_id": "amjad-masad",
+                        "reporting_confidence": "explicit",
+                        "reporting_evidence": "Promoted to President.",
+                        "expertise_keywords": ["LLMs"],
+                    },
+                ],
+            },
+        ]
+
+        mock_result = MagicMock()
+        mock_result.single.return_value = None
+        self.mock_session.run.return_value = mock_result
+
+        enriched = self.seeder.sync_snapshots(snapshots)
+        self.assertEqual(len(enriched), 2)
+        self.assertEqual(enriched[1]["diff_summary"]["counts"]["promoted"], 1)
+
+        # Verify canonical ID was preserved across snapshots and provenance was passed to REPORTS_TO
+        reports_calls = [
+            (args[0], kwargs)
+            for args, kwargs in self.mock_session.run.call_args_list
+            if "CREATE (p)-[:REPORTS_TO" in args[0]
+        ]
+        self.assertGreaterEqual(len(reports_calls), 2)
+        self.assertEqual(reports_calls[-1][1]["person_id"], "michele-catasta")
+        self.assertEqual(reports_calls[-1][1]["manager_id"], "amjad-masad")
+        self.assertEqual(reports_calls[-1][1]["confidence"], "explicit")
+
+
 if __name__ == "__main__":
     unittest.main()

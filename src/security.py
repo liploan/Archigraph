@@ -3,7 +3,10 @@ import ipaddress
 import socket
 from urllib.parse import urlparse, urljoin
 
-import requests
+try:
+    import requests
+except ImportError:
+    requests = None
 
 MAX_REDIRECTS = 3
 MAX_RESPONSE_BYTES = 5 * 1024 * 1024  # 5 MB cap on fetched pages

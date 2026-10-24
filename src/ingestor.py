@@ -1,20 +1,76 @@
+import hashlib
 import re
 import urllib.parse
 from pathlib import Path
-import requests
-from bs4 import BeautifulSoup
+from urllib.parse import urlparse
+try:
+    import requests
+except ImportError:
+    requests = None
+
+try:
+    from bs4 import BeautifulSoup
+except ImportError:
+    BeautifulSoup = None
 from src.config import CACHE_DIR
 from src.security import safe_get
+
+
+def get_domain(url: str) -> str:
+    """Extract normalized domain name (without leading www.) from a URL."""
+    parsed = urlparse(url)
+    domain = parsed.hostname or parsed.netloc or ""
+    if domain.startswith("www."):
+        domain = domain[4:]
+    return domain
+
+
+def build_cache_id(url: str, domain: str = "") -> str:
+    """Cache key that includes the URL path, so /about and /careers never collide."""
+    parsed = urlparse(url)
+    resolved_domain = domain or get_domain(url)
+    normalized = f"{parsed.hostname or parsed.netloc}{parsed.path.rstrip('/')}"
+    digest = hashlib.sha1(normalized.encode("utf-8")).hexdigest()[:10]
+    return f"{resolved_domain}-{digest}"
+
+
+def select_evenly_spaced_snapshots(snapshots: list, limit: int) -> list:
+    """Select up to `limit` snapshots evenly spaced across the chronological list.
+
+    For limit == 1, returns the most recent snapshot.
+    For limit >= 2, includes both the earliest and most recent snapshots and spaces
+    any intermediate selections evenly across the timeline.
+    """
+    if limit <= 0 or not snapshots:
+        return []
+    n = len(snapshots)
+    if n <= limit:
+        return list(snapshots)
+    if limit == 1:
+        return [snapshots[-1]]
+
+    chosen_indices = []
+    seen = set()
+    for i in range(limit):
+        idx = round(i * (n - 1) / (limit - 1))
+        if idx not in seen:
+            seen.add(idx)
+            chosen_indices.append(idx)
+    return [snapshots[i] for i in chosen_indices]
+
 
 def get_wayback_snapshots(url: str, limit: int = 10) -> list:
     """
     Queries the Wayback CDX API for snapshots of a given URL.
+    Collapses by month (YYYYMM) so multi-year histories are covered, deduplicates by
+    content digest, and samples evenly across the chronological timeline.
     Returns a list of dicts: [{'timestamp': '...', 'archive_url': '...', 'status': '200'}]
     """
     # Clean URL
     encoded_url = urllib.parse.quote(url)
+    cdx_limit = max(limit * 20, 120)
     
-    # Restrict search limits at CDX server level to avoid scan timeouts on popular domains
+    # Collapse to 1 capture per month (timestamp:6) and cap scan size at CDX server level
     cdx_url = (
         f"https://web.archive.org/cdx/search/cdx"
         f"?url={encoded_url}"
@@ -22,7 +78,8 @@ def get_wayback_snapshots(url: str, limit: int = 10) -> list:
         f"&fl=timestamp,original,statuscode,digest"
         f"&filter=statuscode:200"
         f"&filter=mimetype:text/html"
-        f"&limit={limit * 5}"
+        f"&collapse=timestamp:6"
+        f"&limit={cdx_limit}"
     )
     
     data = None
@@ -75,7 +132,7 @@ def get_wayback_snapshots(url: str, limit: int = 10) -> list:
             "digest": "live"
         })
         
-    return snapshots[:limit]
+    return select_evenly_spaced_snapshots(snapshots, limit)
 
 def fetch_snapshot_html(archive_url: str, timestamp: str, domain: str) -> str:
     """

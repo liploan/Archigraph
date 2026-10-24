@@ -469,9 +469,16 @@ h1, h2, h3, h4 {
   cursor: not-allowed;
 }
 
+.search-overlay-container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .search-overlay-container input {
   height: 30px;
-  width: 210px;
+  width: 225px;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid var(--border-color);
   border-radius: 6px;
@@ -489,6 +496,90 @@ h1, h2, h3, h4 {
 .search-overlay-container input:disabled {
   opacity: 0.4;
   cursor: not-allowed;
+}
+
+.search-match-badge {
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 10px;
+  background: rgba(236, 72, 153, 0.16);
+  border: 1px solid rgba(236, 72, 153, 0.4);
+  color: #f9a8d4;
+  white-space: nowrap;
+}
+
+/* Export Popover Button Group (CSS Anchor Positioning + Popover API) */
+.export-control-wrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+.export-trigger-btn {
+  anchor-name: --export-trigger;
+  border: 1px solid var(--border-color);
+  border-radius: 7px;
+  padding: 5px 10px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.export-popover-panel {
+  position-anchor: --export-trigger;
+  position-area: block-end span-inline-start;
+  position-try-fallbacks: flip-block, flip-inline;
+  inset: auto;
+  top: anchor(bottom);
+  right: anchor(right);
+  margin: 6px 0 0 0;
+  min-width: 225px;
+  background: rgba(13, 20, 38, 0.96);
+  border: 1px solid rgba(99, 102, 241, 0.35);
+  border-radius: 10px;
+  padding: 6px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  z-index: 60;
+}
+
+[popover].export-popover-panel:is(:popover-open, .\:popover-open),
+.export-popover-panel.fallback-open {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.export-option-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  border-radius: 7px;
+  padding: 8px 10px;
+  cursor: pointer;
+  color: var(--text-color-primary);
+  font-family: inherit;
+  transition: background 0.15s;
+}
+
+.export-option-btn:hover,
+.export-option-btn:focus-visible {
+  background: rgba(99, 102, 241, 0.18);
+}
+
+.export-opt-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.export-opt-desc {
+  font-size: 10.5px;
+  color: var(--text-color-muted);
 }
 
 /* SVG Workspace Canvas */
@@ -904,6 +995,101 @@ h1, h2, h3, h4 {
   width: 100%;
 }
 
+/* Longitudinal Career Timeline inside Profile Card */
+.career-timeline-block {
+  margin-top: 6px;
+}
+
+.career-timeline-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+}
+
+.career-timeline-list::before {
+  content: "";
+  position: absolute;
+  left: 11px;
+  top: 10px;
+  bottom: 10px;
+  width: 1.5px;
+  background: rgba(99, 102, 241, 0.25);
+  pointer-events: none;
+}
+
+.career-step-btn {
+  width: 100%;
+  text-align: left;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-color);
+  border-radius: 7px;
+  padding: 7px 10px 7px 26px;
+  position: relative;
+  cursor: pointer;
+  color: var(--text-color-primary);
+  font-family: inherit;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.career-step-btn::before {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 13px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #1e293b;
+  border: 2px solid var(--color-accent-indigo);
+}
+
+.career-step-btn:hover {
+  background: rgba(99, 102, 241, 0.1);
+  border-color: rgba(99, 102, 241, 0.35);
+}
+
+.career-step-btn.active {
+  background: rgba(99, 102, 241, 0.14);
+  border-color: var(--color-accent-indigo);
+}
+
+.career-step-btn.active::before {
+  background: var(--color-accent-indigo);
+  box-shadow: 0 0 6px var(--color-accent-indigo);
+}
+
+.career-step-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 2px;
+}
+
+.career-step-date {
+  font-size: 11px;
+  font-weight: 700;
+  color: #a5b4fc;
+}
+
+.career-step-role {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-color-primary);
+  display: block;
+}
+
+.career-step-meta {
+  font-size: 10.5px;
+  color: var(--text-color-muted);
+  display: block;
+  margin-top: 1px;
+}
+
 /* ==========================================================================
    What Changed Section (Native <details> Accordions)
    ========================================================================== */
@@ -1298,6 +1484,62 @@ h1, h2, h3, h4 {
   font-weight: 700;
   letter-spacing: 0.03em;
   pointer-events: none;
+}
+
+/* Virtual Organization Root Node (Multi-Root Co-Founders / Unlinked Trees) */
+.node.node-org-root circle {
+  fill: #1e1b4b;
+  stroke: #818cf8;
+  stroke-width: 2.5px;
+  stroke-dasharray: 2, 2;
+}
+
+.link.org-root-link {
+  stroke: rgba(129, 140, 248, 0.32);
+  stroke-dasharray: 3, 3;
+}
+
+.link.unlinked-link {
+  stroke: rgba(148, 163, 184, 0.25);
+  stroke-dasharray: 2, 5;
+}
+
+/* Collapsible Subtree Toggle Pill on Tree Nodes */
+.node-collapse-badge {
+  cursor: pointer;
+}
+
+.node-collapse-bg {
+  fill: #1e293b;
+  stroke: rgba(99, 102, 241, 0.55);
+  stroke-width: 1.2px;
+  rx: 7px;
+  ry: 7px;
+  transition: fill 0.2s, stroke 0.2s;
+}
+
+.node-collapse-badge:hover .node-collapse-bg,
+.node.is-collapsed .node-collapse-bg {
+  fill: rgba(99, 102, 241, 0.3);
+  stroke: #a5b4fc;
+}
+
+.node-collapse-text {
+  font-size: 8.5px !important;
+  font-weight: 700 !important;
+  fill: #e2e8f0 !important;
+  pointer-events: none;
+}
+
+/* Search Active Dimming for Non-Matching Nodes & Links */
+g.search-active .node:not(.highlight):not(.selected) {
+  opacity: 0.24;
+  transition: opacity 0.2s;
+}
+
+g.search-active .link:not(.warm-path-link) {
+  opacity: 0.18;
+  transition: opacity 0.2s;
 }
 
 /* ==========================================================================

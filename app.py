@@ -17,7 +17,10 @@ from src.config import (
     ENABLE_LIVE_EXTRACTION, ACCESS_TOKEN, MAX_EXTRACTIONS_PER_DAY,
     MAX_SNAPSHOTS_PER_REQUEST, FLASK_DEBUG,
 )
-from src.ingestor import get_wayback_snapshots, fetch_snapshot_html, clean_html_content, delete_raw_snapshot
+from src.ingestor import (
+    get_wayback_snapshots, fetch_snapshot_html, clean_html_content,
+    delete_raw_snapshot, get_domain, build_cache_id,
+)
 from src.extractor import extract_org_structure
 from src.diff_engine import enrich_snapshots_with_diffs, find_warm_path
 from src.security import validate_public_url, UnsafeURLError
@@ -155,20 +158,7 @@ def api_demo(key):
 # --------------------------------------------------------------------------
 # Live extraction
 # --------------------------------------------------------------------------
-def get_domain(url: str) -> str:
-    parsed = urlparse(url)
-    domain = parsed.hostname or ""
-    if domain.startswith("www."):
-        domain = domain[4:]
-    return domain
-
-
-def _cache_id(url: str, domain: str) -> str:
-    """Cache key that includes the URL path, so /about and /careers never collide."""
-    parsed = urlparse(url)
-    normalized = f"{parsed.hostname}{parsed.path.rstrip('/')}"
-    digest = hashlib.sha1(normalized.encode("utf-8")).hexdigest()[:10]
-    return f"{domain}-{digest}"
+_cache_id = build_cache_id
 
 
 @app.route("/api/extract", methods=["POST"])

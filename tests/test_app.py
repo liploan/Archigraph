@@ -230,5 +230,28 @@ class TestDiffEngineAndWarmPath(AppTestCase):
         self.assertEqual([step["id"] for step in path["steps"]], ["ceo", "vp-eng", "new-hire"])
 
 
+class TestIngestorSamplingAndConfig(unittest.TestCase):
+    def test_select_evenly_spaced_snapshots(self):
+        from src.ingestor import select_evenly_spaced_snapshots
+        snaps = [{"timestamp": f"202{i}0101"} for i in range(6)]
+        # limit=1 picks latest
+        self.assertEqual(select_evenly_spaced_snapshots(snaps, 1), [{"timestamp": "20250101"}])
+        # limit=2 picks earliest and latest
+        self.assertEqual(
+            [s["timestamp"] for s in select_evenly_spaced_snapshots(snaps, 2)],
+            ["20200101", "20250101"],
+        )
+        # limit=3 picks earliest, middle, latest
+        self.assertEqual(
+            [s["timestamp"] for s in select_evenly_spaced_snapshots(snaps, 3)],
+            ["20200101", "20220101", "20250101"],
+        )
+
+    def test_default_gemini_model_is_valid(self):
+        from src import config, extractor
+        self.assertEqual(config.GEMINI_MODEL, "gemini-2.5-flash")
+        self.assertEqual(extractor.GEMINI_MODEL, "gemini-2.5-flash")
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -14,11 +14,19 @@ document.addEventListener("DOMContentLoaded", () => {
   const displayDate = document.getElementById("display-date");
   const diffKpiBar = document.getElementById("diff-kpi-bar");
   const nodeSearchInput = document.getElementById("node-search");
+  const searchMatchCount = document.getElementById("search-match-count");
 
   const modeTreeBtn = document.getElementById("mode-tree-btn");
   const modeMeshBtn = document.getElementById("mode-mesh-btn");
   const toggleDepartedBtn = document.getElementById("toggle-departed-btn");
+  const expandAllBtn = document.getElementById("expand-all-btn");
   const canvasLegend = document.getElementById("canvas-legend");
+
+  const exportMenuBtn = document.getElementById("export-menu-btn");
+  const exportPopover = document.getElementById("export-popover");
+  const exportJsonBtn = document.getElementById("export-json-btn");
+  const exportCsvBtn = document.getElementById("export-csv-btn");
+  const exportSvgBtn = document.getElementById("export-svg-btn");
 
   const canvasContainer = document.getElementById("canvas-container");
   const placeholderView = document.getElementById("placeholder-view");
@@ -38,6 +46,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const profEvidence = document.getElementById("prof-evidence");
   const profBio = document.getElementById("prof-bio");
   const profSkills = document.getElementById("prof-skills");
+  const profCareerBlock = document.getElementById("prof-career-block");
+  const profCareerTimeline = document.getElementById("prof-career-timeline");
   const traceFromRootBtn = document.getElementById("trace-from-root-btn");
 
   const diffSection = document.getElementById("diff-section");
@@ -65,6 +75,9 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentManagerTargetId = null;
   let viewMode = "tree"; // "tree" | "mesh"
   let showDeparted = false;
+  let collapsedNodeIds = new Set();
+  let searchMatchIds = [];
+  let searchMatchCursor = 0;
   let isPlaying = false;
   let playInterval = null;
   let activeSimulation = null;
@@ -157,6 +170,7 @@ document.addEventListener("DOMContentLoaded", () => {
       selectSnapshot(historicalSnapshots.length > 1 ? historicalSnapshots.length - 1 : 0);
 
       nodeSearchInput.disabled = false;
+      if (exportMenuBtn) exportMenuBtn.disabled = false;
       canvasLegend.classList.remove("hidden");
       warmPathSection.classList.remove("hidden");
       setLoadingState(false);
@@ -200,6 +214,23 @@ document.addEventListener("DOMContentLoaded", () => {
     toggleDepartedBtn.setAttribute("aria-pressed", showDeparted ? "true" : "false");
     renderCurrentSnapshotCanvas();
   });
+
+  if (expandAllBtn) {
+    expandAllBtn.addEventListener("click", () => {
+      collapsedNodeIds.clear();
+      updateExpandAllButton();
+      renderCurrentSnapshotCanvas();
+    });
+  }
+
+  function updateExpandAllButton() {
+    if (!expandAllBtn) return;
+    const shouldShow = viewMode === "tree" && collapsedNodeIds.size > 0;
+    expandAllBtn.classList.toggle("hidden", !shouldShow);
+    if (shouldShow) {
+      expandAllBtn.innerText = `Expand All (${collapsedNodeIds.size})`;
+    }
+  }
 
   // Manager click handler (bound once using addEventListener)
   profManager.addEventListener("click", () => {
@@ -254,8 +285,13 @@ document.addEventListener("DOMContentLoaded", () => {
     selectedNodeId = null;
     currentManagerTargetId = null;
     showDeparted = false;
+    collapsedNodeIds.clear();
+    searchMatchIds = [];
+    searchMatchCursor = 0;
+    updateExpandAllButton();
     toggleDepartedBtn.setAttribute("aria-pressed", "false");
     toggleDepartedBtn.disabled = true;
+    if (exportMenuBtn) exportMenuBtn.disabled = true;
     stopPlayback();
     playBtn.disabled = true;
     timelineSlider.disabled = true;
@@ -268,6 +304,10 @@ document.addEventListener("DOMContentLoaded", () => {
     canvasLegend.classList.add("hidden");
     nodeSearchInput.value = "";
     nodeSearchInput.disabled = true;
+    if (searchMatchCount) {
+      searchMatchCount.innerText = "";
+      searchMatchCount.classList.add("hidden");
+    }
     showProfileDetails(null);
   }
 
@@ -373,16 +413,20 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!snap) return;
     const entities = getEffectiveEntities(snap);
     warmPathResult.classList.add("hidden");
+    updateExpandAllButton();
 
     if (viewMode === "mesh") {
       renderMesh(entities);
     } else {
-      const treeData = buildHierarchy(entities);
+      const treeData = buildHierarchy(entities, snap.organization_name || displayDomain.innerText);
       renderTree(treeData);
     }
 
     if (selectedNodeId) {
       d3.select(`#node-${CSS.escape(selectedNodeId)}`).classed("selected", true);
+    }
+    if (nodeSearchInput && nodeSearchInput.value.trim()) {
+      applySearchFilter(nodeSearchInput.value, false);
     }
   }
 
@@ -565,15 +609,29 @@ document.addEventListener("DOMContentLoaded", () => {
     return top || entities[0];
   }
 
-  function buildHierarchy(entities) {
+  function buildHierarchy(entities, orgName = "") {
     if (!entities || entities.length === 0) return null;
 
     const map = {};
+    const parentOf = {};
     entities.forEach(e => {
       map[e.id] = { ...e, children: [] };
     });
 
-    let root = null;
+    function wouldCreateCycle(candidateParentId, childId) {
+      let cur = candidateParentId;
+      const seen = new Set();
+      while (cur) {
+        if (cur === childId) return true;
+        if (seen.has(cur)) break;
+        seen.add(cur);
+        cur = parentOf[cur];
+      }
+      return false;
+    }
+
+    const topRoots = [];
+    const unlinkedRoots = [];
 
     entities.forEach(e => {
       const node = map[e.id];
@@ -593,14 +651,35 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
 
-      if (parent && parent.id !== node.id) {
+      if (parent && parent.id !== node.id && !wouldCreateCycle(parent.id, node.id)) {
         parent.children.push(node);
-      } else if (!root && !node._isDeparted) {
-        root = node;
+        parentOf[node.id] = parent.id;
+      } else if (!node._isDeparted && !managerId) {
+        topRoots.push(node);
+      } else {
+        node._isUnlinkedSubtree = true;
+        unlinkedRoots.push(node);
       }
     });
 
-    if (!root) root = Object.values(map)[0];
+    let root = null;
+    if (topRoots.length === 1) {
+      root = topRoots[0];
+    } else if (topRoots.length > 1) {
+      // Multi-root org (e.g. Co-Founders, Co-CEOs, or peer top executives):
+      // use a virtual Organization root so peer leaders aren't falsely nested under each other.
+      root = {
+        id: "__org_root__",
+        full_name: orgName || displayDomain.innerText || "Organization",
+        job_title: `${topRoots.length} Top-Level Leaders`,
+        department: "Executive",
+        reporting_confidence: "none",
+        _isVirtualRoot: true,
+        children: [...topRoots],
+      };
+    } else {
+      root = unlinkedRoots.find(n => !n._isDeparted) || Object.values(map)[0];
+    }
 
     const visited = new Set();
     function visit(n) {
@@ -612,6 +691,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     Object.values(map).forEach(n => {
       if (!visited.has(n.id)) {
+        n._isUnlinkedSubtree = true;
         root.children.push(n);
         visit(n);
       }
@@ -644,6 +724,17 @@ document.addEventListener("DOMContentLoaded", () => {
     return "#94a3b8";
   }
 
+  function toggleSubtreeCollapse(nodeId) {
+    if (!nodeId || nodeId === "__org_root__") return;
+    if (collapsedNodeIds.has(nodeId)) {
+      collapsedNodeIds.delete(nodeId);
+    } else {
+      collapsedNodeIds.add(nodeId);
+    }
+    updateExpandAllButton();
+    renderCurrentSnapshotCanvas();
+  }
+
   function renderTree(treeData) {
     clearCanvas();
     if (!treeData) return;
@@ -667,6 +758,19 @@ document.addEventListener("DOMContentLoaded", () => {
     svg.call(zoomBehavior);
 
     const root = d3.hierarchy(treeData);
+
+    // Record total descendant counts and apply collapsed state before layout
+    root.each(d => {
+      d._totalDescendants = d.descendants().length - 1;
+      d._hasChildren = !!(d.children && d.children.length > 0);
+    });
+    root.each(d => {
+      if (!d.data._isVirtualRoot && collapsedNodeIds.has(d.data.id) && d.children) {
+        d._collapsedChildren = d.children;
+        d.children = null;
+      }
+    });
+
     const nodeCount = root.descendants().length;
     const treeHeight = Math.max(height - 100, nodeCount * 46);
     const treeWidth = Math.max(width - 260, 520);
@@ -683,8 +787,12 @@ document.addEventListener("DOMContentLoaded", () => {
       .append("path")
       .attr("class", d => {
         const classes = ["link"];
-        if (d.target.data._isDeparted) {
+        if (d.source.data._isVirtualRoot) {
+          classes.push("org-root-link");
+        } else if (d.target.data._isDeparted) {
           classes.push("departed-link");
+        } else if (d.target.data._isUnlinkedSubtree) {
+          classes.push("confidence-inferred", "unlinked-link");
         } else if (d.target.data.reporting_confidence !== "explicit") {
           classes.push("confidence-inferred");
         }
@@ -704,21 +812,68 @@ document.addEventListener("DOMContentLoaded", () => {
       .enter()
       .append("g")
       .attr("class", d => {
+        if (d.data._isVirtualRoot) {
+          return "node node-org-root";
+        }
         const deptClean = d.data.department ? d.data.department.split(" ")[0] : "Other";
         const diffStatus = getNodeDiffStatus(d.data);
-        return `node dept-${deptClean} diff-${diffStatus}`;
+        const collapsedCls = collapsedNodeIds.has(d.data.id) ? " is-collapsed" : "";
+        return `node dept-${deptClean} diff-${diffStatus}${collapsedCls}`;
       })
       .attr("id", d => `node-${d.data.id}`)
       .attr("transform", d => `translate(${d.y},${d.x})`)
       .on("click", (event, d) => {
+        if (d.data._isVirtualRoot) return;
         selectNodeById(d.data.id, d.data);
+      })
+      .on("dblclick", (event, d) => {
+        if (d.data._isVirtualRoot || !d._hasChildren) return;
+        event.stopPropagation();
+        toggleSubtreeCollapse(d.data.id);
       });
 
     nodes.append("circle")
-      .attr("r", 8);
+      .attr("r", d => d.data._isVirtualRoot ? 10 : 8);
+
+    // Interactive Collapse/Expand badge on nodes with children
+    nodes.each(function (d) {
+      if (!d._hasChildren || d.data._isVirtualRoot) return;
+      const isCollapsed = collapsedNodeIds.has(d.data.id);
+      const badgeLabel = isCollapsed ? `+${d._totalDescendants}` : "−";
+      const badgeWidth = isCollapsed ? Math.max(20, String(badgeLabel).length * 6 + 8) : 16;
+
+      const badge = d3.select(this)
+        .append("g")
+        .attr("class", "node-collapse-badge")
+        .attr("transform", "translate(18, 0)")
+        .on("click", (event) => {
+          event.stopPropagation();
+          toggleSubtreeCollapse(d.data.id);
+        });
+
+      badge.append("title")
+        .text(isCollapsed
+          ? `Expand ${d._totalDescendants} hidden report(s)`
+          : `Collapse ${d._totalDescendants} report(s)`);
+
+      badge.append("rect")
+        .attr("class", "node-collapse-bg")
+        .attr("x", -badgeWidth / 2)
+        .attr("y", -7)
+        .attr("width", badgeWidth)
+        .attr("height", 14);
+
+      badge.append("text")
+        .attr("class", "node-collapse-text")
+        .attr("dy", "3px")
+        .attr("x", 0)
+        .attr("text-anchor", "middle")
+        .text(badgeLabel);
+    });
 
     // Diff status badge above node if changed
     nodes.each(function (d) {
+      if (d.data._isVirtualRoot) return;
       const status = getNodeDiffStatus(d.data);
       const tagText = getDiffTagText(status);
       if (tagText) {
@@ -1060,6 +1215,109 @@ document.addEventListener("DOMContentLoaded", () => {
       tag.innerText = "None extracted";
       profSkills.appendChild(tag);
     }
+
+    renderCareerTimeline(entity.id);
+  }
+
+  function renderCareerTimeline(personId) {
+    if (!profCareerTimeline || !profCareerBlock) return;
+    profCareerTimeline.innerHTML = "";
+    if (!personId || historicalSnapshots.length === 0) {
+      profCareerBlock.classList.add("hidden");
+      return;
+    }
+
+    const entries = [];
+    historicalSnapshots.forEach((snap, idx) => {
+      const activeMatch = (snap.entities || []).find(e => e.id === personId);
+      const departedMatch = (snap.diff_summary?.departed || []).find(e => e.id === personId);
+      const person = activeMatch || (departedMatch ? { ...departedMatch, _isDeparted: true } : null);
+      if (!person) return;
+
+      const status = person._isDeparted ? "departed" : (person.diff?.status || (idx === 0 ? "baseline" : "unchanged"));
+      let managerLabel = "Top Level";
+      if (person.manager_name_or_id) {
+        const mgrObj = (snap.entities || []).find(
+          x => x.id === person.manager_name_or_id || x.full_name.toLowerCase() === person.manager_name_or_id.toLowerCase()
+        );
+        managerLabel = mgrObj ? mgrObj.full_name : person.manager_name_or_id;
+      }
+
+      entries.push({
+        snapIdx: idx,
+        dateLabel: formatTimestamp(snap.snapshot_timestamp),
+        status,
+        jobTitle: person.job_title || "Team Member",
+        department: person.department || "Unassigned",
+        managerLabel,
+        isDeparted: !!person._isDeparted,
+        summary: person.diff?.summary || person.summary || "",
+      });
+    });
+
+    if (entries.length === 0) {
+      profCareerBlock.classList.add("hidden");
+      return;
+    }
+
+    profCareerBlock.classList.remove("hidden");
+    const statusLabels = {
+      baseline: "Baseline",
+      unchanged: "Unchanged",
+      joined: "Joined",
+      promoted: "Promoted",
+      moved: "Moved",
+      departed: "Departed",
+    };
+
+    entries.forEach(item => {
+      const li = document.createElement("li");
+      const btn = document.createElement("button");
+      btn.type = "button";
+      const isCurrentEra = item.snapIdx === currentSnapshotIndex;
+      btn.className = `career-step-btn${isCurrentEra ? " active" : ""}`;
+      if (isCurrentEra) {
+        btn.setAttribute("aria-current", "step");
+      }
+
+      const header = document.createElement("div");
+      header.className = "career-step-header";
+
+      const dateSpan = document.createElement("span");
+      dateSpan.className = "career-step-date";
+      dateSpan.innerText = item.dateLabel;
+
+      const badgeSpan = document.createElement("span");
+      badgeSpan.className = `diff-badge ${item.status}`;
+      badgeSpan.innerText = statusLabels[item.status] || item.status;
+
+      header.appendChild(dateSpan);
+      header.appendChild(badgeSpan);
+
+      const roleSpan = document.createElement("span");
+      roleSpan.className = "career-step-role";
+      roleSpan.innerText = item.isDeparted ? `Departed (was ${item.jobTitle})` : item.jobTitle;
+
+      const metaSpan = document.createElement("span");
+      metaSpan.className = "career-step-meta";
+      metaSpan.innerText = `${item.department} · Reports to: ${item.managerLabel}`;
+
+      btn.appendChild(header);
+      btn.appendChild(roleSpan);
+      btn.appendChild(metaSpan);
+
+      btn.addEventListener("click", () => {
+        if (item.isDeparted && !showDeparted) {
+          showDeparted = true;
+          toggleDepartedBtn.setAttribute("aria-pressed", "true");
+        }
+        selectSnapshot(item.snapIdx);
+        selectNodeById(personId);
+      });
+
+      li.appendChild(btn);
+      profCareerTimeline.appendChild(li);
+    });
   }
 
   // ==========================================================================
@@ -1175,26 +1433,284 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ==========================================================================
-  // Natural Language Search / Highlighter
+  // Natural Language Search, Non-Match Dimming & Search-to-Zoom
   // ==========================================================================
-  nodeSearchInput.addEventListener("input", (e) => {
-    const query = e.target.value.toLowerCase().trim();
+  function entityMatchesQuery(entity, query) {
+    if (!entity || entity._isVirtualRoot || !query) return false;
+    const nameMatch = entity.full_name?.toLowerCase().includes(query);
+    const titleMatch = entity.job_title?.toLowerCase().includes(query);
+    const deptMatch = entity.department?.toLowerCase().includes(query);
+    const skillsMatch = entity.expertise_keywords?.some(skill =>
+      skill.toLowerCase().includes(query)
+    );
+    return !!(nameMatch || titleMatch || deptMatch || skillsMatch);
+  }
+
+  function applySearchFilter(rawQuery, allowAutoExpand = true) {
+    const query = (rawQuery || "").toLowerCase().trim();
     if (!g) return;
 
-    g.selectAll(".node").classed("highlight", false);
-    if (!query) return;
+    if (!query) {
+      g.classed("search-active", false);
+      g.selectAll(".node").classed("highlight", false);
+      searchMatchIds = [];
+      searchMatchCursor = 0;
+      if (searchMatchCount) {
+        searchMatchCount.innerText = "";
+        searchMatchCount.classList.add("hidden");
+      }
+      return;
+    }
 
+    // If a matching node is hidden inside a collapsed subtree in Tree mode, expand its ancestors
+    if (allowAutoExpand && viewMode === "tree" && collapsedNodeIds.size > 0) {
+      const snap = historicalSnapshots[currentSnapshotIndex];
+      const entities = getEffectiveEntities(snap);
+      const byId = new Map(entities.map(e => [e.id, e]));
+      let expandedAny = false;
+      entities.forEach(e => {
+        if (entityMatchesQuery(e, query)) {
+          let mgrId = e.manager_name_or_id;
+          const seen = new Set();
+          while (mgrId && !seen.has(mgrId)) {
+            seen.add(mgrId);
+            if (collapsedNodeIds.has(mgrId)) {
+              collapsedNodeIds.delete(mgrId);
+              expandedAny = true;
+            }
+            const mgr = byId.get(mgrId);
+            mgrId = mgr ? mgr.manager_name_or_id : null;
+          }
+        }
+      });
+      if (expandedAny) {
+        updateExpandAllButton();
+        renderCurrentSnapshotCanvas();
+        return;
+      }
+    }
+
+    const matchedIds = [];
     g.selectAll(".node").classed("highlight", d => {
       const entity = d.data || d;
-      const nameMatch = entity.full_name?.toLowerCase().includes(query);
-      const titleMatch = entity.job_title?.toLowerCase().includes(query);
-      const deptMatch = entity.department?.toLowerCase().includes(query);
-      const skillsMatch = entity.expertise_keywords?.some(skill =>
-        skill.toLowerCase().includes(query)
-      );
-      return !!(nameMatch || titleMatch || deptMatch || skillsMatch);
+      const isMatch = entityMatchesQuery(entity, query);
+      if (isMatch && entity.id) {
+        matchedIds.push(entity.id);
+      }
+      return isMatch;
     });
+
+    searchMatchIds = matchedIds;
+    searchMatchCursor = 0;
+    g.classed("search-active", true);
+
+    if (searchMatchCount) {
+      searchMatchCount.innerText = `${matchedIds.length} match${matchedIds.length === 1 ? "" : "es"}`;
+      searchMatchCount.classList.remove("hidden");
+    }
+  }
+
+  function zoomToNodeById(nodeId) {
+    if (!svg || !g || !zoomBehavior || !nodeId) return;
+    const nodeSel = g.select(`#node-${CSS.escape(nodeId)}`);
+    if (nodeSel.empty()) return;
+
+    const datum = nodeSel.datum();
+    // In tree layout coordinates are (y, x); in force mesh layout coordinates are (x, y)
+    const targetX = viewMode === "tree" ? datum.y : datum.x;
+    const targetY = viewMode === "tree" ? datum.x : datum.y;
+    if (typeof targetX !== "number" || typeof targetY !== "number") return;
+
+    const width = canvasContainer.clientWidth || 800;
+    const height = canvasContainer.clientHeight || 550;
+    const scale = 1.15;
+    const tx = width / 2 - targetX * scale;
+    const ty = height / 2 - targetY * scale;
+
+    svg.transition()
+      .duration(450)
+      .call(zoomBehavior.transform, d3.zoomIdentity.translate(tx, ty).scale(scale));
+  }
+
+  nodeSearchInput.addEventListener("input", (e) => {
+    applySearchFilter(e.target.value, true);
   });
+
+  nodeSearchInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && searchMatchIds.length > 0) {
+      e.preventDefault();
+      const targetId = searchMatchIds[searchMatchCursor % searchMatchIds.length];
+      searchMatchCursor = (searchMatchCursor + 1) % searchMatchIds.length;
+      selectNodeById(targetId);
+      zoomToNodeById(targetId);
+    }
+  });
+
+  // ==========================================================================
+  // Export & Shareable Artifacts (Temporal JSON, Roster CSV, Vector SVG)
+  // ==========================================================================
+  function closeExportPopover() {
+    if (!exportPopover) return;
+    if (typeof exportPopover.hidePopover === "function") {
+      try { exportPopover.hidePopover(); } catch (_) {}
+    }
+    exportPopover.classList.remove("fallback-open");
+  }
+
+  if (exportMenuBtn && exportPopover) {
+    // Fallback toggle for browsers/environments where native popover API isn't active
+    exportMenuBtn.addEventListener("click", () => {
+      if (typeof exportPopover.togglePopover !== "function") {
+        exportPopover.classList.toggle("fallback-open");
+      }
+    });
+  }
+
+  function triggerBlobDownload(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  function csvEscape(val) {
+    if (val === null || val === undefined) return "";
+    const str = String(val);
+    if (/[",\n\r]/.test(str)) {
+      return `"${str.replace(/"/g, '""')}"`;
+    }
+    return str;
+  }
+
+  function exportTemporalJson() {
+    if (!historicalSnapshots || historicalSnapshots.length === 0) return;
+    const domainSlug = (displayDomain.innerText || "organization").replace(/[^a-zA-Z0-9_-]/g, "_");
+    const payload = {
+      domain: displayDomain.innerText,
+      exported_at: new Date().toISOString(),
+      snapshots_count: historicalSnapshots.length,
+      data: historicalSnapshots,
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json;charset=utf-8" });
+    triggerBlobDownload(blob, `${domainSlug}_archigraph_temporal.json`);
+    closeExportPopover();
+  }
+
+  function exportCurrentSnapshotCsv() {
+    const snap = historicalSnapshots[currentSnapshotIndex];
+    if (!snap) return;
+    const domainSlug = (displayDomain.innerText || "organization").replace(/[^a-zA-Z0-9_-]/g, "_");
+    const tsSlug = snap.snapshot_timestamp || "current";
+
+    const headers = [
+      "id",
+      "full_name",
+      "job_title",
+      "department",
+      "manager_name_or_id",
+      "reporting_confidence",
+      "reporting_evidence",
+      "diff_status",
+      "diff_summary",
+      "previous_title",
+      "previous_department",
+      "previous_manager",
+      "expertise_keywords",
+      "bio_summary",
+    ];
+
+    const rows = [headers.join(",")];
+    const allRows = [
+      ...(snap.entities || []).map(e => ({ ...e, _departed: false })),
+      ...(snap.diff_summary?.departed || []).map(e => ({ ...e, _departed: true })),
+    ];
+
+    allRows.forEach(e => {
+      const diffStatus = e._departed ? "departed" : (e.diff?.status || "baseline");
+      const diffSummary = e.diff?.summary || e.summary || "";
+      const row = [
+        e.id,
+        e.full_name,
+        e.job_title,
+        e.department || "",
+        e.manager_name_or_id || "",
+        e.reporting_confidence || (e.manager_name_or_id ? "inferred" : "none"),
+        e.reporting_evidence || "",
+        diffStatus,
+        diffSummary,
+        e.diff?.previous_title || "",
+        e.diff?.previous_department || "",
+        e.diff?.previous_manager || "",
+        (e.expertise_keywords || []).join("; "),
+        e.bio_summary || "",
+      ].map(csvEscape);
+      rows.push(row.join(","));
+    });
+
+    const blob = new Blob([rows.join("\n")], { type: "text/csv;charset=utf-8" });
+    triggerBlobDownload(blob, `${domainSlug}_${tsSlug}_roster.csv`);
+    closeExportPopover();
+  }
+
+  function exportCurrentGraphSvg() {
+    const svgEl = canvasContainer.querySelector("svg");
+    if (!svgEl) return;
+    const snap = historicalSnapshots[currentSnapshotIndex];
+    const domainSlug = (displayDomain.innerText || "organization").replace(/[^a-zA-Z0-9_-]/g, "_");
+    const tsSlug = snap?.snapshot_timestamp || "current";
+
+    const clone = svgEl.cloneNode(true);
+    clone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+
+    const width = svgEl.getAttribute("width") || 800;
+    const height = svgEl.getAttribute("height") || 550;
+
+    const styleEl = document.createElementNS("http://www.w3.org/2000/svg", "style");
+    styleEl.textContent = `
+      text { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; fill: #cbd5e1; font-size: 11px; }
+      .link { fill: none; stroke: rgba(99, 102, 241, 0.45); stroke-width: 1.75px; }
+      .link.confidence-inferred { stroke-dasharray: 5, 4; stroke: rgba(148, 163, 184, 0.48); }
+      .link.mesh-skill-link { stroke-dasharray: 2, 4; stroke: rgba(168, 85, 247, 0.35); stroke-width: 1.2px; }
+      .link.departed-link { stroke-dasharray: 3, 4; stroke: rgba(251, 113, 133, 0.42); }
+      .link.org-root-link { stroke-dasharray: 3, 3; stroke: rgba(129, 140, 248, 0.38); }
+      .link.warm-path-link { stroke: #ec4899; stroke-width: 3.2px; }
+      .node circle { fill: #111827; stroke: #6366f1; stroke-width: 2.2px; }
+      .node.dept-Executive circle { stroke: #fb7185; }
+      .node.dept-Design circle { stroke: #fbbf24; }
+      .node.dept-Engineering circle { stroke: #38bdf8; }
+      .node.dept-Product circle { stroke: #34d399; }
+      .node.dept-Artificial circle, .node.dept-AI circle, .node.dept-Research circle { stroke: #c084fc; }
+      .node.diff-joined circle { stroke: #10b981; }
+      .node.diff-promoted circle { stroke: #f59e0b; }
+      .node.diff-moved circle { stroke: #38bdf8; }
+      .node.diff-departed circle { stroke: #fb7185; stroke-dasharray: 3, 2; fill: #1f1224; }
+      .node.node-org-root circle { fill: #1e1b4b; stroke: #818cf8; stroke-dasharray: 2, 2; }
+      .node-diff-tag { font-size: 8.5px; font-weight: 700; }
+      .node-collapse-bg { fill: #1e293b; stroke: rgba(99, 102, 241, 0.55); stroke-width: 1.2px; rx: 7px; ry: 7px; }
+      .node-collapse-text { font-size: 8.5px; font-weight: 700; fill: #e2e8f0; }
+    `;
+    clone.insertBefore(styleEl, clone.firstChild);
+
+    const bgRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    bgRect.setAttribute("width", width);
+    bgRect.setAttribute("height", height);
+    bgRect.setAttribute("fill", "#080a0f");
+    clone.insertBefore(bgRect, styleEl.nextSibling);
+
+    const serializer = new XMLSerializer();
+    const svgString = '<?xml version="1.0" encoding="UTF-8"?>\n' + serializer.serializeToString(clone);
+    const blob = new Blob([svgString], { type: "image/svg+xml;charset=utf-8" });
+    triggerBlobDownload(blob, `${domainSlug}_${tsSlug}_${viewMode}.svg`);
+    closeExportPopover();
+  }
+
+  if (exportJsonBtn) exportJsonBtn.addEventListener("click", exportTemporalJson);
+  if (exportCsvBtn) exportCsvBtn.addEventListener("click", exportCurrentSnapshotCsv);
+  if (exportSvgBtn) exportSvgBtn.addEventListener("click", exportCurrentGraphSvg);
 
   // Handle Demo Pill Clicks (pre-built fixtures: no network or API key needed)
   document.querySelectorAll(".demo-pill").forEach(pill => {

@@ -16,6 +16,19 @@
   
   <!-- D3.js Library -->
   <script src="https://d3js.org/d3.v7.min.js"></script>
+
+  <!-- Feature-detected polyfills for Popover, Invoker Commands, and Anchor Positioning -->
+  <script type="module">
+    if (!("popover" in HTMLElement.prototype)) {
+      import("https://unpkg.com/@oddbird/popover-polyfill@latest/dist/popover.min.js").catch(() => {});
+    }
+    if (!("commandForElement" in HTMLButtonElement.prototype)) {
+      import("https://esm.run/invokers-polyfill").catch(() => {});
+    }
+    if (!("anchorName" in document.documentElement.style)) {
+      import("https://unpkg.com/@oddbird/css-anchor-positioning").catch(() => {});
+    }
+  </script>
   
   <!-- Client Logic -->
   <script src="/static/app.js" defer></script>
@@ -94,10 +107,43 @@
             Show Departed
           </button>
 
+          <button type="button" id="expand-all-btn" class="mode-btn hidden">
+            Expand All
+          </button>
+
           <search class="search-overlay-container">
             <label for="node-search" class="visually-hidden">Search expertise, role, or name</label>
-            <input type="search" id="node-search" placeholder="Filter by skill, role, or name..." disabled>
+            <input type="search" id="node-search" placeholder="Filter by skill, role, or name (Enter to zoom)..." disabled>
+            <span id="search-match-count" class="search-match-badge hidden" aria-live="polite"></span>
           </search>
+
+          <div class="export-control-wrapper">
+            <button
+              type="button"
+              id="export-menu-btn"
+              class="mode-btn export-trigger-btn"
+              popovertarget="export-popover"
+              commandfor="export-popover"
+              command="toggle-popover"
+              disabled
+            >
+              Export ▾
+            </button>
+            <div id="export-popover" popover="auto" class="export-popover-panel" role="group" aria-label="Export options">
+              <button type="button" id="export-json-btn" class="export-option-btn">
+                <span class="export-opt-title">Temporal JSON</span>
+                <span class="export-opt-desc">All snapshots, diffs &amp; provenance</span>
+              </button>
+              <button type="button" id="export-csv-btn" class="export-option-btn">
+                <span class="export-opt-title">Snapshot Roster (CSV)</span>
+                <span class="export-opt-desc">Current snapshot table &amp; diff status</span>
+              </button>
+              <button type="button" id="export-svg-btn" class="export-option-btn">
+                <span class="export-opt-title">Graph Vector (SVG)</span>
+                <span class="export-opt-desc">Standalone vector diagram of canvas</span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
       
@@ -182,6 +228,11 @@
           <div class="skills-block">
             <h4 class="section-title">Extracted Expertise</h4>
             <div class="tags-container" id="prof-skills"></div>
+          </div>
+
+          <div class="career-timeline-block" id="prof-career-block">
+            <h4 class="section-title">Career Timeline Across Snapshots</h4>
+            <ol class="career-timeline-list" id="prof-career-timeline"></ol>
           </div>
 
           <div class="profile-actions">

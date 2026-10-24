@@ -3,7 +3,7 @@ from typing import List, Optional
 from pydantic import BaseModel, Field
 from google import genai
 from google.genai import types
-from src.config import GEMINI_API_KEY, verify_credentials
+from src.config import GEMINI_API_KEY, GEMINI_MODEL, verify_credentials
 
 # Pydantic schemas for structured LLM extraction
 class PersonEntity(BaseModel):
@@ -75,9 +75,9 @@ def extract_org_structure(cleaned_content: str, timestamp: str, domain: str) -> 
     )
     
     try:
-        # Use gemini-2.5-flash for structured data extraction
+        # Use configured Gemini model (defaults to gemini-2.5-flash) for structured data extraction
         response = client.models.generate_content(
-            model="gemini-3.5-flash",
+            model=GEMINI_MODEL,
             contents=user_prompt,
             config=types.GenerateContentConfig(
                 response_mime_type="application/json",

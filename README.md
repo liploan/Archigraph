@@ -14,14 +14,17 @@ Archigraph is a platform designed to automatically extract, map, and visualize o
 
 ## 🚀 Key Features
 
-*   ** WayBack Ingestion & Live Scrape Fallback**: Chronologically crawls target websites using the Wayback Machine CDX API, cleans boilerplates, and automatically falls back to live page scraping if archive endpoints time out.
-*   **Structured LLM Entity Extraction**: Leverages `gemini-3.5-flash` with native Pydantic schema constraints (`google-genai` SDK) to parse unstructured team pages into validated JSON profiles containing `id`, `full_name`, `job_title`, `department`, `manager_name_or_id`, and `expertise_keywords`.
-*   **Interactive Web UI Dashboard**: A sleek, glassmorphic dark-themed single-page app displaying collapsible hierarchies powered by **D3.js**.
-    *   **Time Machine Slider**: Drag to travel between chronological snapshots, or toggle autoplay to watch team shifts, hires, and re-orgs over time.
-    *   **Upward Path Highlighting**: Clicking any node highlights their exact reporting escalation line up to the CEO in glowing pink.
-    *   **Instant Expertise Filtering**: Dynamic search bar highlighting matching nodes and connection bridges as you type.
-*   **Temporal Graph Database Seeding (Neo4j)**: Diff-compares consecutive snapshots and versions relationship edges (`valid_from` / `valid_to`) to record promotions and team churn natively in Cypher.
-*   **Disk Space Optimization**: Configured to delete raw HTML cache snapshots immediately after structured extraction by default (`KEEP_RAW_SNAPSHOTS = False`), keeping only the tiny extracted JSON payloads. Includes a manual cleanup utility.
+*   **Wayback Ingestion & Evenly-Spaced Historical Sampling**: Queries the Wayback Machine CDX API with monthly collapse (`collapse=timestamp:6`), deduplicates by content digest, samples evenly across the chronological timeline, cleans HTML boilerplate, and automatically falls back to live page scraping if archive endpoints time out.
+*   **Structured LLM Entity Extraction & Confidence Provenance**: Leverages `gemini-2.5-flash` (configurable via `GEMINI_MODEL`) with native Pydantic schema constraints (`google-genai` SDK) to parse unstructured team pages into validated JSON profiles containing `id`, `full_name`, `job_title`, `department`, `manager_name_or_id`, `reporting_confidence` (`explicit` | `inferred` | `none`), `reporting_evidence`, and `expertise_keywords`.
+*   **Temporal Diff Engine & Cross-Snapshot Entity Resolution**: Normalizes accents, nicknames, and first-name prefixes across snapshots so individuals retain a canonical ID over time, classifying every transition into **Joined**, **Promoted**, **Moved** (re-org / lateral shift), **Departed**, or **Unchanged**.
+*   **Interactive Web UI Dashboard**: A glassmorphic dark-themed single-page app powered by **D3.js**:
+    *   **Dual Layout Modes**: Switch between the hierarchical **Org Tree** (with multi-root Co-Founder support and interactive collapsible `+N` / `−` subtrees) and the force-directed **Relationship Mesh** (combining reporting lines with shared-expertise bridges).
+    *   **Time Machine Slider & Departed Overlay**: Scrub or autoplay across chronological snapshots, inspect collapsible "What Changed" diff accordions, and toggle **Show Departed** to overlay departed leaders in context.
+    *   **Longitudinal Career Timeline**: Clicking any node displays their complete cross-snapshot career arc (role, department, and manager at each historical capture) with one-click time travel.
+    *   **Warm Path Finder**: Computes and highlights the shortest introduction path between any two people across reporting lines, shared expertise keywords, and department peers.
+    *   **Search-to-Zoom & Export**: Filter by skill, role, or name (dims non-matches, auto-expands collapsed subtrees, and pans/zooms on `Enter`), and export **Temporal JSON**, **Snapshot Roster CSV**, or **Standalone Vector SVG**.
+*   **Temporal Graph Database Seeding (Neo4j)**: Syncs diff-enriched snapshots and versions `:BELONGS_TO` and `:REPORTS_TO` edges (`valid_from` / `valid_to`, `confidence`, `evidence`, `diff_status`) natively in Cypher.
+*   **Disk Space Optimization**: Configured to delete raw HTML cache snapshots immediately after structured extraction by default (`KEEP_RAW_SNAPSHOTS = False`), keeping only the extracted JSON payloads. Includes a manual cleanup utility.
 
 ---
 
@@ -29,27 +32,28 @@ Archigraph is a platform designed to automatically extract, map, and visualize o
 
 ```
 Archigraph/
-├── app.py                   # Flask server: pages, /api/demo, /api/extract, /healthz
+├── app.py                   # Flask server: pages, /api/demo, /api/extract, /api/warm-path, /healthz
 ├── Dockerfile               # Production image (gunicorn)
 ├── render.yaml              # Render blueprint (one-click deploy)
 ├── docker-compose.yml       # Local Neo4j community database container setup
 ├── requirements.txt         # Project-wide Python dependencies
 ├── .gitignore               # Safe Git tracking excludes (ignores caches and credentials)
 ├── demo/                    # Demo fixtures + manifest (labelled illustrative vs extracted)
-├── tests/                   # App, auth, rate-limit and SSRF tests
+├── tests/                   # App, auth, rate-limit, SSRF, diff engine, and warm-path tests
 ├── src/
 │   ├── config.py            # Base directories, env settings, and credentials verification
 │   ├── security.py          # URL validation and SSRF-safe fetching
-│   ├── ingestor.py          # Wayback Crawler, HTML cleaner, and live fallback
+│   ├── ingestor.py          # Wayback Crawler, even timeline sampler, HTML cleaner, and live fallback
 │   ├── extractor.py         # Pydantic schemas and Gemini structured output extraction
-│   ├── main.py              # Ingestion & extraction CLI runner
+│   ├── diff_engine.py       # Cross-snapshot entity resolution, seniority ranker, diffs, and warm-path BFS
+│   ├── main.py              # Ingestion, diff enrichment, and optional Neo4j seeding CLI runner
 │   ├── db_seeder.py         # Temporal Neo4j updating and edge versioning algorithm
 │   ├── test_db_seeder.py    # Seeder unit tests using mock DB drivers
 │   └── cleanup.py           # Disk footprint cache cleanup utility
 └── static/                  # Frontend Web Assets
     ├── index.html           # Dashboard UI structural markup
     ├── style.css            # Dark mode glassmorphism layout and D3 node styling
-    └── app.js               # Visualizer controller, search engine, and D3 tree renderer
+    └── app.js               # Visualizer controller, tree/mesh renderer, career timeline, and exporter
 ```
 
 ---
@@ -72,6 +76,7 @@ dashboard) to run live extractions; the page prompts for it.
 |---|---|---|
 | `ENABLE_LIVE_EXTRACTION` | `false` | Turn on `/api/extract` (Gemini + web fetching) |
 | `GEMINI_API_KEY` | _unset_ | Required only for live extraction |
+| `GEMINI_MODEL` | `gemini-2.5-flash` | Gemini model used for structured org extraction |
 | `ARCHIGRAPH_ACCESS_TOKEN` | _unset_ | If set, live extraction requires `X-Access-Token` |
 | `MAX_EXTRACTIONS_PER_DAY` | `40` | Hard daily cap on Gemini-backed extractions (spend guard) |
 | `MAX_SNAPSHOTS_PER_REQUEST` | `5` | Upper bound on `limit` per request |
@@ -133,18 +138,18 @@ Input a target URL (e.g. `https://replit.com/about`) and select the number of hi
 > `python3 -m unittest discover -s tests -t .`
 
 ### Option B: Run via CLI Engine
-To run the crawler and LLM extractor pipeline directly inside your terminal, execute:
+To run the crawler, LLM extractor, and temporal diff engine directly inside your terminal, execute:
 ```bash
-python3 -m src.main --url <TARGET_URL> --limit <NUM_SNAPSHOTS>
+python3 -m src.main --url <TARGET_URL> --limit <NUM_SNAPSHOTS> [--force-extract] [--seed-neo4j]
 ```
-*Outputs are saved as JSON snapshots in `data/extracted_snapshots/`.*
+*Outputs are enriched with cross-snapshot diffs and saved as JSON snapshots in `data/extracted_snapshots/`. Pass `--seed-neo4j` to automatically sync the enriched snapshots into Neo4j.*
 
 ---
 
 ## 🔌 API Reference
 
 ### POST `/api/extract`
-Crawl, clean, and extract structured org data for a given URL.
+Crawl, clean, and extract structured org data and temporal diffs for a given URL.
 
 *   **Request Body**:
     ```json
@@ -164,6 +169,7 @@ Crawl, clean, and extract structured org data for a given URL.
         {
           "snapshot_timestamp": "20240612214257",
           "organization_name": "replit.com",
+          "diff_summary": null,
           "entities": [
             {
               "id": "amjad-masad",
@@ -171,12 +177,30 @@ Crawl, clean, and extract structured org data for a given URL.
               "job_title": "Founder & CEO",
               "department": "Executive",
               "manager_name_or_id": null,
+              "reporting_confidence": "none",
+              "reporting_evidence": "Founder and Chief Executive Officer at top of leadership page.",
               "expertise_keywords": ["Developer Tools", "AI"],
-              "bio_summary": "Founder and CEO of Replit..."
+              "bio_summary": "Founder and CEO of Replit...",
+              "diff": {
+                "status": "baseline",
+                "summary": "Initial baseline snapshot"
+              }
             }
           ]
         }
       ]
+    }
+    ```
+
+### POST `/api/warm-path`
+Compute the shortest warm introduction path between two entities in a snapshot (prioritizing formal reporting lines, then shared expertise keywords, then shared department peers).
+
+*   **Request Body**:
+    ```json
+    {
+      "entities": [...],
+      "source_id": "amjad-masad",
+      "target_id": "michele-catasta"
     }
     ```
 
