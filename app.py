@@ -21,8 +21,21 @@ from src.ingestor import (
     get_wayback_snapshots, fetch_snapshot_html, clean_html_content,
     delete_raw_snapshot, get_domain, build_cache_id,
 )
+from src.alerts import generate_watchlist_alerts
 from src.extractor import extract_org_structure
 from src.diff_engine import enrich_snapshots_with_diffs, find_warm_path
+from src.intelligence import (
+    SAMPLE_INVESTOR_NETWORK,
+    enrich_snapshots_with_intelligence,
+    match_network_against_snapshots,
+    simulate_key_person_departure,
+)
+from src.job_signals import enrich_job_postings_for_snapshot, fetch_public_ats_jobs
+from src.portfolio import (
+    _group_extracted_dir_by_domain,
+    _load_job_fixtures,
+    build_portfolio_overview,
+)
 from src.security import validate_public_url, UnsafeURLError
 
 import os
@@ -126,7 +139,37 @@ DEMO_NOTES = {
 }
 
 
-@lru_cache(maxsize=16)
+def _ensure_snapshot_source_urls(snapshots: list, domain: str, base_url: str = ""):
+    """Ensure every snapshot exposes a verifiable Wayback or live `source_url`."""
+    fallback_target = base_url or f"https://{domain}/about"
+    for snap in snapshots:
+        if snap.get("source_url"):
+            continue
+        ts = snap.get("snapshot_timestamp") or "current"
+        if ts == "current":
+            snap["source_url"] = fallback_target
+        else:
+            snap["source_url"] = f"https://web.archive.org/web/{ts}/{fallback_target}"
+
+
+def _attach_cross_org_links(snapshots: list, domain: str):
+    """Attach cross-company spinout/migration links onto matching active and departed entities."""
+    try:
+        overview = build_portfolio_overview(DEMO_DIR, OUTPUT_DIR)
+        link_map = overview.get("cross_links_index", {}).get(domain.lower(), {})
+    except Exception:
+        link_map = {}
+    if not link_map:
+        return
+    for snap in snapshots:
+        for e in snap.get("entities", []):
+            if e.get("id") in link_map:
+                e["cross_org_links"] = link_map[e["id"]]
+        for dep in (snap.get("diff_summary") or {}).get("departed") or []:
+            if dep.get("id") in link_map:
+                dep["cross_org_links"] = link_map[dep["id"]]
+
+
 def _load_demo(key: str):
     entry = _load_manifest().get(key)
     if not entry:
@@ -137,12 +180,26 @@ def _load_demo(key: str):
             snapshots.append(json.load(f))
     snapshots.sort(key=lambda s: s.get("snapshot_timestamp", ""))
     snapshots = enrich_snapshots_with_diffs(snapshots)
+    snapshots = enrich_snapshots_with_intelligence(snapshots)
+
+    job_fixtures = _load_job_fixtures(DEMO_DIR)
+    hiring_signals = enrich_job_postings_for_snapshot(
+        job_fixtures.get(key, []),
+        snapshots[-1].get("entities", []) if snapshots else [],
+        org_name=entry["domain"],
+    )
+    if snapshots:
+        snapshots[-1]["hiring_signals"] = hiring_signals
+    _ensure_snapshot_source_urls(snapshots, entry["domain"])
+    _attach_cross_org_links(snapshots, entry["domain"])
+
     return {
         "success": True,
         "domain": entry["domain"],
         "snapshots_processed": len(snapshots),
         "sample_data": entry["kind"],
         "note": DEMO_NOTES.get(entry["kind"], ""),
+        "hiring_signals": hiring_signals,
         "data": snapshots,
     }
 
@@ -236,6 +293,7 @@ def api_extract():
         snapshot_result = extract_org_structure(cleaned_text, timestamp, domain)
         if snapshot_result:
             result_dict = snapshot_result.model_dump()
+            result_dict["source_url"] = archive_url
             try:
                 with open(output_file, "w", encoding="utf-8") as f:
                     json.dump(result_dict, f, indent=2, ensure_ascii=False)
@@ -255,6 +313,22 @@ def api_extract():
 
     results.sort(key=lambda s: s.get("snapshot_timestamp", ""))
     results = enrich_snapshots_with_diffs(results)
+    results = enrich_snapshots_with_intelligence(results)
+
+    ats_url = (data.get("ats_url") or "").strip()
+    hiring_signals = None
+    if ats_url and results:
+        try:
+            _, raw_jobs = fetch_public_ats_jobs(ats_url)
+            hiring_signals = enrich_job_postings_for_snapshot(
+                raw_jobs, results[-1].get("entities", []), org_name=domain
+            )
+            results[-1]["hiring_signals"] = hiring_signals
+        except Exception as e:
+            app.logger.warning("Optional ATS ingestion skipped for %s: %s", ats_url, e)
+
+    _ensure_snapshot_source_urls(results, domain, base_url=url)
+    _attach_cross_org_links(results, domain)
 
     return jsonify({
         "success": True,
@@ -262,6 +336,7 @@ def api_extract():
         "snapshots_processed": len(results),
         "sample_data": None,
         "note": "Partial result: daily extraction budget reached." if budget_exhausted else "",
+        "hiring_signals": hiring_signals,
         "data": results,
     })
 
@@ -283,6 +358,148 @@ def api_warm_path():
     if path is None:
         return jsonify({"error": "No connection path found between the selected people."}), 404
     return jsonify({"success": True, "path": path})
+
+
+@app.route("/api/intelligence", methods=["POST"])
+def api_intelligence():
+    """Compute VC/PE org diligence metrics and executive recruiting poachability signals."""
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+        return jsonify({"error": "Request body must be a JSON object."}), 400
+
+    snapshots = data.get("snapshots")
+    if not isinstance(snapshots, list) or not snapshots:
+        return jsonify({"error": "A non-empty snapshots array is required."}), 400
+
+    enriched = enrich_snapshots_with_intelligence(snapshots)
+    return jsonify({"success": True, "data": enriched})
+
+
+@app.route("/api/sample-network")
+def api_sample_network():
+    """Return a curated demo VC & executive-search contact network for instant evaluation."""
+    return jsonify({"success": True, "contacts": SAMPLE_INVESTOR_NETWORK})
+
+
+@app.route("/api/network-match", methods=["POST"])
+def api_network_match():
+    """Match an uploaded/pasted contact network against active & historical org snapshots."""
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+        return jsonify({"error": "Request body must be a JSON object."}), 400
+
+    contacts = data.get("contacts")
+    snapshots = data.get("snapshots")
+    domain = str(data.get("domain") or "")
+    if not isinstance(contacts, list) or not isinstance(snapshots, list):
+        return jsonify({"error": "contacts and snapshots arrays are required."}), 400
+
+    report = match_network_against_snapshots(contacts, snapshots, domain=domain)
+    return jsonify({"success": True, "match_report": report})
+
+
+@app.route("/api/portfolio")
+def api_portfolio():
+    """Return cross-company screener metrics and cross-org spinout/migration links."""
+    overview = build_portfolio_overview(DEMO_DIR, OUTPUT_DIR)
+    return jsonify({"success": True, **overview})
+
+
+@app.route("/api/extracted/<domain_key>")
+def api_extracted_domain(domain_key):
+    """Load a cached live-extracted organization by domain from the portfolio screener."""
+    grouped = _group_extracted_dir_by_domain(OUTPUT_DIR, exclude_domains=set())
+    normalized = (domain_key or "").strip().lower()
+    snapshots = grouped.get(normalized)
+    if not snapshots:
+        return jsonify({"error": "Cached organization not found."}), 404
+
+    snapshots = enrich_snapshots_with_diffs(snapshots)
+    snapshots = enrich_snapshots_with_intelligence(snapshots)
+    hiring_signals = enrich_job_postings_for_snapshot([], snapshots[-1].get("entities", []), org_name=normalized)
+    snapshots[-1]["hiring_signals"] = hiring_signals
+    _attach_cross_org_links(snapshots, normalized)
+
+    return jsonify({
+        "success": True,
+        "domain": normalized,
+        "snapshots_processed": len(snapshots),
+        "sample_data": "extracted",
+        "note": DEMO_NOTES["extracted"],
+        "hiring_signals": hiring_signals,
+        "data": snapshots,
+    })
+
+
+@app.route("/api/jobs/parse", methods=["POST"])
+def api_jobs_parse():
+    """Fuse job postings (inline array or live Greenhouse/Lever/Ashby URL) with active org nodes."""
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+        return jsonify({"error": "Request body must be a JSON object."}), 400
+
+    entities = data.get("entities")
+    if not isinstance(entities, list):
+        return jsonify({"error": "entities array is required."}), 400
+
+    domain = str(data.get("domain") or "")
+    ats_url = (data.get("ats_url") or "").strip()
+    postings = data.get("postings")
+
+    if ats_url:
+        if not ENABLE_LIVE_EXTRACTION:
+            return jsonify({
+                "error": "Live ATS fetching is disabled on this deployment; paste job descriptions directly instead."
+            }), 403
+        if ACCESS_TOKEN:
+            supplied = request.headers.get("X-Access-Token", "")
+            if not hmac.compare_digest(supplied.encode("utf-8"), ACCESS_TOKEN.encode("utf-8")):
+                return jsonify({"error": "A valid access token is required for live ATS fetching."}), 401
+        if _rate_limited(request.remote_addr or "unknown"):
+            return jsonify({"error": "Rate limit exceeded. Please wait a few minutes."}), 429
+        try:
+            _, postings = fetch_public_ats_jobs(ats_url)
+        except (ValueError, UnsafeURLError) as e:
+            return jsonify({"error": str(e)}), 400
+        except Exception:
+            return jsonify({"error": "Failed to fetch job board postings from target ATS."}), 502
+
+    if not isinstance(postings, list):
+        return jsonify({"error": "Provide a postings array or a supported ats_url."}), 400
+
+    summary = enrich_job_postings_for_snapshot(postings, entities, org_name=domain)
+    return jsonify({"success": True, "hiring_signals": summary})
+
+
+@app.route("/api/alerts")
+def api_alerts():
+    """Evaluate watchlist rules across tracked organizations and emit Slack/CRM webhook payloads."""
+    rules_param = request.args.get("rules")
+    enabled_rules = (
+        [r.strip() for r in rules_param.split(",") if r.strip()]
+        if rules_param is not None
+        else None
+    )
+    feed = generate_watchlist_alerts(DEMO_DIR, OUTPUT_DIR, enabled_rules=enabled_rules)
+    return jsonify({"success": True, **feed})
+
+
+@app.route("/api/simulate-departure", methods=["POST"])
+def api_simulate_departure():
+    """Simulate key-person departure blast radius, flight-risk cascade, and succession bench."""
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+        return jsonify({"error": "Request body must be a JSON object."}), 400
+
+    entities = data.get("entities")
+    target_id = data.get("target_id")
+    if not isinstance(entities, list) or not target_id:
+        return jsonify({"error": "entities array and target_id are required."}), 400
+
+    sim = simulate_key_person_departure(entities, str(target_id))
+    if sim is None:
+        return jsonify({"error": "Target leader not found in active snapshot."}), 404
+    return jsonify({"success": True, "simulation": sim})
 
 
 if __name__ == "__main__":

@@ -1,0 +1,79 @@
+{
+  "snapshot_timestamp": "20200101000000",
+  "organization_name": "palantir.com",
+  "source_url": "https://web.archive.org/web/20200101000000/https://www.palantir.com/about/",
+  "entities": [
+    {
+      "id": "alex-karp",
+      "full_name": "Alex Karp",
+      "job_title": "CEO",
+      "department": "Executive",
+      "manager_name_or_id": null,
+      "expertise_keywords": ["Public Listing Strategy", "Defense Technology", "Enterprise Data"],
+      "bio_summary": "Co-founder and CEO guiding Palantir through its NYSE direct listing and healthcare response."
+    },
+    {
+      "id": "stephen-cohen",
+      "full_name": "Stephen Cohen",
+      "job_title": "Co-Founder & President",
+      "department": "Executive",
+      "manager_name_or_id": "alex-karp",
+      "expertise_keywords": ["Technical Scaling", "Apollo Continuous Delivery", "Governance"],
+      "bio_summary": "Co-founder and President driving Palantir Apollo autonomous deployment architecture."
+    },
+    {
+      "id": "shyam-sankar",
+      "full_name": "Shyam Sankar",
+      "job_title": "COO",
+      "department": "Executive",
+      "manager_name_or_id": "alex-karp",
+      "expertise_keywords": ["Defense Operations", "Commercial Scaling", "Palantir Gotham"],
+      "bio_summary": "COO scaling global forward-deployed engineering and allied defense programs."
+    },
+    {
+      "id": "akash-jain",
+      "full_name": "Akash Jain",
+      "job_title": "SVP of Foundry & Commercial",
+      "department": "Business",
+      "manager_name_or_id": "shyam-sankar",
+      "expertise_keywords": ["Foundry Rollout", "Supply Chain Analytics", "Enterprise SaaS"],
+      "bio_summary": "Promoted to SVP leading global Foundry commercial supply-chain deployments."
+    },
+    {
+      "id": "ryan-taylor",
+      "full_name": "Ryan Taylor",
+      "job_title": "Chief Legal & Business Affairs Officer",
+      "department": "Product",
+      "manager_name_or_id": "alex-karp",
+      "expertise_keywords": ["Commercial Structuring", "Foundry Platform", "Strategic Deals"],
+      "bio_summary": "Elevated to executive leadership structuring flagship commercial and Foundry partnerships."
+    },
+    {
+      "id": "dave-cole",
+      "full_name": "Dave Cole",
+      "job_title": "Director of Foundry Data Integration",
+      "department": "Product",
+      "manager_name_or_id": "akash-jain",
+      "expertise_keywords": ["ERP Connectors", "Zero-Copy Sync", "Data Lineage"],
+      "bio_summary": "Promoted to Director overseeing SAP and multi-cloud data connectors in Foundry."
+    },
+    {
+      "id": "john-harris",
+      "full_name": "John Harris",
+      "job_title": "VP of US Defense Programs",
+      "department": "Business",
+      "manager_name_or_id": "shyam-sankar",
+      "expertise_keywords": ["Army Vantage", "IL6 Cloud", "Tactical Edge"],
+      "bio_summary": "VP managing US Army Vantage and classified defense readiness platforms."
+    },
+    {
+      "id": "matthew-long",
+      "full_name": "Matthew Long",
+      "job_title": "Director of Gotham Edge Systems",
+      "department": "Engineering",
+      "manager_name_or_id": "john-harris",
+      "expertise_keywords": ["Edge Sensors", "Palantir Gotham", "Disconnected Sync"],
+      "bio_summary": "Director leading edge-sensor data fusion across tactical Gotham deployments."
+    }
+  ]
+}

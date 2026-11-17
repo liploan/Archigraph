@@ -1,0 +1,79 @@
+{
+  "snapshot_timestamp": "20200101000000",
+  "organization_name": "spacex.com",
+  "source_url": "https://web.archive.org/web/20200101000000/https://www.spacex.com/about",
+  "entities": [
+    {
+      "id": "elon-musk",
+      "full_name": "Elon Musk",
+      "job_title": "CEO & Chief Engineer",
+      "department": "Executive",
+      "manager_name_or_id": null,
+      "expertise_keywords": ["Starship Prototypes", "Systems Engineering", "Reusable Rockets"],
+      "bio_summary": "CEO and Chief Engineer overseeing Crew Dragon certification and early Boca Chica Starship hops."
+    },
+    {
+      "id": "gwynne-shotwell",
+      "full_name": "Gwynne Shotwell",
+      "job_title": "President & COO",
+      "department": "Executive",
+      "manager_name_or_id": "elon-musk",
+      "expertise_keywords": ["Commercial Crew", "Operations Management", "Starlink Commercialization"],
+      "bio_summary": "President and COO leading NASA Commercial Crew missions and Starlink launch cadence."
+    },
+    {
+      "id": "hans-koenigsmann",
+      "full_name": "Hans Koenigsmann",
+      "job_title": "VP of Build & Flight Reliability",
+      "department": "Executive",
+      "manager_name_or_id": "gwynne-shotwell",
+      "expertise_keywords": ["Flight Reliability", "Crew Safety", "Anomaly Resolution"],
+      "bio_summary": "VP certifying Crew Dragon Demo-2 human spaceflight reliability."
+    },
+    {
+      "id": "bill-gerstenmaier",
+      "full_name": "Bill Gerstenmaier",
+      "job_title": "VP of Build & Flight Reliability Consultant",
+      "department": "Engineering",
+      "manager_name_or_id": "hans-koenigsmann",
+      "expertise_keywords": ["NASA Human Spaceflight", "Flight Readiness Reviews", "Crew Safety"],
+      "bio_summary": "Senior reliability leader strengthening human-rating and mission assurance."
+    },
+    {
+      "id": "john-connery",
+      "full_name": "John Connery",
+      "job_title": "Director of Raptor Propulsion",
+      "department": "Engineering",
+      "manager_name_or_id": "gwynne-shotwell",
+      "expertise_keywords": ["Raptor 2 Engine", "Full-Flow Staged Combustion", "Metallurgy"],
+      "bio_summary": "Director leading Raptor propulsion following Tom Mueller's departure to found Impulse Space."
+    },
+    {
+      "id": "mark-juncosa",
+      "full_name": "Mark Juncosa",
+      "job_title": "VP of Vehicle Engineering",
+      "department": "Engineering",
+      "manager_name_or_id": "gwynne-shotwell",
+      "expertise_keywords": ["Starlink V1", "Structures", "Phased Array Antennas"],
+      "bio_summary": "VP leading vehicle structures and high-rate Starlink satellite manufacturing."
+    },
+    {
+      "id": "jonathan-hofeller",
+      "full_name": "Jonathan Hofeller",
+      "job_title": "VP of Starlink & Commercial Sales",
+      "department": "Engineering",
+      "manager_name_or_id": "gwynne-shotwell",
+      "expertise_keywords": ["Commercial Launch Sales", "Starlink Beta", "Enterprise Connectivity"],
+      "bio_summary": "Promoted to VP leading commercial launch manifest and Starlink customer rollout."
+    },
+    {
+      "id": "sara-spangelo",
+      "full_name": "Sara Spangelo",
+      "job_title": "Senior Manager, Starlink Maritime & Aviation",
+      "department": "Product",
+      "manager_name_or_id": "jonathan-hofeller",
+      "expertise_keywords": ["Aviation Connectivity", "Regulatory Licensing", "Enterprise Terminals"],
+      "bio_summary": "Product leader expanding Starlink into global aviation and maritime fleets."
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "snapshot_timestamp": "20220101000000",
+  "organization_name": "palantir.com",
+  "source_url": "https://web.archive.org/web/20220101000000/https://www.palantir.com/about/",
+  "entities": [
+    {
+      "id": "alex-karp",
+      "full_name": "Alex Karp",
+      "job_title": "CEO",
+      "department": "Executive",
+      "manager_name_or_id": null,
+      "expertise_keywords": ["Sovereign Software", "Defense AI", "Geopolitics"],
+      "bio_summary": "CEO expanding sovereign allied defense software and US commercial enterprise adoption."
+    },
+    {
+      "id": "stephen-cohen",
+      "full_name": "Stephen Cohen",
+      "job_title": "Co-Founder & President",
+      "department": "Executive",
+      "manager_name_or_id": "alex-karp",
+      "expertise_keywords": ["Software Architecture", "Ontology Systems", "Technical Strategy"],
+      "bio_summary": "Co-founder overseeing core ontology engine and multi-environment delivery."
+    },
+    {
+      "id": "shyam-sankar",
+      "full_name": "Shyam Sankar",
+      "job_title": "COO & EVP",
+      "department": "Executive",
+      "manager_name_or_id": "alex-karp",
+      "expertise_keywords": ["Defense Industrial Base", "Software-Defined Hardware", "Operations"],
+      "bio_summary": "COO spearheading software-defined defense primes and TITAN battlefield intelligence."
+    },
+    {
+      "id": "akash-jain",
+      "full_name": "Akash Jain",
+      "job_title": "CTO",
+      "department": "Executive",
+      "manager_name_or_id": "alex-karp",
+      "expertise_keywords": ["Systems Architecture", "Palantir Foundry", "Apollo FedStart"],
+      "bio_summary": "Promoted to Chief Technology Officer unifying Foundry, Gotham, and Apollo R&D."
+    },
+    {
+      "id": "john-harris",
+      "full_name": "John Harris",
+      "job_title": "VP of Foundry Core Engineering",
+      "department": "Engineering",
+      "manager_name_or_id": "akash-jain",
+      "expertise_keywords": ["Ontology Engine", "Graph Storage", "FedRAMP High"],
+      "bio_summary": "Re-assigned under newly promoted CTO Akash Jain to lead Foundry backend engineering."
+    },
+    {
+      "id": "daniel-golding",
+      "full_name": "Daniel Golding",
+      "job_title": "Director of US Government Systems",
+      "department": "Engineering",
+      "manager_name_or_id": "john-harris",
+      "expertise_keywords": ["FedRAMP High", "Classified Clusters", "Apollo FedStart"],
+      "bio_summary": "Joined to lead classified federal cloud accreditation and cluster infrastructure."
+    },
+    {
+      "id": "ryan-taylor",
+      "full_name": "Ryan Taylor",
+      "job_title": "Chief Revenue & Legal Officer",
+      "department": "Business",
+      "manager_name_or_id": "shyam-sankar",
+      "expertise_keywords": ["US Commercial Revenue", "Enterprise GTM", "Modular Foundry"],
+      "bio_summary": "Leading global commercial revenue expansion prior to spearheading AIP rollout."
+    },
+    {
+      "id": "dave-cole",
+      "full_name": "Dave Cole",
+      "job_title": "Director of Ontology Applications",
+      "department": "Product",
+      "manager_name_or_id": "ryan-taylor",
+      "expertise_keywords": ["Ontology SDK", "Operational Workflows", "Low-Code Apps"],
+      "bio_summary": "Director building operational ontology workflow builders for commercial clients."
+    },
+    {
+      "id": "matthew-long",
+      "full_name": "Matthew Long",
+      "job_title": "Director of Defense AI Solutions",
+      "department": "Engineering",
+      "manager_name_or_id": "john-harris",
+      "expertise_keywords": ["Computer Vision", "Edge Inference", "Palantir MetaConstellation"],
+      "bio_summary": "Director managing satellite edge AI inference pipelines."
+    }
+  ]
+}

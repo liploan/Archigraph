@@ -1,0 +1,106 @@
+{
+  "snapshot_timestamp": "20220101000000",
+  "organization_name": "google.com",
+  "source_url": "https://web.archive.org/web/20220101000000/https://about.google/leadership/",
+  "entities": [
+    {
+      "id": "sundar-pichai",
+      "full_name": "Sundar Pichai",
+      "job_title": "CEO",
+      "department": "Executive",
+      "manager_name_or_id": null,
+      "expertise_keywords": ["Global Leadership", "Corporate Strategy", "AI Infrastructure", "Cloud"],
+      "bio_summary": "CEO of Alphabet and Google steering Search, Cloud, and foundational AI investments."
+    },
+    {
+      "id": "prabhakar-raghavan",
+      "full_name": "Prabhakar Raghavan",
+      "job_title": "SVP of Knowledge & Information",
+      "department": "Executive",
+      "manager_name_or_id": "sundar-pichai",
+      "expertise_keywords": ["Computational Advertising", "Information Retrieval", "Executive Leadership"],
+      "bio_summary": "Appointed SVP unifying Search, Ads, Geo, and Commerce divisions."
+    },
+    {
+      "id": "pandu-nayak",
+      "full_name": "Pandu Nayak",
+      "job_title": "VP of Search Quality",
+      "department": "Engineering",
+      "manager_name_or_id": "prabhakar-raghavan",
+      "expertise_keywords": ["BERT Integration", "MUM Models", "Core Ranking Systems", "Semantic Understanding"],
+      "bio_summary": "VP leading core search ranking quality and MUM transformer ranking under Prabhakar Raghavan."
+    },
+    {
+      "id": "cathy-edwards",
+      "full_name": "Cathy Edwards",
+      "job_title": "VP of Search & Content Experiences",
+      "department": "Product",
+      "manager_name_or_id": "prabhakar-raghavan",
+      "expertise_keywords": ["Multimodal Search", "Product Strategy", "UI Layouts"],
+      "bio_summary": "VP overseeing consumer search product experiences under Knowledge & Information."
+    },
+    {
+      "id": "liz-reid",
+      "full_name": "Liz Reid",
+      "job_title": "VP of Search Engineering, Multisearch",
+      "department": "Product",
+      "manager_name_or_id": "prabhakar-raghavan",
+      "expertise_keywords": ["Multisearch", "Visual Querying", "Search Launch"],
+      "bio_summary": "VP directing multisearch and local discovery product engineering."
+    },
+    {
+      "id": "jeff-dean",
+      "full_name": "Jeff Dean",
+      "job_title": "SVP of Google Research & AI",
+      "department": "Artificial Intelligence",
+      "manager_name_or_id": "sundar-pichai",
+      "expertise_keywords": ["PaLM Pathways", "Deep Learning", "Distributed Infrastructure"],
+      "bio_summary": "SVP leading Pathways language modeling and Google Research labs."
+    },
+    {
+      "id": "eli-collins",
+      "full_name": "Eli Collins",
+      "job_title": "VP of Research, Language Models",
+      "department": "Artificial Intelligence",
+      "manager_name_or_id": "jeff-dean",
+      "expertise_keywords": ["Large Language Models", "LaMDA", "Transformer Scaling"],
+      "bio_summary": "VP co-leading LaMDA and PaLM foundation model research initiatives."
+    },
+    {
+      "id": "geoffrey-hinton",
+      "full_name": "Geoffrey Hinton",
+      "job_title": "VP & Engineering Fellow",
+      "department": "Artificial Intelligence",
+      "manager_name_or_id": "jeff-dean",
+      "expertise_keywords": ["Backpropagation", "Forward-Forward Algorithm", "Neural Nets Research"],
+      "bio_summary": "VP and Engineering Fellow researching next-generation neural learning algorithms."
+    },
+    {
+      "id": "thomas-kurian",
+      "full_name": "Thomas Kurian",
+      "job_title": "CEO of Google Cloud",
+      "department": "Executive",
+      "manager_name_or_id": "sundar-pichai",
+      "expertise_keywords": ["Enterprise Software", "Cloud Infrastructure", "B2B Sales", "SaaS Solutions"],
+      "bio_summary": "CEO scaling Google Cloud enterprise databases, security, and Kubernetes platforms."
+    },
+    {
+      "id": "andi-gutmans",
+      "full_name": "Andi Gutmans",
+      "job_title": "VP & GM of Databases",
+      "department": "Engineering",
+      "manager_name_or_id": "thomas-kurian",
+      "expertise_keywords": ["Distributed Databases", "AlloyDB", "Spanner", "SQL Engines"],
+      "bio_summary": "VP leading AlloyDB, Spanner, and cloud database engineering under Thomas Kurian."
+    },
+    {
+      "id": "chen-goldberg",
+      "full_name": "Chen Goldberg",
+      "job_title": "GM & VP of Engineering, Cloud Native",
+      "department": "Engineering",
+      "manager_name_or_id": "thomas-kurian",
+      "expertise_keywords": ["Kubernetes", "Container Orchestration", "Serverless Infrastructure"],
+      "bio_summary": "VP overseeing Google Kubernetes Engine and serverless container platforms."
+    }
+  ]
+}

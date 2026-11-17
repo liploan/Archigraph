@@ -17,12 +17,24 @@ Archigraph is a platform designed to automatically extract, map, and visualize o
 *   **Wayback Ingestion & Evenly-Spaced Historical Sampling**: Queries the Wayback Machine CDX API with monthly collapse (`collapse=timestamp:6`), deduplicates by content digest, samples evenly across the chronological timeline, cleans HTML boilerplate, and automatically falls back to live page scraping if archive endpoints time out.
 *   **Structured LLM Entity Extraction & Confidence Provenance**: Leverages `gemini-2.5-flash` (configurable via `GEMINI_MODEL`) with native Pydantic schema constraints (`google-genai` SDK) to parse unstructured team pages into validated JSON profiles containing `id`, `full_name`, `job_title`, `department`, `manager_name_or_id`, `reporting_confidence` (`explicit` | `inferred` | `none`), `reporting_evidence`, and `expertise_keywords`.
 *   **Temporal Diff Engine & Cross-Snapshot Entity Resolution**: Normalizes accents, nicknames, and first-name prefixes across snapshots so individuals retain a canonical ID over time, classifying every transition into **Joined**, **Promoted**, **Moved** (re-org / lateral shift), **Departed**, or **Unchanged**.
+*   **VC / PE Org Diligence & Talent Intelligence (`src/intelligence.py`)**:
+    *   **Org Health Scorecard**: Computes leadership retention %, VP+/C-suite churn %, internal-promotion vs. external-senior-hire bench archetype, hierarchy depth, span-of-control bottlenecks, unfilled VP+ leadership seats, emerging domain capabilities, and auto-generated bull/risk diligence briefs.
+    *   **Executive Recruiting Poachability Radar**: Scores every active leader (`0–100`, `Prime Target` / `Passive Watch` / `Anchored`) using transparent structural catalysts—*Layered Over in Re-Org*, *Sponsor/Manager Departed*, *Stagnant Amid Peer Promotions*, and *Scope/Span Compression*—plus a **Spinout & Available Alumni Watchlist** for departed founders, chief scientists, and VPs.
+    *   **Bring Your Own Network (Warm Intros & Candid Backchannels)**: Matches uploaded LinkedIn/CRM CSV contact lists (or a 1-click Demo VC & Search Network) against **both active rosters and departed historical snapshots** to uncover off-list backchannel reference checks who overlapped with current executives.
+*   **Public Job-Board Signal Fusion (`src/job_signals.py`)**:
+    *   Ingests public **Greenhouse**, **Lever**, and **Ashby** job boards (or inline pasted JDs), extracts explicit reporting-line clauses (*"Reporting directly to our CTO..."*) and roadmap keywords (`AI Agents`, `Multi-Tenant Sandboxes`, `CUDA`, `FedRAMP`), resolves the hiring manager node, and attaches live `+ HIRING` open seats directly onto the org chart.
+*   **Cross-Company Portfolio Screener & Spinout Tracker (`src/portfolio.py`)**:
+    *   Benchmarks all tracked organizations in a sortable institutional table (Retention %, VP+ Churn, Prime Poachable Targets, Open Roles, Bench Archetype) and automatically resolves cross-company alumni movements and stealth founder spinouts (e.g., `spacex.com` → `impulsespace.com`).
+*   **Watchlist Alert Engine & Slack / CRM Webhooks (`src/alerts.py`)**:
+    *   Evaluates configurable portfolio trigger rules (*Spinouts & Migrations*, *VP+ & C-Suite Exits*, *Prime Poachable ≥ 55*, *Unfilled VP+ Seats*) and emits inspectable, copyable **Slack Block Kit** and **CRM/ATS Event** webhook JSON payloads.
+*   **Key-Person Blast Radius Simulator & 4-Era Provenance Timelines**:
+    *   Models what-if executive departures directly on the graph (orphaned direct reports, cascade flight-risk shock, single-point domain loss, and ranked internal succession candidates), backed by 4-era historical trajectories (`2018 → 2020 → 2022 → 2024`) with clickable Wayback/live source verification links.
 *   **Interactive Web UI Dashboard**: A glassmorphic dark-themed single-page app powered by **D3.js**:
-    *   **Dual Layout Modes**: Switch between the hierarchical **Org Tree** (with multi-root Co-Founder support and interactive collapsible `+N` / `−` subtrees) and the force-directed **Relationship Mesh** (combining reporting lines with shared-expertise bridges).
+    *   **Dual Layout Modes & Poachability Halos**: Switch between the hierarchical **Org Tree** (with multi-root Co-Founder support and interactive collapsible `+N` / `−` subtrees) and the force-directed **Relationship Mesh**, and toggle **Poachability Radar** or **Network Bridge** rings directly on canvas nodes.
     *   **Time Machine Slider & Departed Overlay**: Scrub or autoplay across chronological snapshots, inspect collapsible "What Changed" diff accordions, and toggle **Show Departed** to overlay departed leaders in context.
     *   **Longitudinal Career Timeline**: Clicking any node displays their complete cross-snapshot career arc (role, department, and manager at each historical capture) with one-click time travel.
     *   **Warm Path Finder**: Computes and highlights the shortest introduction path between any two people across reporting lines, shared expertise keywords, and department peers.
-    *   **Search-to-Zoom & Export**: Filter by skill, role, or name (dims non-matches, auto-expands collapsed subtrees, and pans/zooms on `Enter`), and export **Temporal JSON**, **Snapshot Roster CSV**, or **Standalone Vector SVG**.
+    *   **Search-to-Zoom & Institutional Exports**: Filter by skill, role, or name (dims non-matches, auto-expands collapsed subtrees, and pans/zooms on `Enter`), and export **VC & Search Brief (`.md`)**, **Temporal JSON**, **Snapshot Roster CSV** (with poachability scores), or **Standalone Vector SVG**.
 *   **Temporal Graph Database Seeding (Neo4j)**: Syncs diff-enriched snapshots and versions `:BELONGS_TO` and `:REPORTS_TO` edges (`valid_from` / `valid_to`, `confidence`, `evidence`, `diff_status`) natively in Cypher.
 *   **Disk Space Optimization**: Configured to delete raw HTML cache snapshots immediately after structured extraction by default (`KEEP_RAW_SNAPSHOTS = False`), keeping only the extracted JSON payloads. Includes a manual cleanup utility.
 
@@ -46,6 +58,10 @@ Archigraph/
 │   ├── ingestor.py          # Wayback Crawler, even timeline sampler, HTML cleaner, and live fallback
 │   ├── extractor.py         # Pydantic schemas and Gemini structured output extraction
 │   ├── diff_engine.py       # Cross-snapshot entity resolution, seniority ranker, diffs, and warm-path BFS
+│   ├── intelligence.py      # VC/PE diligence KPIs, executive poachability radar & backchannel matcher
+│   ├── job_signals.py       # Greenhouse/Lever/Ashby ATS parser, JD reporting-line & roadmap extractor
+│   ├── portfolio.py         # Multi-org screener & cross-company spinout / migration linker
+│   ├── alerts.py            # Watchlist trigger rule evaluator & Slack / CRM webhook payload builder
 │   ├── main.py              # Ingestion, diff enrichment, and optional Neo4j seeding CLI runner
 │   ├── db_seeder.py         # Temporal Neo4j updating and edge versioning algorithm
 │   ├── test_db_seeder.py    # Seeder unit tests using mock DB drivers
@@ -203,6 +219,21 @@ Compute the shortest warm introduction path between two entities in a snapshot (
       "target_id": "michele-catasta"
     }
     ```
+
+### POST `/api/intelligence`
+Enrich chronological snapshots with VC/PE diligence scorecards, strategic capability shifts, executive recruiting poachability scores (`0–100`), and departed spinout/alumni watchlists.
+
+### POST `/api/network-match` & GET `/api/sample-network`
+Match an uploaded or pasted contact network (`contacts`) against active and historical org snapshots (`snapshots`) to surface 1st-degree insiders, former-colleague backchannel reference checks with exact historical overlap eras, and functional operator bridges.
+
+### GET `/api/portfolio` & GET `/api/extracted/<domain>`
+Return cross-company screener rows across all demo and cached extracted organizations, plus cross-org founder spinout and executive migration links.
+
+### POST `/api/jobs/parse`
+Fuse inline job descriptions (`postings`) or a live public Greenhouse/Lever/Ashby board (`ats_url`) with an active snapshot (`entities`), resolving hiring managers and generating graph-ready open seat nodes.
+
+### GET `/api/alerts` & POST `/api/simulate-departure`
+Evaluate portfolio watchlist trigger rules (`?rules=...`) with Slack Block Kit and CRM/ATS webhook JSON payloads, or simulate the downstream organizational blast radius and internal succession bench if `target_id` departs.
 
 ---
 

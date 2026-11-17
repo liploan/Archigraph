@@ -1,0 +1,88 @@
+{
+  "snapshot_timestamp": "20200101000000",
+  "organization_name": "google.com",
+  "source_url": "https://web.archive.org/web/20200101000000/https://about.google/leadership/",
+  "entities": [
+    {
+      "id": "sundar-pichai",
+      "full_name": "Sundar Pichai",
+      "job_title": "CEO of Alphabet & Google",
+      "department": "Executive",
+      "manager_name_or_id": null,
+      "expertise_keywords": ["Corporate Strategy", "Global Operations", "Cloud & Search", "Product Scaling"],
+      "bio_summary": "Appointed CEO of both Alphabet and Google following Larry Page's transition from executive leadership."
+    },
+    {
+      "id": "ben-gomes",
+      "full_name": "Ben Gomes",
+      "job_title": "SVP of Search, News & Assistant",
+      "department": "Engineering",
+      "manager_name_or_id": "sundar-pichai",
+      "expertise_keywords": ["Information Retrieval", "Search Quality", "BERT Ranking", "Query Understanding"],
+      "bio_summary": "SVP overseeing Google Search engineering, News, and Assistant core ranking."
+    },
+    {
+      "id": "pandu-nayak",
+      "full_name": "Pandu Nayak",
+      "job_title": "VP of Search Quality",
+      "department": "Engineering",
+      "manager_name_or_id": "ben-gomes",
+      "expertise_keywords": ["BERT Integration", "Search Ranking", "Semantic Search", "Evaluation Systems"],
+      "bio_summary": "Promoted to VP of Search Quality leading BERT natural-language ranking rollout."
+    },
+    {
+      "id": "cathy-edwards",
+      "full_name": "Cathy Edwards",
+      "job_title": "VP of Engineering & Product, Google Images",
+      "department": "Product",
+      "manager_name_or_id": "ben-gomes",
+      "expertise_keywords": ["Visual Search", "Mobile Search", "Product Strategy", "Google Lens"],
+      "bio_summary": "Expanded scope overseeing visual discovery and multimodal image search experiences."
+    },
+    {
+      "id": "hiroshi-lockheimer",
+      "full_name": "Hiroshi Lockheimer",
+      "job_title": "SVP of Platforms & Ecosystems",
+      "department": "Engineering",
+      "manager_name_or_id": "sundar-pichai",
+      "expertise_keywords": ["Android Ecosystem", "Chrome OS", "Mobile Partnerships", "Play Store"],
+      "bio_summary": "SVP leading Android, Chrome, Chrome OS, and Play ecosystem engineering."
+    },
+    {
+      "id": "sameer-samat",
+      "full_name": "Sameer Samat",
+      "job_title": "VP of Product Management, Android & Play",
+      "department": "Product",
+      "manager_name_or_id": "hiroshi-lockheimer",
+      "expertise_keywords": ["Mobile Product Strategy", "App Store Operations", "Developer Ecosystem"],
+      "bio_summary": "Promoted to VP overseeing Android OS product management and Google Play."
+    },
+    {
+      "id": "jeff-dean",
+      "full_name": "Jeff Dean",
+      "job_title": "SVP of Google Research & Health",
+      "department": "Artificial Intelligence",
+      "manager_name_or_id": "sundar-pichai",
+      "expertise_keywords": ["Deep Learning", "TensorFlow", "TPU Architecture", "AI Research"],
+      "bio_summary": "SVP leading Google AI Research division and machine learning systems."
+    },
+    {
+      "id": "geoffrey-hinton",
+      "full_name": "Geoffrey Hinton",
+      "job_title": "VP & Engineering Fellow",
+      "department": "Artificial Intelligence",
+      "manager_name_or_id": "jeff-dean",
+      "expertise_keywords": ["Backpropagation", "Representation Learning", "Neural Nets Research"],
+      "bio_summary": "VP and Engineering Fellow advancing foundational representation learning research."
+    },
+    {
+      "id": "thomas-kurian",
+      "full_name": "Thomas Kurian",
+      "job_title": "CEO of Google Cloud",
+      "department": "Executive",
+      "manager_name_or_id": "sundar-pichai",
+      "expertise_keywords": ["Enterprise Software", "Cloud Infrastructure", "B2B Sales", "SaaS Go-to-Market"],
+      "bio_summary": "Joined to lead Google Cloud's enterprise sales and multi-cloud infrastructure expansion."
+    }
+  ]
+}

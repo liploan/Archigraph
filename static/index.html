@@ -17,16 +17,24 @@
   <!-- D3.js Library -->
   <script src="https://d3js.org/d3.v7.min.js"></script>
 
-  <!-- Feature-detected polyfills for Popover, Invoker Commands, and Anchor Positioning -->
+  <!-- Feature-detected polyfills for Popover, Invoker Commands, Focusgroup, and Anchor Positioning -->
   <script type="module">
-    if (!("popover" in HTMLElement.prototype)) {
+    if (!Object.hasOwn(HTMLElement.prototype, "popover")) {
       import("https://unpkg.com/@oddbird/popover-polyfill@latest/dist/popover.min.js").catch(() => {});
     }
     if (!("commandForElement" in HTMLButtonElement.prototype)) {
       import("https://esm.run/invokers-polyfill").catch(() => {});
     }
+    if (!Object.hasOwn(HTMLElement.prototype, "focusGroup")) {
+      import("https://esm.run/@microsoft/focusgroup-polyfill")
+        .then(m => m.polyfill?.())
+        .catch(() => {});
+    }
     if (!("anchorName" in document.documentElement.style)) {
       import("https://unpkg.com/@oddbird/css-anchor-positioning").catch(() => {});
+    }
+    if (!("switch" in HTMLInputElement.prototype)) {
+      import("https://esm.run/input-switch-polyfill").catch(() => {});
     }
   </script>
   
@@ -41,7 +49,7 @@
     <div class="logo-area">
       <div class="logo-mark" aria-hidden="true"></div>
       <h1 class="logo-text">Archigraph</h1>
-      <span class="badge">V1.1 TEMPORAL</span>
+      <span class="badge">V2.0 DILIGENCE &amp; TALENT</span>
     </div>
     
     <!-- Quick Demo Pills -->
@@ -50,8 +58,28 @@
       <button type="button" class="demo-pill" data-demo="google">Google</button>
       <button type="button" class="demo-pill" data-demo="meta">Meta</button>
       <button type="button" class="demo-pill" data-demo="spacex">SpaceX</button>
+      <button type="button" class="demo-pill" data-demo="impulse">Impulse Space</button>
       <button type="button" class="demo-pill" data-demo="palantir">Palantir</button>
       <button type="button" class="demo-pill" data-demo="replit">Replit (extracted)</button>
+      <button
+        type="button"
+        id="open-portfolio-btn"
+        class="secondary-btn portfolio-header-btn"
+        command="show-modal"
+        commandfor="portfolio-dialog"
+      >
+        Portfolio Screener
+      </button>
+      <button
+        type="button"
+        id="open-alerts-btn"
+        class="secondary-btn portfolio-header-btn alerts-header-btn"
+        command="show-modal"
+        commandfor="alerts-dialog"
+      >
+        <span>Alerts</span>
+        <span id="alerts-count-pill" class="alerts-count-pill hidden">0</span>
+      </button>
     </div>
     
     <!-- Extraction Controller Form -->
@@ -107,13 +135,32 @@
             Show Departed
           </button>
 
+          <button type="button" id="toggle-radar-btn" class="mode-btn radar-toggle" aria-pressed="false" disabled>
+            Poachability Radar
+          </button>
+
+          <button type="button" id="toggle-jobs-btn" class="mode-btn jobs-toggle" aria-pressed="false" disabled>
+            Open Roles
+          </button>
+
+          <button
+            type="button"
+            id="open-network-btn"
+            class="mode-btn network-trigger-btn"
+            command="show-modal"
+            commandfor="network-dialog"
+          >
+            <span>My Network</span>
+            <span id="network-match-pill" class="network-match-pill hidden">0</span>
+          </button>
+
           <button type="button" id="expand-all-btn" class="mode-btn hidden">
             Expand All
           </button>
 
           <search class="search-overlay-container">
             <label for="node-search" class="visually-hidden">Search expertise, role, or name</label>
-            <input type="search" id="node-search" placeholder="Filter by skill, role, or name (Enter to zoom)..." disabled>
+            <input type="search" id="node-search" autocorrect="off" autocapitalize="none" spellcheck="false" placeholder="Filter by skill, role, or name (Enter to zoom)..." disabled>
             <span id="search-match-count" class="search-match-badge hidden" aria-live="polite"></span>
           </search>
 
@@ -122,7 +169,6 @@
               type="button"
               id="export-menu-btn"
               class="mode-btn export-trigger-btn"
-              popovertarget="export-popover"
               commandfor="export-popover"
               command="toggle-popover"
               disabled
@@ -130,13 +176,17 @@
               Export ▾
             </button>
             <div id="export-popover" popover="auto" class="export-popover-panel" role="group" aria-label="Export options">
+              <button type="button" id="export-brief-btn" class="export-option-btn">
+                <span class="export-opt-title">VC &amp; Search Brief (.md)</span>
+                <span class="export-opt-desc">Diligence memo, KPIs &amp; prime targets</span>
+              </button>
               <button type="button" id="export-json-btn" class="export-option-btn">
                 <span class="export-opt-title">Temporal JSON</span>
-                <span class="export-opt-desc">All snapshots, diffs &amp; provenance</span>
+                <span class="export-opt-desc">All snapshots, diffs &amp; intelligence</span>
               </button>
               <button type="button" id="export-csv-btn" class="export-option-btn">
                 <span class="export-opt-title">Snapshot Roster (CSV)</span>
-                <span class="export-opt-desc">Current snapshot table &amp; diff status</span>
+                <span class="export-opt-desc">Roster, diff status &amp; poachability</span>
               </button>
               <button type="button" id="export-svg-btn" class="export-option-btn">
                 <span class="export-opt-title">Graph Vector (SVG)</span>
@@ -171,6 +221,8 @@
           <span class="legend-item"><span class="legend-dot status-promoted" aria-hidden="true"></span>Promoted</span>
           <span class="legend-item"><span class="legend-dot status-moved" aria-hidden="true"></span>Moved</span>
           <span class="legend-item"><span class="legend-dot status-departed" aria-hidden="true"></span>Departed</span>
+          <span class="legend-item"><span class="legend-dot status-hiring" aria-hidden="true"></span>Open Seat (JD)</span>
+          <span class="legend-item"><span class="legend-dot status-network" aria-hidden="true"></span>Network Bridge</span>
           <span class="legend-item"><span class="legend-line-dashed" aria-hidden="true"></span>Inferred / Skill Link</span>
         </div>
       </div>
@@ -178,6 +230,40 @@
     
     <!-- Right: Contextual Details & Temporal Intelligence Sidebar -->
     <aside class="detail-sidebar" id="detail-panel" aria-label="Contextual node details and temporal analysis">
+
+      <!-- Investor & Executive Search Intelligence Hub -->
+      <div class="sidebar-section hidden" id="intel-hub-section">
+        <div class="sidebar-header">
+          <h2>Investor &amp; Search Signals</h2>
+          <p class="sidebar-subtitle" id="intel-era-subtitle">Automated diligence &amp; talent mobility analysis</p>
+        </div>
+
+        <div class="intel-tabs" id="intel-tabs">
+          <div class="intel-tablist" focusgroup="tablist nomemory" aria-label="Intelligence views">
+            <button type="button" id="tab-vc-btn" aria-selected="true" focusgroupstart>VC / PE</button>
+            <button type="button" id="tab-recruiting-btn" aria-selected="false">Recruiting</button>
+            <button type="button" id="tab-hiring-btn" aria-selected="false">Hiring &amp; JDs</button>
+            <button type="button" id="tab-network-btn" aria-selected="false">Backchannels</button>
+          </div>
+
+          <div id="panel-vc" role="tabpanel" aria-labelledby="tab-vc-btn" tabindex="0">
+            <div class="intel-panel-inner" id="vc-intel-content"></div>
+          </div>
+
+          <div id="panel-recruiting" role="tabpanel" aria-labelledby="tab-recruiting-btn" hidden="until-found">
+            <div class="intel-panel-inner" id="recruiting-intel-content"></div>
+          </div>
+
+          <div id="panel-hiring" role="tabpanel" aria-labelledby="tab-hiring-btn" hidden="until-found">
+            <div class="intel-panel-inner" id="hiring-intel-content"></div>
+          </div>
+
+          <div id="panel-network" role="tabpanel" aria-labelledby="tab-network-btn" hidden="until-found">
+            <div class="intel-panel-inner" id="network-intel-content"></div>
+          </div>
+        </div>
+      </div>
+
       <div class="sidebar-header">
         <h2>Node Profile</h2>
       </div>
@@ -214,9 +300,32 @@
             <span class="detail-label">Line Confidence</span>
             <span class="confidence-pill" id="prof-confidence">Inferred</span>
           </div>
+
+          <div class="cross-org-block hidden" id="prof-cross-org-block">
+            <h4 class="section-title">Cross-Company Trajectory</h4>
+            <div class="cross-org-list" id="prof-cross-org-list"></div>
+          </div>
+
+          <div class="recruiting-signal-block hidden" id="prof-recruiting-block">
+            <div class="recruiting-signal-header">
+              <span class="section-title">Recruiting &amp; Retention Signal</span>
+              <span class="poach-pill" id="prof-poach-pill">Anchored</span>
+            </div>
+            <ul class="signal-trigger-list" id="prof-poach-triggers" role="list"></ul>
+          </div>
+
+          <div class="network-signal-block hidden" id="prof-network-block">
+            <h4 class="section-title">Your Network &amp; Backchannels</h4>
+            <ul class="network-node-list" id="prof-network-list" role="list"></ul>
+          </div>
           
           <div class="evidence-block">
-            <h4 class="section-title">Extraction Evidence</h4>
+            <div class="evidence-header-row">
+              <h4 class="section-title">Extraction Evidence</h4>
+              <a id="prof-source-link" class="source-verify-link hidden" href="#" target="_blank" rel="noopener noreferrer">
+                Verify Snapshot Source ↗
+              </a>
+            </div>
             <p id="prof-evidence" class="evidence-text">Inferred from organizational hierarchy and title tier.</p>
           </div>
 
@@ -237,8 +346,20 @@
 
           <div class="profile-actions">
             <button type="button" id="trace-from-root-btn" class="secondary-btn">
-              Find Warm Path from Top Executive
+              Warm Path from Top Exec
             </button>
+            <button type="button" id="simulate-departure-btn" class="ghost-btn blast-sim-btn" aria-pressed="false">
+              Simulate Departure
+            </button>
+          </div>
+
+          <div class="simulation-block hidden" id="prof-simulation-block">
+            <div class="recruiting-signal-header">
+              <span class="section-title">Departure Blast Radius (What-If)</span>
+              <span class="poach-pill high" id="prof-sim-pill">Critical</span>
+            </div>
+            <p id="prof-sim-summary" class="sim-summary-text"></p>
+            <ul class="signal-trigger-list" id="prof-sim-details" role="list"></ul>
           </div>
         </div>
       </div>
@@ -304,6 +425,209 @@
       </div>
     </div>
   </footer>
+
+  <!-- Modal Dialog: Bring Your Own Network (Warm Intros & Candid Backchannel References) -->
+  <dialog id="network-dialog" closedby="any" aria-labelledby="network-dialog-title">
+    <div class="dialog-inner">
+      <div class="dialog-header">
+        <div>
+          <h2 id="network-dialog-title">Bring Your Network — Intros &amp; Backchannels</h2>
+          <p class="dialog-subtitle">Match your contacts against both active leaders and departed historical cohorts for warm introductions and off-list VC reference checks.</p>
+        </div>
+        <button type="button" class="ghost-btn dialog-close-btn" command="close" commandfor="network-dialog">
+          Close
+        </button>
+      </div>
+
+      <div class="dialog-quickstart-bar">
+        <button type="button" id="load-sample-network-btn" class="secondary-btn" autofocus>
+          Load Demo VC &amp; Search Network (9 Contacts)
+        </button>
+        <button type="button" id="clear-network-btn" class="ghost-btn hidden">
+          Clear Loaded Network
+        </button>
+      </div>
+
+      <form id="network-form" aria-labelledby="network-dialog-title">
+        <div class="dialog-field">
+          <label for="network-csv-file">Upload LinkedIn Connections or CRM CSV</label>
+          <span id="csv-file-hint" class="field-hint">Accepts LinkedIn Connections.csv (First Name, Last Name, Company, Position) or Name, Company, Role columns.</span>
+          <input
+            type="file"
+            id="network-csv-file"
+            name="network_csv"
+            accept=".csv,text/csv"
+            aria-describedby="csv-file-hint"
+          >
+        </div>
+
+        <div class="dialog-field">
+          <label for="network-paste-input">Or paste contacts (Name, Company, Role — one per line)</label>
+          <span id="paste-hint" class="field-hint">Example: John Agan, Replit (Alumni), Former VP of Product &amp; Data</span>
+          <textarea
+            id="network-paste-input"
+            name="network_paste"
+            rows="5"
+            autocorrect="off"
+            autocapitalize="none"
+            spellcheck="false"
+            aria-describedby="paste-hint"
+            placeholder="John Agan, Replit (Alumni), Former VP of Product&#10;Tom Mueller, SpaceX (Alumni), Former VP of Propulsion"
+          ></textarea>
+        </div>
+
+        <p id="network-form-status" class="network-status-msg" role="status" aria-live="polite"></p>
+
+        <div class="dialog-actions">
+          <button type="button" class="ghost-btn" command="close" commandfor="network-dialog">Cancel</button>
+          <button type="submit" class="gradient-btn">
+            <span class="btn-text">Match Against Org Timeline</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- Modal Dialog: Cross-Company Portfolio Screener & Alumni Spinout Tracker -->
+  <dialog id="portfolio-dialog" class="wide-dialog" closedby="any" aria-labelledby="portfolio-dialog-title">
+    <div class="dialog-inner">
+      <div class="dialog-header">
+        <div>
+          <h2 id="portfolio-dialog-title">Portfolio Screener &amp; Cross-Org Talent Flows</h2>
+          <p class="dialog-subtitle">Benchmark tracked companies across retention, VP+ churn, poachability targets, and open job-board requisitions, and trace cross-company founder spinouts.</p>
+        </div>
+        <button type="button" class="ghost-btn dialog-close-btn" command="close" commandfor="portfolio-dialog" autofocus>
+          Close
+        </button>
+      </div>
+
+      <div class="portfolio-kpi-strip" id="portfolio-kpi-strip"></div>
+
+      <p id="portfolio-sort-status" role="status" class="visually-hidden"></p>
+
+      <div tabindex="0" role="region" aria-labelledby="portfolio-table-caption" class="table-wrapper" id="portfolio-table-wrapper">
+        <table id="portfolio-table" class="screener-table">
+          <caption id="portfolio-table-caption" class="visually-hidden">Tracked organizations benchmarked on leadership retention, senior churn, poachability targets, and open job-board roles</caption>
+          <thead>
+            <tr>
+              <th scope="col" data-type="text">
+                <button type="button" commandfor="portfolio-table" command="--sort">
+                  Organization <span class="sort-icon" aria-hidden="true"></span>
+                </button>
+              </th>
+              <th scope="col" data-type="number">
+                <button type="button" commandfor="portfolio-table" command="--sort">
+                  Leaders <span class="sort-icon" aria-hidden="true"></span>
+                </button>
+              </th>
+              <th scope="col" data-type="number">
+                <button type="button" commandfor="portfolio-table" command="--sort">
+                  Retention <span class="sort-icon" aria-hidden="true"></span>
+                </button>
+              </th>
+              <th scope="col" data-type="number">
+                <button type="button" commandfor="portfolio-table" command="--sort">
+                  VP+ Churn <span class="sort-icon" aria-hidden="true"></span>
+                </button>
+              </th>
+              <th scope="col" data-type="number" aria-sort="descending">
+                <button type="button" commandfor="portfolio-table" command="--sort">
+                  Prime Targets <span class="sort-icon" aria-hidden="true"></span>
+                </button>
+              </th>
+              <th scope="col" data-type="number">
+                <button type="button" commandfor="portfolio-table" command="--sort">
+                  Open Roles <span class="sort-icon" aria-hidden="true"></span>
+                </button>
+              </th>
+              <th scope="col" data-type="text">
+                <button type="button" commandfor="portfolio-table" command="--sort">
+                  Bench Posture <span class="sort-icon" aria-hidden="true"></span>
+                </button>
+              </th>
+              <th scope="col">Inspect</th>
+            </tr>
+          </thead>
+          <tbody id="portfolio-tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="portfolio-flows-section">
+        <h3 class="section-title">Cross-Company Spinouts &amp; Executive Migrations</h3>
+        <ul class="intel-list" id="portfolio-flows-list" role="list"></ul>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Modal Dialog: Watchlist Alert Rules & Slack / CRM Webhook Inspector -->
+  <dialog id="alerts-dialog" class="wide-dialog" closedby="any" aria-labelledby="alerts-dialog-title">
+    <div class="dialog-inner">
+      <div class="dialog-header">
+        <div>
+          <h2 id="alerts-dialog-title">Watchlist Alert Engine &amp; Webhook Payloads</h2>
+          <p class="dialog-subtitle">Configure structural push triggers across your portfolio and inspect ready-to-fire Slack Block Kit and CRM/ATS event payloads.</p>
+        </div>
+        <button type="button" class="ghost-btn dialog-close-btn" command="close" commandfor="alerts-dialog" autofocus>
+          Close
+        </button>
+      </div>
+
+      <fieldset class="alert-rules-fieldset">
+        <legend class="section-title">Active Watchlist Trigger Rules</legend>
+        <div class="alert-switches-row" id="alert-switches-row">
+          <div class="switch-item">
+            <input type="checkbox" id="rule-spinout_watch" data-rule="spinout_watch" switch checked>
+            <label for="rule-spinout_watch">Spinouts &amp; Migrations</label>
+          </div>
+          <div class="switch-item">
+            <input type="checkbox" id="rule-c_suite_exit" data-rule="c_suite_exit" switch checked>
+            <label for="rule-c_suite_exit">VP+ &amp; C-Suite Exits</label>
+          </div>
+          <div class="switch-item">
+            <input type="checkbox" id="rule-prime_poachable" data-rule="prime_poachable" switch checked>
+            <label for="rule-prime_poachable">Prime Poachable ≥ 55</label>
+          </div>
+          <div class="switch-item">
+            <input type="checkbox" id="rule-open_vp_gap" data-rule="open_vp_gap" switch checked>
+            <label for="rule-open_vp_gap">Unfilled VP+ Seats</label>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="alerts-split-grid">
+        <div class="alerts-feed-col">
+          <h3 class="section-title" id="alerts-feed-heading">Triggered Portfolio Signals</h3>
+          <ul class="intel-list alerts-scroll-list" id="alerts-feed-list" role="list"></ul>
+        </div>
+
+        <div class="alerts-webhook-col">
+          <div class="webhook-toolbar">
+            <span class="section-title" id="webhook-preview-title">Webhook JSON Payload</span>
+            <div class="view-mode-group" role="group" aria-label="Webhook payload schema">
+              <button type="button" id="webhook-fmt-slack" class="mode-btn" aria-pressed="true">Slack Block Kit</button>
+              <button type="button" id="webhook-fmt-crm" class="mode-btn" aria-pressed="false">CRM / ATS Event</button>
+            </div>
+          </div>
+
+          <figure class="webhook-figure copyable">
+            <span class="copy">
+              <button
+                type="button"
+                class="copy-button"
+                command="--copy"
+                commandfor="webhook-payload-code"
+                aria-label="Copy webhook JSON payload"
+              >
+                <span class="copy-icon" aria-hidden="true"></span>
+              </button>
+              <span class="tip" role="status"></span>
+            </span>
+            <pre role="region" aria-labelledby="webhook-preview-title" tabindex="0"><code id="webhook-payload-code">Select any alert to inspect its webhook payload.</code></pre>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </dialog>
 
 </body>
 </html>

@@ -1,0 +1,61 @@
+{
+  "snapshot_timestamp": "20240601000000",
+  "organization_name": "impulsespace.com",
+  "entities": [
+    {
+      "id": "tom-mueller",
+      "full_name": "Tom Mueller",
+      "job_title": "Founder & CEO",
+      "department": "Executive",
+      "manager_name_or_id": null,
+      "reporting_confidence": "none",
+      "reporting_evidence": "Founder and Chief Executive Officer of Impulse Space.",
+      "expertise_keywords": ["Rocket Propulsion", "Helios Kick Stage", "GEO Logistics", "DeepTech Scaling"],
+      "bio_summary": "Founder & CEO spearheading Mira and high-energy Helios orbital transfer stages."
+    },
+    {
+      "id": "eric-romo",
+      "full_name": "Eric Romo",
+      "job_title": "President & COO",
+      "department": "Executive",
+      "manager_name_or_id": "tom-mueller",
+      "reporting_confidence": "explicit",
+      "reporting_evidence": "Appointed President & COO reporting directly to Founder & CEO Tom Mueller.",
+      "expertise_keywords": ["DeepTech Operations", "Hardware Scaling", "Defense Strategy", "Series B Growth"],
+      "bio_summary": "President & COO overseeing commercial manifest, defense programs, and production scaling."
+    },
+    {
+      "id": "kevin-miller",
+      "full_name": "Kevin Miller",
+      "job_title": "VP of Propulsion",
+      "department": "Engineering",
+      "manager_name_or_id": "tom-mueller",
+      "reporting_confidence": "inferred",
+      "reporting_evidence": "Elevated to VP of Propulsion overseeing Deneb and Saiph engine programs.",
+      "expertise_keywords": ["Cryogenic Propulsion", "Deneb Engine", "LOX/Methane", "Thrusters"],
+      "bio_summary": "VP of Propulsion leading development of the 15,000-lbf Deneb engine for the Helios kick stage."
+    },
+    {
+      "id": "curtis-iwata",
+      "full_name": "Curtis Iwata",
+      "job_title": "Director of Avionics & GNC",
+      "department": "Engineering",
+      "manager_name_or_id": "eric-romo",
+      "reporting_confidence": "inferred",
+      "reporting_evidence": "Vehicle flight systems organized under President & COO operations.",
+      "expertise_keywords": ["Avionics Control", "Autonomous Rendezvous", "Spacecraft Bus", "Radiation Tolerance"],
+      "bio_summary": "Director leading avionics and orbital rendezvous operations across active LEO missions."
+    },
+    {
+      "id": "cia-lee",
+      "full_name": "Cia Lee",
+      "job_title": "VP of Mission Management",
+      "department": "Product",
+      "manager_name_or_id": "eric-romo",
+      "reporting_confidence": "inferred",
+      "reporting_evidence": "Mission integration and customer payload manifest under COO.",
+      "expertise_keywords": ["Payload Integration", "Space Force Contracts", "GEO Rideshare"],
+      "bio_summary": "VP leading customer payload integration and Space Force tactically responsive space missions."
+    }
+  ]
+}

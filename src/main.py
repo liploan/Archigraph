@@ -13,6 +13,7 @@ from src.ingestor import (
 )
 from src.extractor import extract_org_structure
 from src.diff_engine import enrich_snapshots_with_diffs
+from src.intelligence import enrich_snapshots_with_intelligence
 from src.db_seeder import TemporalGraphSeeder
 
 
@@ -117,6 +118,7 @@ def main():
     if extracted_results:
         extracted_results.sort(key=lambda s: s.get("snapshot_timestamp", ""))
         enriched_results = enrich_snapshots_with_diffs(extracted_results)
+        enriched_results = enrich_snapshots_with_intelligence(enriched_results)
         print("\n----------------------------------------------------")
         print("Temporal Diff & Entity Resolution Summary:")
         for idx, snap in enumerate(enriched_results):

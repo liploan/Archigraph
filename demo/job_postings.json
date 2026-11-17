@@ -1,0 +1,185 @@
+{
+  "replit": [
+    {
+      "id": "ash-replit-vp-product",
+      "title": "VP of Product, AI Agents & Enterprise",
+      "department": "Product",
+      "location": "Foster City, CA (Hybrid)",
+      "ats_source": "Ashby",
+      "url": "https://jobs.ashbyhq.com/replit",
+      "description": "This role reports directly to Founder & CEO Amjad Masad to backfill and scale core product strategy. You will own autonomous AI Agents, usage-based billing monetization, and Enterprise RBAC & SSO adoption."
+    },
+    {
+      "id": "ash-replit-dir-runtime",
+      "title": "Director of Cloud Runtime & Sandboxes",
+      "department": "Engineering",
+      "location": "Foster City, CA",
+      "ats_source": "Ashby",
+      "url": "https://jobs.ashbyhq.com/replit",
+      "description": "Reporting directly to our CTO Luis Héctor Chávez, you will lead multi-tenant Firecracker microVMs, instant container sandboxes, and global edge compute routing."
+    },
+    {
+      "id": "ash-replit-head-ent-gtm",
+      "title": "Head of Enterprise GTM Partnerships",
+      "department": "Executive",
+      "location": "San Francisco / New York",
+      "ats_source": "Ashby",
+      "url": "https://jobs.ashbyhq.com/replit",
+      "description": "Reporting into the President, you will build our Fortune 500 enterprise GTM motion, SOC 2 governance workflows, and strategic cloud alliances."
+    },
+    {
+      "id": "ash-replit-staff-agent-eval",
+      "title": "Staff Research Engineer, Autonomous Agents",
+      "department": "Artificial Intelligence",
+      "location": "Foster City, CA",
+      "ats_source": "Ashby",
+      "url": "https://jobs.ashbyhq.com/replit",
+      "description": "Reporting to VP of Engineering Scott Kennedy, you will train and evaluate multi-step agentic coding loops, CUDA inference clusters, and sandboxed verification."
+    }
+  ],
+  "google": [
+    {
+      "id": "gh-goog-vp-agentic-cloud",
+      "title": "VP of Agentic Enterprise Platform",
+      "department": "Executive",
+      "location": "Sunnyvale, CA",
+      "ats_source": "Greenhouse",
+      "url": "https://careers.google.com",
+      "description": "Reporting directly to CEO of Google Cloud Thomas Kurian, you will unify enterprise AI Agents, SOC 2 governance, and usage-based billing across Vertex AI."
+    },
+    {
+      "id": "gh-goog-dir-multimodal",
+      "title": "Director of Multimodal Post-Training",
+      "department": "Artificial Intelligence",
+      "location": "London / Mountain View",
+      "ats_source": "Greenhouse",
+      "url": "https://careers.google.com",
+      "description": "This position reports directly to CEO of Google DeepMind Demis Hassabis. Lead multimodal vision-language reasoning and custom TPU/GPU clusters."
+    },
+    {
+      "id": "gh-goog-dir-search-rag",
+      "title": "Director of Generative Search Infrastructure",
+      "department": "Engineering",
+      "location": "Mountain View, CA",
+      "ats_source": "Greenhouse",
+      "url": "https://careers.google.com",
+      "description": "Reporting to VP of Search Quality Pandu Nayak, you will scale sub-100ms RAG knowledge graph retrieval for global AI Overviews."
+    }
+  ],
+  "meta": [
+    {
+      "id": "lv-meta-vp-biz-ai",
+      "title": "VP of Business Messaging & AI Monetization",
+      "department": "Business",
+      "location": "Menlo Park, CA",
+      "ats_source": "Lever",
+      "url": "https://metacareers.com",
+      "description": "Reporting directly to Chief Product Officer Chris Cox, you will lead commercial AI Agents and enterprise GTM monetization across WhatsApp and Instagram."
+    },
+    {
+      "id": "lv-meta-dir-mtia-asic",
+      "title": "Senior Director, Next-Gen MTIA Silicon",
+      "department": "Engineering",
+      "location": "Sunnyvale, CA",
+      "ats_source": "Lever",
+      "url": "https://metacareers.com",
+      "description": "This role reports to CTO Andrew Bosworth. Drive custom ASIC chip tapeout and Triton kernels for Llama training clusters."
+    },
+    {
+      "id": "lv-meta-head-open-agents",
+      "title": "Head of Multimodal Llama Agents",
+      "department": "Artificial Intelligence",
+      "location": "Menlo Park / Paris",
+      "ats_source": "Lever",
+      "url": "https://metacareers.com",
+      "description": "Reporting directly to Chief AI Scientist Yann LeCun, you will advance multimodal audio generation and autonomous agent reasoning."
+    }
+  ],
+  "spacex": [
+    {
+      "id": "gh-spx-vp-mission-assurance",
+      "title": "VP of Flight Reliability & Mission Assurance",
+      "department": "Executive",
+      "location": "Hawthorne / Starbase, TX",
+      "ats_source": "Greenhouse",
+      "url": "https://boards.greenhouse.io/spacex",
+      "description": "Reporting directly to President & COO Gwynne Shotwell, you will oversee Starship human-rating certification, avionics fault tolerance, and NASA mission assurance."
+    },
+    {
+      "id": "gh-spx-dir-orbital-refuel",
+      "title": "Director of Starship Orbital Cryo-Transfer",
+      "department": "Engineering",
+      "location": "Starbase, TX",
+      "ats_source": "Greenhouse",
+      "url": "https://boards.greenhouse.io/spacex",
+      "description": "This role reports directly to VP of Starship Engineering Mark Juncosa. Lead cryogenic propulsion fluid transfer and autonomous orbital rendezvous."
+    },
+    {
+      "id": "gh-spx-head-d2c-enterprise",
+      "title": "Head of Direct-to-Cell Sovereign Carriers",
+      "department": "Product",
+      "location": "Redmond, WA",
+      "ats_source": "Greenhouse",
+      "url": "https://boards.greenhouse.io/spacex",
+      "description": "Reporting to VP of Starlink Commercial Operations Jonathan Hofeller, you will expand direct-to-cell global carrier monetization and sovereign FedRAMP mobility."
+    }
+  ],
+  "palantir": [
+    {
+      "id": "lv-pltr-vp-sovereign-aip",
+      "title": "VP of Sovereign Defense & FedRAMP AIP",
+      "department": "Executive",
+      "location": "Washington, D.C.",
+      "ats_source": "Lever",
+      "url": "https://jobs.lever.co/palantir",
+      "description": "Reporting directly to COO Shyam Sankar, you will scale IL6 air-gapped sovereign cloud deployments and autonomous AI Agents across allied defense programs."
+    },
+    {
+      "id": "lv-pltr-dir-ontology-kernels",
+      "title": "Director of Ontology Compute & RAG Engines",
+      "department": "Engineering",
+      "location": "Palo Alto / New York",
+      "ats_source": "Lever",
+      "url": "https://jobs.lever.co/palantir",
+      "description": "Reporting directly to CTO Akash Jain, you will architect high-throughput ontology knowledge graph pipelines, enterprise RBAC, and multi-tenant sandboxes."
+    },
+    {
+      "id": "lv-pltr-lead-aip-bootcamp",
+      "title": "Head of Commercial AIP Bootcamps",
+      "department": "Product",
+      "location": "New York, NY",
+      "ats_source": "Lever",
+      "url": "https://jobs.lever.co/palantir",
+      "description": "This position reports to Head of AI Research & AIP Product Ryan Taylor to accelerate enterprise GTM conversion and agentic workflow templates."
+    }
+  ],
+  "impulse": [
+    {
+      "id": "gh-imp-vp-gnc-avionics",
+      "title": "VP of Spacecraft Avionics & Autonomous GNC",
+      "department": "Engineering",
+      "location": "Redondo Beach, CA",
+      "ats_source": "Greenhouse",
+      "url": "https://boards.greenhouse.io/impulsespace",
+      "description": "Reporting directly to Founder & CEO Tom Mueller, you will lead radiation-tolerant avionics and autonomous orbital transfer rendezvous."
+    },
+    {
+      "id": "gh-imp-dir-defense-missions",
+      "title": "Director of National Security Space Programs",
+      "department": "Executive",
+      "location": "El Segundo / Washington, D.C.",
+      "ats_source": "Greenhouse",
+      "url": "https://boards.greenhouse.io/impulsespace",
+      "description": "This role reports directly to President & COO Eric Romo to scale sovereign responsive-space contracts and GEO orbital logistics."
+    },
+    {
+      "id": "gh-imp-prin-turbomachinery",
+      "title": "Principal Propulsion Turbomachinery Lead",
+      "department": "Engineering",
+      "location": "Redondo Beach, CA",
+      "ats_source": "Greenhouse",
+      "url": "https://boards.greenhouse.io/impulsespace",
+      "description": "Reporting to VP of Propulsion Kevin Miller, you will test high-pressure LOX/Methane thrusters and orbital propulsion hardware for Helios."
+    }
+  ]
+}

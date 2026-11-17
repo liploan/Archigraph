@@ -29,9 +29,10 @@ class TestDemos(AppTestCase):
         body = self.client.get("/api/demo/google").get_json()
         self.assertEqual(body["sample_data"], "illustrative")
         self.assertIn("Illustrative", body["note"])
-        self.assertEqual(body["snapshots_processed"], 2)
+        self.assertEqual(body["snapshots_processed"], 4)
         stamps = [s["snapshot_timestamp"] for s in body["data"]]
         self.assertEqual(stamps, sorted(stamps))
+        self.assertTrue(all(s.get("source_url", "").startswith("https://") for s in body["data"]))
 
     def test_extracted_demo_is_labelled_differently(self):
         body = self.client.get("/api/demo/replit").get_json()
@@ -39,6 +40,9 @@ class TestDemos(AppTestCase):
         self.assertEqual(body["snapshots_processed"], 2)
         second_snap = body["data"][1]
         self.assertIn("diff_summary", second_snap)
+        self.assertIn("intelligence", second_snap)
+        self.assertIn("vc_metrics", second_snap["intelligence"])
+        self.assertIn("recruiting_radar", second_snap["intelligence"])
         self.assertGreaterEqual(second_snap["diff_summary"]["counts"]["promoted"], 1)
         self.assertGreaterEqual(second_snap["diff_summary"]["counts"]["departed"], 1)
 
@@ -228,6 +232,60 @@ class TestDiffEngineAndWarmPath(AppTestCase):
         path = resp.get_json()["path"]
         self.assertEqual(path["node_ids"], ["ceo", "vp-eng", "new-hire"])
         self.assertEqual([step["id"] for step in path["steps"]], ["ceo", "vp-eng", "new-hire"])
+
+    def test_intelligence_and_network_match_endpoints(self):
+        sample_resp = self.client.get("/api/sample-network")
+        self.assertEqual(sample_resp.status_code, 200)
+        sample_contacts = sample_resp.get_json()["contacts"]
+        self.assertGreater(len(sample_contacts), 3)
+
+        demo_snaps = self.client.get("/api/demo/replit").get_json()["data"]
+        intel_resp = self.client.post("/api/intelligence", json={"snapshots": demo_snaps})
+        self.assertEqual(intel_resp.status_code, 200)
+        self.assertIn("intelligence", intel_resp.get_json()["data"][-1])
+
+        match_resp = self.client.post("/api/network-match", json={
+            "contacts": sample_contacts,
+            "snapshots": demo_snaps,
+            "domain": "replit.com",
+        })
+        self.assertEqual(match_resp.status_code, 200)
+        report = match_resp.get_json()["match_report"]
+        self.assertGreaterEqual(report["total_matches"], 1)
+        self.assertGreaterEqual(len(report["backchannels"]), 1)
+
+        portfolio_resp = self.client.get("/api/portfolio")
+        self.assertEqual(portfolio_resp.status_code, 200)
+        p_body = portfolio_resp.get_json()
+        self.assertGreaterEqual(p_body["portfolio_kpis"]["organizations_tracked"], 6)
+        self.assertGreaterEqual(len(p_body["cross_company_flows"]), 1)
+
+        jobs_resp = self.client.post("/api/jobs/parse", json={
+            "entities": demo_snaps[-1]["entities"],
+            "domain": "replit.com",
+            "postings": [{
+                "id": "custom-1",
+                "title": "VP of Infrastructure",
+                "department": "Engineering",
+                "description": "Reporting directly to our CTO, you will scale CUDA clusters.",
+            }],
+        })
+        self.assertEqual(jobs_resp.status_code, 200)
+        hs = jobs_resp.get_json()["hiring_signals"]
+        self.assertEqual(hs["total_open_roles"], 1)
+        self.assertEqual(hs["postings"][0]["hiring_manager_id"], "luis-hector-chavez")
+
+        alerts_resp = self.client.get("/api/alerts?rules=spinout_watch,prime_poachable")
+        self.assertEqual(alerts_resp.status_code, 200)
+        alerts_body = alerts_resp.get_json()
+        self.assertGreaterEqual(alerts_body["total_alerts"], 2)
+
+        sim_resp = self.client.post("/api/simulate-departure", json={
+            "entities": demo_snaps[-1]["entities"],
+            "target_id": "luis-hector-chavez",
+        })
+        self.assertEqual(sim_resp.status_code, 200)
+        self.assertGreaterEqual(sim_resp.get_json()["simulation"]["direct_reports_orphaned"], 1)
 
 
 class TestIngestorSamplingAndConfig(unittest.TestCase):

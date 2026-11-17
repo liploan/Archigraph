@@ -2,6 +2,7 @@ import datetime
 from typing import List
 from src.config import NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD
 from src.diff_engine import enrich_snapshots_with_diffs
+from src.intelligence import enrich_snapshots_with_intelligence
 
 try:
     from neo4j import GraphDatabase
@@ -41,6 +42,7 @@ class TemporalGraphSeeder:
             return []
         ordered = sorted(snapshots, key=lambda s: s.get("snapshot_timestamp", ""))
         enriched = enrich_snapshots_with_diffs(ordered)
+        enriched = enrich_snapshots_with_intelligence(enriched)
         for snap in enriched:
             self.sync_snapshot(snap)
         return enriched
@@ -76,6 +78,9 @@ class TemporalGraphSeeder:
                 confidence = entity.get("reporting_confidence") or ("inferred" if manager_id else "none")
                 evidence = entity.get("reporting_evidence") or ""
                 diff_status = (entity.get("diff") or {}).get("status", "baseline")
+                recruiting_info = entity.get("recruiting") or {}
+                poachability_score = recruiting_info.get("score")
+                poachability_tier = recruiting_info.get("tier")
                 
                 # Merge person node
                 session.run(
@@ -121,6 +126,8 @@ class TemporalGraphSeeder:
                                 role_title: $job_title,
                                 department: $department,
                                 diff_status: $diff_status,
+                                poachability_score: $poachability_score,
+                                poachability_tier: $poachability_tier,
                                 valid_from: datetime($timestamp),
                                 valid_to: null
                             }]->(o)
@@ -130,6 +137,8 @@ class TemporalGraphSeeder:
                             job_title=job_title,
                             department=department,
                             diff_status=diff_status,
+                            poachability_score=poachability_score,
+                            poachability_tier=poachability_tier,
                             timestamp=timestamp
                         )
                 else:
@@ -141,6 +150,8 @@ class TemporalGraphSeeder:
                             role_title: $job_title,
                             department: $department,
                             diff_status: $diff_status,
+                            poachability_score: $poachability_score,
+                            poachability_tier: $poachability_tier,
                             valid_from: datetime($timestamp),
                             valid_to: null
                         }]->(o)
@@ -150,6 +161,8 @@ class TemporalGraphSeeder:
                         job_title=job_title,
                         department=department,
                         diff_status=diff_status,
+                        poachability_score=poachability_score,
+                        poachability_tier=poachability_tier,
                         timestamp=timestamp
                     )
                 

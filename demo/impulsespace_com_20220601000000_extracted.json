@@ -1,0 +1,50 @@
+{
+  "snapshot_timestamp": "20220601000000",
+  "organization_name": "impulsespace.com",
+  "entities": [
+    {
+      "id": "tom-mueller",
+      "full_name": "Tom Mueller",
+      "job_title": "Founder & CEO",
+      "department": "Executive",
+      "manager_name_or_id": null,
+      "reporting_confidence": "none",
+      "reporting_evidence": "Listed at top of Impulse Space team page as Founder & CEO.",
+      "expertise_keywords": ["Rocket Propulsion", "Orbital Transfer Vehicles", "Spacecraft Architecture"],
+      "bio_summary": "Founding propulsion CTO/VP alum of SpaceX, leading Impulse Space's in-space orbital logistics fleet."
+    },
+    {
+      "id": "barry-matsumori",
+      "full_name": "Barry Matsumori",
+      "job_title": "President & COO",
+      "department": "Executive",
+      "manager_name_or_id": "tom-mueller",
+      "reporting_confidence": "inferred",
+      "reporting_evidence": "Listed directly alongside Founder & CEO Tom Mueller.",
+      "expertise_keywords": ["Aerospace Operations", "Commercial Launch", "Defense Contracts"],
+      "bio_summary": "President and COO scaling manufacturing and commercial satellite delivery programs."
+    },
+    {
+      "id": "curtis-iwata",
+      "full_name": "Curtis Iwata",
+      "job_title": "Director of Avionics & GNC",
+      "department": "Engineering",
+      "manager_name_or_id": "tom-mueller",
+      "reporting_confidence": "inferred",
+      "reporting_evidence": "Listed under Engineering leadership reporting to technical founder.",
+      "expertise_keywords": ["Avionics Control", "Autonomous Rendezvous", "Flight Software"],
+      "bio_summary": "Director leading guidance, navigation, and autonomous docking systems for Mira orbital vehicles."
+    },
+    {
+      "id": "kevin-miller",
+      "full_name": "Kevin Miller",
+      "job_title": "Director of Propulsion Engineering",
+      "department": "Engineering",
+      "manager_name_or_id": "tom-mueller",
+      "reporting_confidence": "explicit",
+      "reporting_evidence": "Leads chemical thruster test stands directly under Tom Mueller.",
+      "expertise_keywords": ["Bipropellant Thrusters", "Saiph Engine", "Fluid Dynamics"],
+      "bio_summary": "Director developing high-impulse non-toxic chemical thrusters for rapid orbital maneuvers."
+    }
+  ]
+}

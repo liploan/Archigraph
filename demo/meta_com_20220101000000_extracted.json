@@ -1,0 +1,97 @@
+{
+  "snapshot_timestamp": "20220101000000",
+  "organization_name": "meta.com",
+  "source_url": "https://web.archive.org/web/20220101000000/https://about.meta.com/media-gallery/executives/",
+  "entities": [
+    {
+      "id": "mark-zuckerberg",
+      "full_name": "Mark Zuckerberg",
+      "job_title": "Founder & CEO",
+      "department": "Executive",
+      "manager_name_or_id": null,
+      "expertise_keywords": ["Metaverse Strategy", "Social Platforms", "AI Discovery Engine"],
+      "bio_summary": "CEO leading Meta's rebrand, AI discovery feed transition, and Reality Labs."
+    },
+    {
+      "id": "sheryl-sandberg",
+      "full_name": "Sheryl Sandberg",
+      "job_title": "COO",
+      "department": "Executive",
+      "manager_name_or_id": "mark-zuckerberg",
+      "expertise_keywords": ["Global Advertising", "Operations", "Monetization"],
+      "bio_summary": "COO managing global business groups prior to announced board transition."
+    },
+    {
+      "id": "marne-levine",
+      "full_name": "Marne Levine",
+      "job_title": "Chief Business Officer",
+      "department": "Business",
+      "manager_name_or_id": "sheryl-sandberg",
+      "expertise_keywords": ["Global Ads", "SMB Monetization", "Strategic Partnerships"],
+      "bio_summary": "Promoted to Chief Business Officer overseeing global advertising and partnerships."
+    },
+    {
+      "id": "andrew-bosworth",
+      "full_name": "Andrew Bosworth",
+      "job_title": "CTO",
+      "department": "Executive",
+      "manager_name_or_id": "mark-zuckerberg",
+      "expertise_keywords": ["Reality Labs", "Spatial Computing", "Technical Roadmap"],
+      "bio_summary": "Promoted to Chief Technology Officer succeeding Mike Schroepfer."
+    },
+    {
+      "id": "vishal-shah",
+      "full_name": "Vishal Shah",
+      "job_title": "VP of Metaverse",
+      "department": "Product",
+      "manager_name_or_id": "andrew-bosworth",
+      "expertise_keywords": ["Horizon Worlds", "Avatars", "Creator Economics"],
+      "bio_summary": "VP leading Horizon Worlds and social VR avatar ecosystems under CTO Andrew Bosworth."
+    },
+    {
+      "id": "chris-cox",
+      "full_name": "Chris Cox",
+      "job_title": "Chief Product Officer",
+      "department": "Product",
+      "manager_name_or_id": "mark-zuckerberg",
+      "expertise_keywords": ["Family of Apps", "Reels Ranking", "Recommendation AI"],
+      "bio_summary": "CPO accelerating AI-recommended Reels video feeds across Instagram and Facebook."
+    },
+    {
+      "id": "adam-mosseri",
+      "full_name": "Adam Mosseri",
+      "job_title": "VP of Instagram",
+      "department": "Product",
+      "manager_name_or_id": "chris-cox",
+      "expertise_keywords": ["Reels Video Feed", "Creator Economy", "Algorithm Curation"],
+      "bio_summary": "VP scaling Instagram Reels short-form video and creator monetization."
+    },
+    {
+      "id": "loredana-crisan",
+      "full_name": "Loredana Crisan",
+      "job_title": "VP of Messaging Experiences",
+      "department": "Product",
+      "manager_name_or_id": "chris-cox",
+      "expertise_keywords": ["Messenger", "Design Systems", "Cross-App Messaging"],
+      "bio_summary": "Appointed VP leading Messenger following Stan Chudnovsky's departure."
+    },
+    {
+      "id": "yann-lecun",
+      "full_name": "Yann LeCun",
+      "job_title": "Chief AI Scientist",
+      "department": "Artificial Intelligence",
+      "manager_name_or_id": "mark-zuckerberg",
+      "expertise_keywords": ["Open Foundation Models", "OPT-175B", "Academic Research"],
+      "bio_summary": "Chief AI Scientist overseeing FAIR open foundation model research."
+    },
+    {
+      "id": "joelle-pineau",
+      "full_name": "Joelle Pineau",
+      "job_title": "Managing Director of FAIR",
+      "department": "Artificial Intelligence",
+      "manager_name_or_id": "yann-lecun",
+      "expertise_keywords": ["Reinforcement Learning", "Model Reproducibility", "Robotics"],
+      "bio_summary": "Managing Director scaling global Fundamental AI Research labs."
+    }
+  ]
+}

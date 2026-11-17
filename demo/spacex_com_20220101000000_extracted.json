@@ -1,0 +1,70 @@
+{
+  "snapshot_timestamp": "20220101000000",
+  "organization_name": "spacex.com",
+  "source_url": "https://web.archive.org/web/20220101000000/https://www.spacex.com/updates/",
+  "entities": [
+    {
+      "id": "elon-musk",
+      "full_name": "Elon Musk",
+      "job_title": "CEO & Lead Designer",
+      "department": "Executive",
+      "manager_name_or_id": null,
+      "expertise_keywords": ["Starship Stage Zero", "Raptor Scaling", "Orbital Refueling"],
+      "bio_summary": "CEO directing Starbase orbital pad integration and full-stack Starship testing."
+    },
+    {
+      "id": "gwynne-shotwell",
+      "full_name": "Gwynne Shotwell",
+      "job_title": "President & COO",
+      "department": "Executive",
+      "manager_name_or_id": "elon-musk",
+      "expertise_keywords": ["Global Operations", "Starshield", "NASA Artemis HLS"],
+      "bio_summary": "President and COO overseeing Falcon 9 record cadence, Artemis HLS, and Starlink scale."
+    },
+    {
+      "id": "mark-juncosa",
+      "full_name": "Mark Juncosa",
+      "job_title": "VP of Starship Engineering",
+      "department": "Engineering",
+      "manager_name_or_id": "gwynne-shotwell",
+      "expertise_keywords": ["Starship Structural Design", "Super Heavy", "Thermal Protection"],
+      "bio_summary": "Shifted to VP of Starship Engineering consolidating Starbase vehicle and pad teams."
+    },
+    {
+      "id": "john-connery",
+      "full_name": "John Connery",
+      "job_title": "Director of Starship Propulsion",
+      "department": "Engineering",
+      "manager_name_or_id": "mark-juncosa",
+      "expertise_keywords": ["Raptor 2 Production", "Gimbal Systems", "Hot-Staging"],
+      "bio_summary": "Director scaling 33-engine Super Heavy booster propulsion integration under Mark Juncosa."
+    },
+    {
+      "id": "bill-gerstenmaier",
+      "full_name": "Bill Gerstenmaier",
+      "job_title": "VP of Build & Flight Reliability",
+      "department": "Engineering",
+      "manager_name_or_id": "gwynne-shotwell",
+      "expertise_keywords": ["Flight Readiness", "Crew Dragon Fleet", "Mission Assurance"],
+      "bio_summary": "Succeeded Hans Koenigsmann leading SpaceX flight reliability and NASA safety reviews."
+    },
+    {
+      "id": "jonathan-hofeller",
+      "full_name": "Jonathan Hofeller",
+      "job_title": "VP of Starlink Commercial Sales",
+      "department": "Engineering",
+      "manager_name_or_id": "gwynne-shotwell",
+      "expertise_keywords": ["Satellite Broadband", "Enterprise Sales", "Mobility Terminals"],
+      "bio_summary": "VP scaling Starlink enterprise, aviation, and maritime commercial contracts."
+    },
+    {
+      "id": "sara-spangelo",
+      "full_name": "Sara Spangelo",
+      "job_title": "Co-Lead, Starlink Direct to Cell",
+      "department": "Product",
+      "manager_name_or_id": "jonathan-hofeller",
+      "expertise_keywords": ["Direct-to-Cell", "Carrier Partnerships", "Spectrum Rights"],
+      "bio_summary": "Leading T-Mobile and global carrier satellite-to-cellular product partnerships."
+    }
+  ]
+}

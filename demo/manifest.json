@@ -28,5 +28,11 @@
     "domain": "replit.com",
     "prefix": "replit_com",
     "kind": "extracted"
+  },
+  "impulse": {
+    "label": "Impulse Space",
+    "domain": "impulsespace.com",
+    "prefix": "impulsespace_com",
+    "kind": "illustrative"
   }
 }

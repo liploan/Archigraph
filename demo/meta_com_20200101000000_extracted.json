@@ -1,0 +1,88 @@
+{
+  "snapshot_timestamp": "20200101000000",
+  "organization_name": "meta.com",
+  "source_url": "https://web.archive.org/web/20200101000000/https://about.fb.com/media-gallery/executives/",
+  "entities": [
+    {
+      "id": "mark-zuckerberg",
+      "full_name": "Mark Zuckerberg",
+      "job_title": "Founder & CEO",
+      "department": "Executive",
+      "manager_name_or_id": null,
+      "expertise_keywords": ["Social Networks", "Corporate Strategy", "AR/VR Vision"],
+      "bio_summary": "Founder and CEO leading Facebook's family of apps and AR/VR hardware investments."
+    },
+    {
+      "id": "sheryl-sandberg",
+      "full_name": "Sheryl Sandberg",
+      "job_title": "COO",
+      "department": "Executive",
+      "manager_name_or_id": "mark-zuckerberg",
+      "expertise_keywords": ["Operations", "Advertising Sales", "Business Development", "Monetization"],
+      "bio_summary": "COO overseeing global advertising revenue, partnerships, and business operations."
+    },
+    {
+      "id": "marne-levine",
+      "full_name": "Marne Levine",
+      "job_title": "VP of Global Partnerships & Business Development",
+      "department": "Business",
+      "manager_name_or_id": "sheryl-sandberg",
+      "expertise_keywords": ["Global Operations", "Partnerships", "Brand Strategy"],
+      "bio_summary": "VP leading global strategic partnerships and corporate business development."
+    },
+    {
+      "id": "chris-cox",
+      "full_name": "Chris Cox",
+      "job_title": "Chief Product Officer",
+      "department": "Product",
+      "manager_name_or_id": "mark-zuckerberg",
+      "expertise_keywords": ["Product Architecture", "Family of Apps", "User Growth"],
+      "bio_summary": "CPO unifying product direction across Facebook, Instagram, Messenger, and WhatsApp."
+    },
+    {
+      "id": "adam-mosseri",
+      "full_name": "Adam Mosseri",
+      "job_title": "Head of Instagram",
+      "department": "Product",
+      "manager_name_or_id": "chris-cox",
+      "expertise_keywords": ["Creator Economy", "Instagram Stories", "Reels Launch", "Feed Ranking"],
+      "bio_summary": "Appointed Head of Instagram following the departure of Instagram's co-founders."
+    },
+    {
+      "id": "stan-chudnovsky",
+      "full_name": "Stan Chudnovsky",
+      "job_title": "VP of Messenger",
+      "department": "Product",
+      "manager_name_or_id": "chris-cox",
+      "expertise_keywords": ["Chat Platforms", "Cross-App Messaging", "Real-Time Comms"],
+      "bio_summary": "Promoted to VP of Messenger overseeing cross-app messaging infrastructure."
+    },
+    {
+      "id": "mike-schroepfer",
+      "full_name": "Mike Schroepfer",
+      "job_title": "CTO",
+      "department": "Engineering",
+      "manager_name_or_id": "mark-zuckerberg",
+      "expertise_keywords": ["Engineering Leadership", "AI Infrastructure", "Technical Vision"],
+      "bio_summary": "CTO overseeing core infrastructure, AI research, and AR/VR engineering."
+    },
+    {
+      "id": "andrew-bosworth",
+      "full_name": "Andrew Bosworth",
+      "job_title": "VP of Facebook Reality Labs",
+      "department": "Engineering",
+      "manager_name_or_id": "mike-schroepfer",
+      "expertise_keywords": ["Quest Headsets", "Virtual Reality", "Spatial Computing", "Oculus"],
+      "bio_summary": "VP scaling Oculus Quest hardware and Reality Labs spatial computing division."
+    },
+    {
+      "id": "yann-lecun",
+      "full_name": "Yann LeCun",
+      "job_title": "VP & Chief AI Scientist",
+      "department": "Artificial Intelligence",
+      "manager_name_or_id": "mike-schroepfer",
+      "expertise_keywords": ["Self-Supervised Learning", "Neural Networks", "FAIR Labs"],
+      "bio_summary": "Chief AI Scientist guiding fundamental self-supervised learning research."
+    }
+  ]
+}
