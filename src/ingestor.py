@@ -1,5 +1,6 @@
 import hashlib
 import re
+import time
 import urllib.parse
 from pathlib import Path
 from urllib.parse import urlparse
@@ -147,29 +148,38 @@ def fetch_snapshot_html(archive_url: str, timestamp: str, domain: str) -> str:
         return cache_path.read_text(encoding="utf-8")
         
     print(f"Fetching from archive: {archive_url}")
-    try:
-        # Standard user-agent header to prevent rate-limiting/blocking
-        headers = {
-            "User-Agent": (
-                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-                "AppleWebKit/537.36 (KHTML, like Gecko) "
-                "Chrome/115.0.0.0 Safari/537.36"
-            )
-        }
-        response = safe_get(archive_url, headers=headers, timeout=20)
-        encoding = response.encoding
-        if not encoding or encoding.lower() == "iso-8859-1":
-            # requests defaults to ISO-8859-1 when no charset is declared, which
-            # corrupts UTF-8 pages (accented names, etc.). Detect instead.
-            encoding = response.apparent_encoding or "utf-8"
-        html = response.content.decode(encoding, errors="replace").replace("\x00", "")
-        
-        # Save to cache
-        cache_path.write_text(html, encoding="utf-8")
-        return html
-    except Exception as e:
-        print(f"Failed to fetch snapshot {archive_url}: {e}")
-        return ""
+    headers = {
+        "User-Agent": (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/115.0.0.0 Safari/537.36"
+        )
+    }
+    max_attempts = 3
+    for attempt in range(1, max_attempts + 1):
+        try:
+            response = safe_get(archive_url, headers=headers, timeout=20)
+            encoding = response.encoding
+            if not encoding or encoding.lower() == "iso-8859-1":
+                # requests defaults to ISO-8859-1 when no charset is declared, which
+                # corrupts UTF-8 pages (accented names, etc.). Detect instead.
+                encoding = response.apparent_encoding or "utf-8"
+            html = response.content.decode(encoding, errors="replace").replace("\x00", "")
+
+            # Save to cache
+            cache_path.write_text(html, encoding="utf-8")
+            return html
+        except Exception as e:
+            status_code = getattr(getattr(e, "response", None), "status_code", None)
+            transient = status_code in (429, 502, 503, 504) or "429" in str(e)
+            if transient and attempt < max_attempts:
+                delay = 1.5 * attempt
+                print(f"Transient error ({status_code or e}) fetching {archive_url}; retrying in {delay:.1f}s...")
+                time.sleep(delay)
+                continue
+            print(f"Failed to fetch snapshot {archive_url}: {e}")
+            return ""
+    return ""
 
 def clean_html_content(raw_html: str) -> str:
     """
@@ -182,9 +192,11 @@ def clean_html_content(raw_html: str) -> str:
         
     soup = BeautifulSoup(raw_html, "lxml")
     
-    # Strip unnecessary elements
+    # Strip unnecessary elements and injected Wayback Machine toolbar chrome
     for element in soup(["script", "style", "noscript", "iframe", "svg", "canvas", "header", "footer", "nav", "form", "aside"]):
         element.decompose()
+    for wm_el in soup.find_all(id=re.compile(r"^(wm-ipp|donato)", re.I)):
+        wm_el.decompose()
         
     # Also strip typical social sharing / newsletter widgets / modal overlays
     for class_keyword in ["newsletter", "social-share", "cookie-banner", "modal", "popup", "ad-container", "menu"]:

@@ -8,7 +8,7 @@ try:
 except ImportError:
     requests = None
 
-MAX_REDIRECTS = 3
+MAX_REDIRECTS = 5
 MAX_RESPONSE_BYTES = 5 * 1024 * 1024  # 5 MB cap on fetched pages
 
 

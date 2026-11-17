@@ -18,7 +18,7 @@ Archigraph is a platform designed to automatically extract, map, and visualize o
 ## 🚀 Key Features
 
 *   **Wayback Ingestion & Evenly-Spaced Historical Sampling**: Queries the Wayback Machine CDX API with monthly collapse (`collapse=timestamp:6`), deduplicates by content digest, samples evenly across the chronological timeline, cleans HTML boilerplate, and automatically falls back to live page scraping if archive endpoints time out.
-*   **Structured LLM Entity Extraction & Confidence Provenance**: Leverages `gemini-2.5-flash` (configurable via `GEMINI_MODEL`) with native Pydantic schema constraints (`google-genai` SDK) to parse unstructured team pages into validated JSON profiles containing `id`, `full_name`, `job_title`, `department`, `manager_name_or_id`, `reporting_confidence` (`explicit` | `inferred` | `none`), `reporting_evidence`, and `expertise_keywords`.
+*   **Structured LLM Entity Extraction & Confidence Provenance**: Leverages `gemini-3.8-flash` (configurable via `GEMINI_MODEL`, with automatic fallback to `gemini-flash-latest`) with native Pydantic schema constraints (`google-genai` SDK) to parse unstructured team pages into validated JSON profiles containing `id`, `full_name`, `job_title`, `department`, `manager_name_or_id`, `reporting_confidence` (`explicit` | `inferred` | `none`), `reporting_evidence`, and `expertise_keywords`.
 *   **Temporal Diff Engine & Cross-Snapshot Entity Resolution**: Normalizes accents, nicknames, and first-name prefixes across snapshots so individuals retain a canonical ID over time, classifying every transition into **Joined**, **Promoted**, **Moved** (re-org / lateral shift), **Departed**, or **Unchanged**.
 *   **VC / PE Org Diligence & Talent Intelligence (`src/intelligence.py`)**:
     *   **Org Health Scorecard**: Computes leadership retention %, VP+/C-suite churn %, internal-promotion vs. external-senior-hire bench archetype, hierarchy depth, span-of-control bottlenecks, unfilled VP+ leadership seats, emerging domain capabilities, and auto-generated bull/risk diligence briefs.
@@ -95,7 +95,7 @@ dashboard) to run live extractions; the page prompts for it.
 |---|---|---|
 | `ENABLE_LIVE_EXTRACTION` | `false` | Turn on `/api/extract` (Gemini + web fetching) |
 | `GEMINI_API_KEY` | _unset_ | Required only for live extraction |
-| `GEMINI_MODEL` | `gemini-2.5-flash` | Gemini model used for structured org extraction |
+| `GEMINI_MODEL` | `gemini-3.8-flash` | Gemini model used for structured org extraction |
 | `ARCHIGRAPH_ACCESS_TOKEN` | _unset_ | If set, live extraction requires `X-Access-Token` |
 | `MAX_EXTRACTIONS_PER_DAY` | `40` | Hard daily cap on Gemini-backed extractions (spend guard) |
 | `MAX_SNAPSHOTS_PER_REQUEST` | `5` | Upper bound on `limit` per request |

@@ -3,7 +3,7 @@ from typing import List, Optional
 from pydantic import BaseModel, Field
 from google import genai
 from google.genai import types
-from src.config import GEMINI_API_KEY, GEMINI_MODEL, verify_credentials
+from src.config import GEMINI_API_KEY, GEMINI_MODEL, GEMINI_FALLBACK_MODEL, verify_credentials
 
 # Pydantic schemas for structured LLM extraction
 class PersonEntity(BaseModel):
@@ -74,23 +74,37 @@ def extract_org_structure(cleaned_content: str, timestamp: str, domain: str) -> 
         f"========================\n"
     )
     
-    try:
-        # Use configured Gemini model (defaults to gemini-2.5-flash) for structured data extraction
-        response = client.models.generate_content(
-            model=GEMINI_MODEL,
-            contents=user_prompt,
-            config=types.GenerateContentConfig(
-                response_mime_type="application/json",
-                response_schema=ExtractedOrgSnapshot,
-                system_instruction=system_instruction,
-                temperature=0.1,  # Low temperature for highly deterministic extraction
+    gen_config = types.GenerateContentConfig(
+        response_mime_type="application/json",
+        response_schema=ExtractedOrgSnapshot,
+        system_instruction=system_instruction,
+        temperature=0.1,  # Low temperature for highly deterministic extraction
+    )
+
+    models_to_try = [GEMINI_MODEL]
+    if GEMINI_FALLBACK_MODEL and GEMINI_FALLBACK_MODEL != GEMINI_MODEL:
+        models_to_try.append(GEMINI_FALLBACK_MODEL)
+
+    for idx, model_name in enumerate(models_to_try):
+        try:
+            response = client.models.generate_content(
+                model=model_name,
+                contents=user_prompt,
+                config=gen_config,
             )
-        )
-        
-        # Load output into Pydantic model
-        result_data = json.loads(response.text)
-        return ExtractedOrgSnapshot(**result_data)
-        
-    except Exception as e:
-        print(f"Error during structured LLM extraction for timestamp {timestamp}: {e}")
-        return None
+            result_data = json.loads(response.text)
+            result_data["snapshot_timestamp"] = timestamp
+            return ExtractedOrgSnapshot(**result_data)
+        except Exception as e:
+            err_lower = str(e).lower()
+            is_retired_or_missing = any(
+                tok in err_lower for tok in ("404", "not_found", "not found", "no longer available")
+            )
+            if idx == 0 and len(models_to_try) > 1 and is_retired_or_missing:
+                print(
+                    f"Model '{model_name}' unavailable ({e}); retrying with fallback '{models_to_try[1]}'..."
+                )
+                continue
+            print(f"Error during structured LLM extraction for timestamp {timestamp} (model={model_name}): {e}")
+            return None
+    return None

@@ -263,48 +263,69 @@ def api_extract():
     results = []
     budget_exhausted = False
     cache_id = _cache_id(url, domain)
+    safe_cache_slug = re.sub(r"[^a-zA-Z0-9-]", "_", cache_id)
+    tried_current = False
 
-    for snap in snapshots:
-        timestamp = snap["timestamp"]
-        archive_url = snap["archive_url"]
-        output_file = OUTPUT_DIR / f"{re.sub(r'[^a-zA-Z0-9-]', '_', cache_id)}_{timestamp}_extracted.json"
+    def _process_snapshot(ts: str, fetch_url: str) -> bool:
+        nonlocal budget_exhausted, tried_current
+        if ts == "current":
+            tried_current = True
+        output_file = OUTPUT_DIR / f"{safe_cache_slug}_{ts}_extracted.json"
 
         # Load from disk if already extracted (free: no Gemini call)
         if output_file.exists() and not force_extract:
             try:
                 with open(output_file, "r", encoding="utf-8") as f:
                     results.append(json.load(f))
-                    continue
+                    return True
             except Exception as e:
                 app.logger.warning("Error loading cached JSON, re-extracting: %s", e)
 
-        if not _reserve_extraction():
-            budget_exhausted = True
-            break
-
-        raw_html = fetch_snapshot_html(archive_url, timestamp, cache_id)
+        raw_html = fetch_snapshot_html(fetch_url, ts, cache_id)
         if not raw_html:
-            continue
+            return False
 
         cleaned_text = clean_html_content(raw_html)
         if not cleaned_text:
-            continue
+            return False
 
-        snapshot_result = extract_org_structure(cleaned_text, timestamp, domain)
-        if snapshot_result:
-            result_dict = snapshot_result.model_dump()
-            result_dict["source_url"] = archive_url
-            try:
-                with open(output_file, "w", encoding="utf-8") as f:
-                    json.dump(result_dict, f, indent=2, ensure_ascii=False)
-            except Exception as e:
-                app.logger.warning("Error saving extraction to cache: %s", e)
+        if not _reserve_extraction():
+            budget_exhausted = True
+            return False
 
-            results.append(result_dict)
+        snapshot_result = extract_org_structure(cleaned_text, ts, domain)
+        if not snapshot_result:
+            return False
 
-            # Disk space cleanup
-            if not KEEP_RAW_SNAPSHOTS:
-                delete_raw_snapshot(timestamp, cache_id)
+        result_dict = snapshot_result.model_dump()
+        result_dict["source_url"] = fetch_url
+        try:
+            with open(output_file, "w", encoding="utf-8") as f:
+                json.dump(result_dict, f, indent=2, ensure_ascii=False)
+        except Exception as e:
+            app.logger.warning("Error saving extraction to cache: %s", e)
+
+        results.append(result_dict)
+
+        # Disk space cleanup
+        if not KEEP_RAW_SNAPSHOTS:
+            delete_raw_snapshot(ts, cache_id)
+        return True
+
+    for idx, snap in enumerate(snapshots):
+        ok = _process_snapshot(snap["timestamp"], snap["archive_url"])
+        if budget_exhausted:
+            break
+        # If Wayback rate-limits or drops the most recent capture, fall back to the live page
+        if not ok and idx == len(snapshots) - 1 and snap["timestamp"] != "current" and not tried_current:
+            app.logger.info("[API] Falling back to live URL for latest snapshot of %s", domain)
+            _process_snapshot("current", url)
+            if budget_exhausted:
+                break
+
+    if not results and not budget_exhausted and not tried_current:
+        app.logger.info("[API] All archive fetches failed for %s; falling back to live URL", domain)
+        _process_snapshot("current", url)
 
     if not results:
         if budget_exhausted:

@@ -307,8 +307,8 @@ class TestIngestorSamplingAndConfig(unittest.TestCase):
 
     def test_default_gemini_model_is_valid(self):
         from src import config, extractor
-        self.assertEqual(config.GEMINI_MODEL, "gemini-2.5-flash")
-        self.assertEqual(extractor.GEMINI_MODEL, "gemini-2.5-flash")
+        self.assertEqual(config.GEMINI_MODEL, "gemini-3.8-flash")
+        self.assertEqual(extractor.GEMINI_MODEL, "gemini-3.8-flash")
 
 
 if __name__ == "__main__":
