@@ -1,11 +1,14 @@
 # Archigraph 🌐🕒
 *Temporal Org Chart & Relationship Network Mapping Platform*
 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-archigraph--sevo.onrender.com-2ea44f?style=for-the-badge)](https://archigraph-sevo.onrender.com)
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/liploan/Archigraph)
 
+> **Live App:** **[https://archigraph-sevo.onrender.com](https://archigraph-sevo.onrender.com)** *(hosted on Render's free tier — allow ~30–60s on first visit if waking from idle).*
+>
 > **Hosting note:** Archigraph needs a Python backend, so it cannot run on GitHub Pages
 > (`liploan.github.io/Archigraph` only renders this README). See [Deploying](#-deploying-fully-hosted)
-> to run the full app. Once deployed, add your service URL here.
+> to deploy your own instance.
 
 
 Archigraph is a platform designed to automatically extract, map, and visualize organizational hierarchies and professional relationship networks over time. By ingesting public web data—including historical snapshots via internet archives like the Wayback Machine and current live websites—Archigraph reconstructs reporting lines, team evolutions, and expertise distributions.
