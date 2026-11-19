@@ -17,11 +17,8 @@
   <!-- D3.js Library -->
   <script src="https://d3js.org/d3.v7.min.js"></script>
 
-  <!-- Feature-detected polyfills for Popover, Invoker Commands, Focusgroup, and Anchor Positioning -->
+  <!-- Feature-detected polyfills for Invoker Commands, Focusgroup, and Switch -->
   <script type="module">
-    if (!Object.hasOwn(HTMLElement.prototype, "popover")) {
-      import("https://unpkg.com/@oddbird/popover-polyfill@latest/dist/popover.min.js").catch(() => {});
-    }
     if (!("commandForElement" in HTMLButtonElement.prototype)) {
       import("https://esm.run/invokers-polyfill").catch(() => {});
     }
@@ -30,13 +27,13 @@
         .then(m => m.polyfill?.())
         .catch(() => {});
     }
-    if (!("anchorName" in document.documentElement.style)) {
-      import("https://unpkg.com/@oddbird/css-anchor-positioning").catch(() => {});
-    }
     if (!("switch" in HTMLInputElement.prototype)) {
       import("https://esm.run/input-switch-polyfill").catch(() => {});
     }
   </script>
+
+  <!-- Shared Interest-Triggered Hints & Anchor/Popover Polyfills -->
+  <script type="module" src="/static/hints.js"></script>
   
   <!-- Client Logic -->
   <script src="/static/app.js" defer></script>
@@ -55,18 +52,19 @@
     <!-- Quick Demo Pills -->
     <div class="demo-pills" role="group" aria-label="Quick Demos">
       <span class="demo-label">Demos:</span>
-      <button type="button" class="demo-pill" data-demo="google">Google</button>
-      <button type="button" class="demo-pill" data-demo="meta">Meta</button>
-      <button type="button" class="demo-pill" data-demo="spacex">SpaceX</button>
-      <button type="button" class="demo-pill" data-demo="impulse">Impulse Space</button>
-      <button type="button" class="demo-pill" data-demo="palantir">Palantir</button>
-      <button type="button" class="demo-pill" data-demo="replit">Replit (extracted)</button>
+      <button type="button" class="demo-pill" data-demo="google" interestfor="tip-demo-google">Google</button>
+      <button type="button" class="demo-pill" data-demo="meta" interestfor="tip-demo-meta">Meta</button>
+      <button type="button" class="demo-pill" data-demo="spacex" interestfor="tip-demo-spacex">SpaceX</button>
+      <button type="button" class="demo-pill" data-demo="impulse" interestfor="tip-demo-impulse">Impulse Space</button>
+      <button type="button" class="demo-pill" data-demo="palantir" interestfor="tip-demo-palantir">Palantir</button>
+      <button type="button" class="demo-pill" data-demo="replit" interestfor="tip-demo-replit">Replit (extracted)</button>
       <button
         type="button"
         id="open-portfolio-btn"
         class="secondary-btn portfolio-header-btn"
         command="show-modal"
         commandfor="portfolio-dialog"
+        interestfor="tip-portfolio-btn"
       >
         Portfolio Screener
       </button>
@@ -76,10 +74,20 @@
         class="secondary-btn portfolio-header-btn alerts-header-btn"
         command="show-modal"
         commandfor="alerts-dialog"
+        interestfor="tip-alerts-btn"
       >
         <span>Alerts</span>
         <span id="alerts-count-pill" class="alerts-count-pill hidden">0</span>
       </button>
+      <a
+        href="/help"
+        id="open-help-link"
+        class="secondary-btn portfolio-header-btn help-header-link"
+        interestfor="tip-help-link"
+      >
+        <span class="help-qmark" aria-hidden="true">?</span>
+        <span>Help</span>
+      </a>
     </div>
     
     <!-- Extraction Controller Form -->
@@ -104,8 +112,21 @@
           <option value="5">5 Snapshots</option>
         </select>
       </div>
+
+      <button
+        type="button"
+        id="extract-info-btn"
+        class="info-toggletip"
+        interestfor="tip-extract-info"
+        popovertarget="tip-extract-info"
+        popovertargetaction="show"
+        aria-label="More about live URL extraction"
+      >?</button>
+      <div id="tip-extract-info" popover="hint" class="hint-bubble hint-end">
+        <div class="hint-bubble-inner">Enter any public team or leadership URL and choose 1–5 historical Wayback snapshots to extract reporting lines with Gemini.</div>
+      </div>
       
-      <button type="submit" id="submit-btn" class="gradient-btn">
+      <button type="submit" id="submit-btn" class="gradient-btn" interestfor="tip-extract-submit">
         <span class="btn-text">Extract Network</span>
         <div class="loader-ring hidden" id="btn-loader" aria-hidden="true"></div>
       </button>
@@ -127,19 +148,19 @@
 
         <div class="canvas-controls">
           <div class="view-mode-group" role="group" aria-label="Visualization layout mode">
-            <button type="button" id="mode-tree-btn" class="mode-btn" aria-pressed="true">Org Tree</button>
-            <button type="button" id="mode-mesh-btn" class="mode-btn" aria-pressed="false">Relationship Mesh</button>
+            <button type="button" id="mode-tree-btn" class="mode-btn" aria-pressed="true" interestfor="tip-mode-tree">Org Tree</button>
+            <button type="button" id="mode-mesh-btn" class="mode-btn" aria-pressed="false" interestfor="tip-mode-mesh">Relationship Mesh</button>
           </div>
 
-          <button type="button" id="toggle-departed-btn" class="mode-btn departed-toggle" aria-pressed="false" disabled>
+          <button type="button" id="toggle-departed-btn" class="mode-btn departed-toggle" aria-pressed="false" aria-disabled="true" interestfor="tip-toggle-departed">
             Show Departed
           </button>
 
-          <button type="button" id="toggle-radar-btn" class="mode-btn radar-toggle" aria-pressed="false" disabled>
+          <button type="button" id="toggle-radar-btn" class="mode-btn radar-toggle" aria-pressed="false" aria-disabled="true" interestfor="tip-toggle-radar">
             Poachability Radar
           </button>
 
-          <button type="button" id="toggle-jobs-btn" class="mode-btn jobs-toggle" aria-pressed="false" disabled>
+          <button type="button" id="toggle-jobs-btn" class="mode-btn jobs-toggle" aria-pressed="false" aria-disabled="true" interestfor="tip-toggle-jobs">
             Open Roles
           </button>
 
@@ -149,12 +170,13 @@
             class="mode-btn network-trigger-btn"
             command="show-modal"
             commandfor="network-dialog"
+            interestfor="tip-open-network"
           >
             <span>My Network</span>
             <span id="network-match-pill" class="network-match-pill hidden">0</span>
           </button>
 
-          <button type="button" id="expand-all-btn" class="mode-btn hidden">
+          <button type="button" id="expand-all-btn" class="mode-btn hidden" interestfor="tip-expand-all">
             Expand All
           </button>
 
@@ -162,6 +184,18 @@
             <label for="node-search" class="visually-hidden">Search expertise, role, or name</label>
             <input type="search" id="node-search" autocorrect="off" autocapitalize="none" spellcheck="false" placeholder="Filter by skill, role, or name (Enter to zoom)..." disabled>
             <span id="search-match-count" class="search-match-badge hidden" aria-live="polite"></span>
+            <button
+              type="button"
+              id="search-info-btn"
+              class="info-toggletip"
+              interestfor="tip-search-info"
+              popovertarget="tip-search-info"
+              popovertargetaction="show"
+              aria-label="More about graph search filter"
+            >?</button>
+            <div id="tip-search-info" popover="hint" class="hint-bubble hint-end">
+              <div class="hint-bubble-inner">Type a skill, title, or person's name to highlight matches across the graph; press Enter to auto-expand collapsed branches and zoom in.</div>
+            </div>
           </search>
 
           <div class="export-control-wrapper">
@@ -171,24 +205,25 @@
               class="mode-btn export-trigger-btn"
               commandfor="export-popover"
               command="toggle-popover"
-              disabled
+              aria-disabled="true"
+              interestfor="tip-export-menu"
             >
               Export ▾
             </button>
             <div id="export-popover" popover="auto" class="export-popover-panel" role="group" aria-label="Export options">
-              <button type="button" id="export-brief-btn" class="export-option-btn">
+              <button type="button" id="export-brief-btn" class="export-option-btn" interestfor="tip-export-brief">
                 <span class="export-opt-title">VC &amp; Search Brief (.md)</span>
                 <span class="export-opt-desc">Diligence memo, KPIs &amp; prime targets</span>
               </button>
-              <button type="button" id="export-json-btn" class="export-option-btn">
+              <button type="button" id="export-json-btn" class="export-option-btn" interestfor="tip-export-json">
                 <span class="export-opt-title">Temporal JSON</span>
                 <span class="export-opt-desc">All snapshots, diffs &amp; intelligence</span>
               </button>
-              <button type="button" id="export-csv-btn" class="export-option-btn">
+              <button type="button" id="export-csv-btn" class="export-option-btn" interestfor="tip-export-csv">
                 <span class="export-opt-title">Snapshot Roster (CSV)</span>
                 <span class="export-opt-desc">Roster, diff status &amp; poachability</span>
               </button>
-              <button type="button" id="export-svg-btn" class="export-option-btn">
+              <button type="button" id="export-svg-btn" class="export-option-btn" interestfor="tip-export-svg">
                 <span class="export-opt-title">Graph Vector (SVG)</span>
                 <span class="export-opt-desc">Standalone vector diagram of canvas</span>
               </button>
@@ -240,10 +275,10 @@
 
         <div class="intel-tabs" id="intel-tabs">
           <div class="intel-tablist" focusgroup="tablist nomemory" aria-label="Intelligence views">
-            <button type="button" id="tab-vc-btn" aria-selected="true" focusgroupstart>VC / PE</button>
-            <button type="button" id="tab-recruiting-btn" aria-selected="false">Recruiting</button>
-            <button type="button" id="tab-hiring-btn" aria-selected="false">Hiring &amp; JDs</button>
-            <button type="button" id="tab-network-btn" aria-selected="false">Backchannels</button>
+            <button type="button" id="tab-vc-btn" aria-selected="true" focusgroupstart interestfor="tip-tab-vc">VC / PE</button>
+            <button type="button" id="tab-recruiting-btn" aria-selected="false" interestfor="tip-tab-recruiting">Recruiting</button>
+            <button type="button" id="tab-hiring-btn" aria-selected="false" interestfor="tip-tab-hiring">Hiring &amp; JDs</button>
+            <button type="button" id="tab-network-btn" aria-selected="false" interestfor="tip-tab-network">Backchannels</button>
           </div>
 
           <div id="panel-vc" role="tabpanel" aria-labelledby="tab-vc-btn" tabindex="0">
@@ -294,7 +329,7 @@
           </div>
           <div class="detail-row">
             <span class="detail-label">Reports To</span>
-            <button type="button" class="link-btn" id="prof-manager">Amjad Masad</button>
+            <button type="button" class="link-btn" id="prof-manager" interestfor="tip-prof-manager">Amjad Masad</button>
           </div>
           <div class="detail-row">
             <span class="detail-label">Line Confidence</span>
@@ -322,7 +357,7 @@
           <div class="evidence-block">
             <div class="evidence-header-row">
               <h4 class="section-title">Extraction Evidence</h4>
-              <a id="prof-source-link" class="source-verify-link hidden" href="#" target="_blank" rel="noopener noreferrer">
+              <a id="prof-source-link" class="source-verify-link hidden" href="#" target="_blank" rel="noopener noreferrer" interestfor="tip-prof-source">
                 Verify Snapshot Source ↗
               </a>
             </div>
@@ -345,10 +380,10 @@
           </div>
 
           <div class="profile-actions">
-            <button type="button" id="trace-from-root-btn" class="secondary-btn">
+            <button type="button" id="trace-from-root-btn" class="secondary-btn" interestfor="tip-trace-root">
               Warm Path from Top Exec
             </button>
-            <button type="button" id="simulate-departure-btn" class="ghost-btn blast-sim-btn" aria-pressed="false">
+            <button type="button" id="simulate-departure-btn" class="ghost-btn blast-sim-btn" aria-pressed="false" interestfor="tip-simulate-departure">
               Simulate Departure
             </button>
           </div>
@@ -389,8 +424,8 @@
             <select id="warm-target-select"></select>
           </div>
           <div class="warm-btn-row">
-            <button type="button" id="find-path-btn" class="secondary-btn">Highlight Path</button>
-            <button type="button" id="clear-path-btn" class="ghost-btn">Clear</button>
+            <button type="button" id="find-path-btn" class="secondary-btn" interestfor="tip-find-path">Highlight Path</button>
+            <button type="button" id="clear-path-btn" class="ghost-btn" interestfor="tip-clear-path">Clear</button>
           </div>
         </div>
         <div id="warm-path-result" class="warm-path-result hidden" role="status" aria-live="polite"></div>
@@ -402,11 +437,23 @@
   <footer class="time-machine-footer">
     <div class="time-machine-container">
       <div class="playback-controls">
-        <button type="button" id="play-btn" class="circle-btn" aria-label="Play timeline animation" disabled>
+        <button type="button" id="play-btn" class="circle-btn" aria-label="Play timeline animation" aria-disabled="true" interestfor="tip-play-timeline">
           <svg class="play-icon" aria-hidden="true" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
           <svg class="pause-icon hidden" aria-hidden="true" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
         </button>
         <span class="slider-label">Time Machine</span>
+        <button
+          type="button"
+          id="time-machine-info-btn"
+          class="info-toggletip"
+          interestfor="tip-time-machine"
+          popovertarget="tip-time-machine"
+          popovertargetaction="show"
+          aria-label="More about Time Machine timeline"
+        >?</button>
+        <div id="tip-time-machine" popover="hint" class="hint-bubble hint-above">
+          <div class="hint-bubble-inner">Scrub or press Play to travel across historical snapshots and watch hires, promotions, re-orgs, and departures unfold chronologically.</div>
+        </div>
       </div>
       
       <div class="slider-wrapper">
@@ -440,7 +487,7 @@
       </div>
 
       <div class="dialog-quickstart-bar">
-        <button type="button" id="load-sample-network-btn" class="secondary-btn" autofocus>
+        <button type="button" id="load-sample-network-btn" class="secondary-btn" autofocus interestfor="tip-load-sample-net">
           Load Demo VC &amp; Search Network (9 Contacts)
         </button>
         <button type="button" id="clear-network-btn" class="ghost-btn hidden">
@@ -604,8 +651,8 @@
           <div class="webhook-toolbar">
             <span class="section-title" id="webhook-preview-title">Webhook JSON Payload</span>
             <div class="view-mode-group" role="group" aria-label="Webhook payload schema">
-              <button type="button" id="webhook-fmt-slack" class="mode-btn" aria-pressed="true">Slack Block Kit</button>
-              <button type="button" id="webhook-fmt-crm" class="mode-btn" aria-pressed="false">CRM / ATS Event</button>
+              <button type="button" id="webhook-fmt-slack" class="mode-btn" aria-pressed="true" interestfor="tip-webhook-slack">Slack Block Kit</button>
+              <button type="button" id="webhook-fmt-crm" class="mode-btn" aria-pressed="false" interestfor="tip-webhook-crm">CRM / ATS Event</button>
             </div>
           </div>
 
@@ -617,6 +664,7 @@
                 command="--copy"
                 commandfor="webhook-payload-code"
                 aria-label="Copy webhook JSON payload"
+                interestfor="tip-copy-webhook"
               >
                 <span class="copy-icon" aria-hidden="true"></span>
               </button>
@@ -628,6 +676,121 @@
       </div>
     </div>
   </dialog>
+
+  <!-- Interest-Triggered Information Bubbles (popover="hint") -->
+  <div id="workspace-hint-layer">
+    <div id="tip-demo-google" popover="hint" class="hint-bubble">
+      <div class="hint-bubble-inner">Load Google's 4-era illustrative leadership timeline (2018–2024) showcasing AI re-orgs and internal promotions.</div>
+    </div>
+    <div id="tip-demo-meta" popover="hint" class="hint-bubble">
+      <div class="hint-bubble-inner">Load Meta's 4-era illustrative org chart tracking Reality Labs, GenAI leadership shifts, and C-suite transitions.</div>
+    </div>
+    <div id="tip-demo-spacex" popover="hint" class="hint-bubble">
+      <div class="hint-bubble-inner">Load SpaceX's 4-era timeline highlighting Starlink expansion and founder spinout links to Impulse Space.</div>
+    </div>
+    <div id="tip-demo-impulse" popover="hint" class="hint-bubble">
+      <div class="hint-bubble-inner">Load Impulse Space's org chart to trace cross-company alumni founder spinouts from SpaceX.</div>
+    </div>
+    <div id="tip-demo-palantir" popover="hint" class="hint-bubble">
+      <div class="hint-bubble-inner">Load Palantir's 4-era leadership hierarchy covering AIP platform growth and executive retention benchmarks.</div>
+    </div>
+    <div id="tip-demo-replit" popover="hint" class="hint-bubble">
+      <div class="hint-bubble-inner">Load a real Gemini extraction of Replit's archived Wayback team snapshot vs. current leadership roster.</div>
+    </div>
+    <div id="tip-portfolio-btn" popover="hint" class="hint-bubble">
+      <div class="hint-bubble-inner">Compare all tracked companies across retention %, VP+ churn, poachability targets, open roles, and founder spinouts.</div>
+    </div>
+    <div id="tip-alerts-btn" popover="hint" class="hint-bubble">
+      <div class="hint-bubble-inner">Configure portfolio watchlist trigger rules and inspect ready-to-send Slack Block Kit or CRM/ATS webhook JSON payloads.</div>
+    </div>
+    <div id="tip-help-link" popover="hint" class="hint-bubble">
+      <div class="hint-bubble-inner">Open the Archigraph Help &amp; Feature Guide for metric formulas, workflow walkthroughs, and troubleshooting FAQs.</div>
+    </div>
+    <div id="tip-extract-submit" popover="hint" class="hint-bubble hint-end">
+      <div class="hint-bubble-inner">Crawl Wayback Machine captures for the target URL and run Gemini structured extraction to build a temporal org graph.</div>
+    </div>
+    <div id="tip-mode-tree" popover="hint" class="hint-bubble">
+      <div class="hint-bubble-inner">Display a top-down reporting hierarchy with collapsible +N manager subtrees and multi-root co-founder support.</div>
+    </div>
+    <div id="tip-mode-mesh" popover="hint" class="hint-bubble">
+      <div class="hint-bubble-inner">Switch to a force-directed network layout highlighting cross-functional skill clusters and informal bridges.</div>
+    </div>
+    <div id="tip-toggle-departed" popover="hint" class="hint-bubble">
+      <div class="hint-bubble-inner">Overlay departed executives and alumni from the prior snapshot directly onto the active org chart.</div>
+    </div>
+    <div id="tip-toggle-radar" popover="hint" class="hint-bubble">
+      <div class="hint-bubble-inner">Project color-coded Poachability Radar halos (Prime Target, Passive Watch, Anchored) onto every active leader node.</div>
+    </div>
+    <div id="tip-toggle-jobs" popover="hint" class="hint-bubble">
+      <div class="hint-bubble-inner">Show live or parsed open job requisitions (+ HIRING seats) attached directly beneath their resolved hiring managers.</div>
+    </div>
+    <div id="tip-open-network" popover="hint" class="hint-bubble">
+      <div class="hint-bubble-inner">Upload a LinkedIn CSV or paste contacts to uncover 1st-degree insiders and former-colleague backchannel references.</div>
+    </div>
+    <div id="tip-expand-all" popover="hint" class="hint-bubble">
+      <div class="hint-bubble-inner">Expand all collapsed +N reporting subtrees across the organization tree at once.</div>
+    </div>
+    <div id="tip-export-menu" popover="hint" class="hint-bubble hint-end">
+      <div class="hint-bubble-inner">Export the active organization as a Markdown VC brief, full Temporal JSON, Snapshot Roster CSV, or vector SVG diagram.</div>
+    </div>
+    <div id="tip-export-brief" popover="hint" class="hint-bubble hint-end">
+      <div class="hint-bubble-inner">Download a formatted Markdown memo summarizing retention KPIs, diligence risks, and top poachable executives.</div>
+    </div>
+    <div id="tip-export-json" popover="hint" class="hint-bubble hint-end">
+      <div class="hint-bubble-inner">Download raw enriched JSON containing every snapshot, entity diff, poachability score, and hiring signal.</div>
+    </div>
+    <div id="tip-export-csv" popover="hint" class="hint-bubble hint-end">
+      <div class="hint-bubble-inner">Download a spreadsheet-ready CSV of the active snapshot's roster, reporting lines, and retention tiers.</div>
+    </div>
+    <div id="tip-export-svg" popover="hint" class="hint-bubble hint-end">
+      <div class="hint-bubble-inner">Save a standalone, high-resolution vector SVG image of the currently rendered org graph.</div>
+    </div>
+    <div id="tip-tab-vc" popover="hint" class="hint-bubble hint-end">
+      <div class="hint-bubble-inner">Inspect leadership retention %, VP+ churn, internal vs. external bench velocity, span-of-control risk, and diligence briefs.</div>
+    </div>
+    <div id="tip-tab-recruiting" popover="hint" class="hint-bubble hint-end">
+      <div class="hint-bubble-inner">View ranked executive flight-risk scores (0–100), structural poachability catalysts, and departed alumni spinout candidates.</div>
+    </div>
+    <div id="tip-tab-hiring" popover="hint" class="hint-bubble hint-end">
+      <div class="hint-bubble-inner">Fetch live Greenhouse, Lever, or Ashby job boards—or paste JDs—to map open roles and strategic roadmap keywords.</div>
+    </div>
+    <div id="tip-tab-network" popover="hint" class="hint-bubble hint-end">
+      <div class="hint-bubble-inner">Review matched insiders, historical overlap backchannel references, and operator bridges from your contact network.</div>
+    </div>
+    <div id="tip-prof-manager" popover="hint" class="hint-bubble hint-end">
+      <div class="hint-bubble-inner">Jump selection and focus directly to this person's manager on the org chart.</div>
+    </div>
+    <div id="tip-prof-source" popover="hint" class="hint-bubble hint-end">
+      <div class="hint-bubble-inner">Open the exact archived Wayback Machine capture or live webpage from which this profile was extracted.</div>
+    </div>
+    <div id="tip-trace-root" popover="hint" class="hint-bubble hint-end">
+      <div class="hint-bubble-inner">Highlight the shortest chain of reporting or shared-expertise hops from the top executive to this person.</div>
+    </div>
+    <div id="tip-simulate-departure" popover="hint" class="hint-bubble hint-end">
+      <div class="hint-bubble-inner">Simulate what happens if this leader exits: orphaned reports, cascade flight risk, lost skills, and succession readiness.</div>
+    </div>
+    <div id="tip-find-path" popover="hint" class="hint-bubble hint-above hint-end">
+      <div class="hint-bubble-inner">Compute and illuminate the shortest warm introduction path between the selected From and To individuals.</div>
+    </div>
+    <div id="tip-clear-path" popover="hint" class="hint-bubble hint-above hint-end">
+      <div class="hint-bubble-inner">Remove the highlighted warm path from the canvas and reset node opacity.</div>
+    </div>
+    <div id="tip-play-timeline" popover="hint" class="hint-bubble hint-above">
+      <div class="hint-bubble-inner">Play or pause automatic chronological stepping across all captured organizational snapshots.</div>
+    </div>
+    <div id="tip-load-sample-net" popover="hint" class="hint-bubble">
+      <div class="hint-bubble-inner">Load 9 sample investor &amp; executive-search contacts instantly to test warm intro and alumni backchannel matching.</div>
+    </div>
+    <div id="tip-webhook-slack" popover="hint" class="hint-bubble hint-end">
+      <div class="hint-bubble-inner">Format the selected alert as a ready-to-post Slack Block Kit JSON message payload.</div>
+    </div>
+    <div id="tip-webhook-crm" popover="hint" class="hint-bubble hint-end">
+      <div class="hint-bubble-inner">Format the selected alert as a structured CRM / ATS webhook event payload.</div>
+    </div>
+    <div id="tip-copy-webhook" popover="hint" class="hint-bubble hint-end">
+      <div class="hint-bubble-inner">Copy the displayed JSON webhook payload to your clipboard.</div>
+    </div>
+  </div>
 
 </body>
 </html>

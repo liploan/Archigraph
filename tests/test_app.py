@@ -117,6 +117,20 @@ class TestExtractGating(AppTestCase):
         self.assertEqual(r.headers["X-Content-Type-Options"], "nosniff")
         self.assertEqual(r.headers["X-Frame-Options"], "DENY")
 
+    def test_help_page_and_hover_hints_present(self):
+        index_resp = self.client.get("/")
+        self.assertEqual(index_resp.status_code, 200)
+        index_html = index_resp.get_data(as_text=True)
+        self.assertIn('href="/help"', index_html)
+        self.assertIn('popover="hint"', index_html)
+        self.assertIn("interestfor=", index_html)
+
+        help_resp = self.client.get("/help")
+        self.assertEqual(help_resp.status_code, 200)
+        help_html = help_resp.get_data(as_text=True)
+        self.assertIn("Archigraph Help &amp; Feature Guide", help_html)
+        self.assertIn('popover="hint"', help_html)
+
 
 class TestSSRF(AppTestCase):
     def test_blocked_targets_via_api(self):

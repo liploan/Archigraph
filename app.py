@@ -103,6 +103,11 @@ def index():
     return send_from_directory("static", "index.html")
 
 
+@app.route("/help")
+def help_page():
+    return send_from_directory("static", "help.html")
+
+
 @app.route("/healthz")
 def healthz():
     return jsonify({"status": "ok"})

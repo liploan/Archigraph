@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Archigraph Help & Feature Guide: Learn how to map temporal org charts, interpret VC/PE diligence KPIs and poachability scores, match backchannel networks, and configure watchlist webhooks.">
+  <title>Help &amp; Feature Guide | Archigraph</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Shared Stylesheet -->
+  <link rel="stylesheet" href="/static/style.css">
+
+  <!-- Feature-detected polyfill for Invoker Commands -->
+  <script type="module">
+    if (!("commandForElement" in HTMLButtonElement.prototype)) {
+      import("https://esm.run/invokers-polyfill").catch(() => {});
+    }
+  </script>
+
+  <!-- Shared Interest-Triggered Hints & Anchor/Popover Polyfills -->
+  <script type="module" src="/static/hints.js"></script>
+</head>
+<body class="help-page">
+  <a href="#help-main-heading" class="skip-link visually-hidden">Skip to help content</a>
+
+  <!-- Sticky Top Navigation -->
+  <header class="app-header help-header">
+    <div class="logo-area">
+      <a href="/" class="logo-home-link" aria-label="Archigraph Workspace Home">
+        <span class="logo-mark" aria-hidden="true"></span>
+        <span class="logo-text">Archigraph</span>
+      </a>
+      <span class="badge">HELP &amp; DOCS</span>
+    </div>
+
+    <div class="help-header-actions">
+      <a href="/?demo=google" class="demo-pill" interestfor="tip-help-try-google">Try Google Demo</a>
+      <a href="/?demo=spacex" class="demo-pill" interestfor="tip-help-try-spacex">Try SpaceX Demo</a>
+      <a href="/?demo=replit" class="demo-pill" interestfor="tip-help-try-replit">Try Replit (Extracted)</a>
+      <a href="/" class="secondary-btn help-back-btn" interestfor="tip-help-back">
+        ← Back to Workspace
+      </a>
+    </div>
+  </header>
+
+  <div class="help-layout">
+    <!-- Sticky Scrollspy Sidebar Table of Contents -->
+    <aside class="help-sidebar" aria-label="Documentation navigation">
+      <nav class="help-toc" aria-label="Help sections">
+        <p class="help-toc-title">On This Page</p>
+        <ul>
+          <li><a href="#getting-started">1. Getting Started &amp; Extraction</a></li>
+          <li><a href="#canvas-controls">2. Graph Canvas &amp; Time Machine</a></li>
+          <li><a href="#intelligence-hub">3. Diligence &amp; Poachability Signals</a></li>
+          <li><a href="#workflows">4. Network, Portfolio &amp; Webhooks</a></li>
+          <li><a href="#faq">5. FAQ &amp; Troubleshooting</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Documentation Content -->
+    <main class="help-main">
+      <div class="help-hero-card">
+        <h1 id="help-main-heading" tabindex="-1">Archigraph Help &amp; Feature Guide</h1>
+        <p class="help-lead">
+          Archigraph reconstructs how organizations evolve over time—combining Wayback Machine historical captures, Gemini structured entity extraction, longitudinal diffing, VC/PE org diligence metrics, and executive recruiting signals in one interactive workspace.
+        </p>
+        <p class="help-tip-callout">
+          <strong>Hover Tip:</strong> Hover or focus on any button, tab, pill, or <code>?</code> badge in the workspace (and on this page) to reveal a contextual information bubble explaining what it does. Press <kbd>Esc</kbd> at any time to dismiss an open bubble.
+        </p>
+      </div>
+
+      <!-- Section 1: Getting Started -->
+      <section id="getting-started" class="help-section" tabindex="-1">
+        <h2>1. Getting Started &amp; Live Extraction</h2>
+        <p>
+          You can explore Archigraph immediately with pre-loaded longitudinal datasets or extract live organizational hierarchies from public company team pages.
+        </p>
+
+        <div class="help-grid">
+          <article class="help-card">
+            <h3>Quick Company Demos</h3>
+            <p>
+              Click <strong>Google</strong>, <strong>Meta</strong>, <strong>SpaceX</strong>, <strong>Impulse Space</strong>, or <strong>Palantir</strong> in the top bar to load 4-era longitudinal benchmarks (<code>2018 → 2024</code>), or click <strong>Replit (extracted)</strong> to inspect a real Gemini extraction of an archived Wayback snapshot compared against Replit's current leadership page.
+            </p>
+          </article>
+
+          <article class="help-card">
+            <h3>Live Wayback + Gemini Extraction</h3>
+            <p>
+              Paste any public leadership or team URL (for example, <code>https://replit.com/about</code>), pick <strong>1–5 Snapshots</strong>, and click <strong>Extract Network</strong>. Archigraph queries the Wayback Machine CDX API (deduplicated by monthly content digest), cleans HTML boilerplate, and extracts structured profiles via <code>gemini-3.8-flash</code>.
+            </p>
+          </article>
+
+          <article class="help-card">
+            <h3>Access Tokens &amp; Rate Guardrails</h3>
+            <p>
+              Hosted deployments gate live Gemini calls behind <code>ARCHIGRAPH_ACCESS_TOKEN</code>. On your first live extraction, the browser prompts once for the token and stores it in <code>sessionStorage</code> for your current tab session. If Wayback rate-limits the newest capture, Archigraph automatically falls back to the live URL.
+            </p>
+          </article>
+
+          <article class="help-card">
+            <h3>Data Provenance &amp; Source Verification</h3>
+            <p>
+              Every extracted profile records its <strong>Line Confidence</strong> (<code>Explicit</code>, <code>Inferred</code>, or <code>Root Node</code>) and a quoted justification. Click any person and select <strong>Verify Snapshot Source ↗</strong> to inspect the original Wayback capture or live webpage.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <!-- Section 2: Canvas Controls & Visual Legend -->
+      <section id="canvas-controls" class="help-section" tabindex="-1">
+        <h2>2. Graph Canvas, Overlays &amp; Time Machine</h2>
+        <p>
+          The interactive D3.js canvas supports zooming, panning, subtree folding, search-to-zoom, and two complementary network topologies.
+        </p>
+
+        <div class="help-table-wrap" tabindex="0" role="region" aria-labelledby="controls-table-caption">
+          <table class="help-ref-table">
+            <caption id="controls-table-caption">Workspace toolbar &amp; footer controls reference</caption>
+            <thead>
+              <tr>
+                <th scope="col">Control</th>
+                <th scope="col">What It Does</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Org Tree / Relationship Mesh</th>
+                <td>Switch between a top-down reporting hierarchy (with collapsible <code>+N</code> / <code>−</code> manager badges and multi-root co-founders) and a force-directed mesh revealing shared-expertise clusters.</td>
+              </tr>
+              <tr>
+                <th scope="row">Show Departed</th>
+                <td>Overlays executives who exited since the previous snapshot onto the canvas with dashed rose halos so you can see exactly which manager lost bench depth.</td>
+              </tr>
+              <tr>
+                <th scope="row">Poachability Radar</th>
+                <td>Colors every active leader's outer ring by recruiting flight risk: <span class="poach-pill high">Prime Target (≥55)</span>, <span class="poach-pill watch">Passive Watch (30–54)</span>, or <span class="poach-pill anchored">Anchored (&lt;30)</span>.</td>
+              </tr>
+              <tr>
+                <th scope="row">Open Roles</th>
+                <td>Attaches live or parsed job requisitions (<code>+ HIRING</code> dashed emerald nodes) directly underneath their resolved hiring manager on the org chart.</td>
+              </tr>
+              <tr>
+                <th scope="row">Filter / Search Box</th>
+                <td>Dims non-matching nodes in real time as you type a skill, title, or name. Press <kbd>Enter</kbd> to auto-expand collapsed subtrees and cycle camera zoom across matches.</td>
+              </tr>
+              <tr>
+                <th scope="row">Time Machine &amp; Play</th>
+                <td>Scrub across historical eras or click <strong>Play</strong> to animate hires (emerald), promotions (amber), lateral re-orgs (sky blue), and departures (rose) chronologically.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Section 3: Investor & Search Signals -->
+      <section id="intelligence-hub" class="help-section" tabindex="-1">
+        <h2>3. Investor Diligence &amp; Recruiting Intelligence</h2>
+        <p>
+          Whenever an organization is loaded, the right-hand <strong>Investor &amp; Search Signals</strong> hub computes four institutional lenses for the active snapshot era:
+        </p>
+
+        <div class="help-grid">
+          <article class="help-card">
+            <h3>VC / PE Org Scorecard</h3>
+            <ul>
+              <li><strong>Retention Rate &amp; VP+ Churn:</strong> Measures continuity of the prior snapshot's leadership cohort and isolates Director+/VP+/C-suite exits.</li>
+              <li><strong>Bench Velocity Archetype:</strong> Classifies leadership growth as <em>Internal Bench-Builder</em>, <em>External Heavy</em>, or <em>Balanced</em> based on internal promotions vs. external senior hires.</li>
+              <li><strong>Max Span &amp; Unfilled VP+ Seats:</strong> Flags managers with overloaded direct-report spans and senior roles vacated without a replacement.</li>
+            </ul>
+          </article>
+
+          <article class="help-card">
+            <h3>Executive Poachability Radar (0–100)</h3>
+            <ul>
+              <li><strong>Layered Over in Re-Org:</strong> A new intermediate executive was inserted above an existing leader.</li>
+              <li><strong>Sponsor / Manager Departed:</strong> The executive's prior reporting manager exited the company.</li>
+              <li><strong>Stagnant Amid Peer Promotions:</strong> Title remained static across snapshots while peers advanced in seniority.</li>
+              <li><strong>Scope / Span Compression:</strong> Direct report count contracted relative to earlier eras.</li>
+            </ul>
+          </article>
+
+          <article class="help-card">
+            <h3>Hiring &amp; Job-Board Signal Fusion</h3>
+            <p>
+              Paste raw job descriptions or fetch a live public <strong>Greenhouse</strong>, <strong>Lever</strong>, or <strong>Ashby</strong> board URL. Archigraph parses explicit reporting clauses (<em>"Reporting directly to our CTO…"</em>), maps open seats onto the hiring manager, and extracts roadmap signals (e.g., <code>CUDA</code>, <code>AI Agents</code>, <code>FedRAMP</code>).
+            </p>
+          </article>
+
+          <article class="help-card">
+            <h3>Backchannels &amp; Contact Matching</h3>
+            <p>
+              Click <strong>My Network</strong> (or load the 9-contact demo VC network) to match your LinkedIn CSV or CRM list against <strong>both current leaders and departed alumni</strong>—surfacing off-list reference checks with exact historical overlap eras alongside current executives.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <!-- Section 4: Advanced Workflows -->
+      <section id="workflows" class="help-section" tabindex="-1">
+        <h2>4. Warm Paths, Blast Radius, Portfolio &amp; Exports</h2>
+
+        <div class="help-grid">
+          <article class="help-card">
+            <h3>Warm Path Finder</h3>
+            <p>
+              Select any two people in <strong>Warm Path Finder</strong> (or click <strong>Warm Path from Top Exec</strong> on a profile card) to illuminate the shortest introduction chain—prioritizing formal reporting edges first, shared expertise second, and department peers third.
+            </p>
+          </article>
+
+          <article class="help-card">
+            <h3>Key-Person Departure Simulator</h3>
+            <p>
+              Select any active leader and click <strong>Simulate Departure</strong> to model a what-if exit directly on the graph: orphaned direct reports, downstream flight-risk shock, single-point domain expertise loss, and ranked internal succession candidates.
+            </p>
+          </article>
+
+          <article class="help-card">
+            <h3>Portfolio Screener &amp; Spinout Tracker</h3>
+            <p>
+              Click <strong>Portfolio Screener</strong> in the header to sort all tracked companies by Retention %, VP+ Churn, Prime Targets, or Open Roles—and automatically trace cross-company alumni founder spinouts (such as <code>spacex.com → impulsespace.com</code>).
+            </p>
+          </article>
+
+          <article class="help-card">
+            <h3>Watchlist Alerts &amp; Institutional Exports</h3>
+            <p>
+              Open <strong>Alerts</strong> to toggle trigger rules and copy production-ready <strong>Slack Block Kit</strong> or <strong>CRM / ATS Event</strong> JSON webhooks. Use <strong>Export ▾</strong> to download a VC &amp; Search Brief (<code>.md</code>), Temporal JSON, Snapshot Roster CSV, or standalone Vector SVG.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <!-- Section 5: Searchable Native Accordion FAQ -->
+      <section id="faq" class="help-section help-accordion" aria-labelledby="faq-heading" tabindex="-1">
+        <div class="help-faq-header">
+          <h2 id="faq-heading">5. Frequently Asked Questions &amp; Troubleshooting</h2>
+          <button
+            type="button"
+            class="secondary-btn faq-toggle-all-btn"
+            commandfor="faq"
+            command="--toggle-all"
+            aria-expanded="false"
+            interestfor="tip-faq-toggle-all"
+          >
+            <span class="expand">Expand all</span>
+            <span class="collapse">Collapse all</span>
+          </button>
+        </div>
+
+        <details open>
+          <summary>Why is the URL extraction box disabled on some deployments?</summary>
+          <div class="details-body">
+            <p>
+              By default, hosted instances set <code>ENABLE_LIVE_EXTRACTION=false</code> so demos run at zero API cost. To enable live crawling on Render or Docker, set <code>ENABLE_LIVE_EXTRACTION=true</code> and configure <code>GEMINI_API_KEY</code> in your service environment variables.
+            </p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Where do I find the access token when prompted during live extraction?</summary>
+          <div class="details-body">
+            <p>
+              In your Render dashboard, open your Archigraph web service, click <strong>Environment</strong> in the left sidebar, and reveal the auto-generated <code>ARCHIGRAPH_ACCESS_TOKEN</code> value. Paste it once when prompted; Archigraph saves it in <code>sessionStorage</code> for the rest of your browser tab session.
+            </p>
+          </div>
+        </details>
+
+        <details>
+          <summary>What happens if the Wayback Machine doesn't have snapshots or rate-limits a URL?</summary>
+          <div class="details-body">
+            <p>
+              Archigraph automatically retries transient Wayback <code>429</code> / <code>503</code> responses with exponential backoff, and falls back to scraping the live target URL (<code>current</code>) whenever archive captures are unavailable or rate-limited—without deducting failed HTTP downloads from your daily Gemini extraction budget.
+            </p>
+          </div>
+        </details>
+
+        <details>
+          <summary>What is the difference between solid and dashed lines on the org chart?</summary>
+          <div class="details-body">
+            <p>
+              <strong>Solid lines</strong> represent explicit reporting relationships directly stated in source text or structured data. <strong>Dashed lines</strong> indicate reporting lines inferred from page layout/title hierarchy or, in Relationship Mesh mode, shared-expertise bridges between peers.
+            </p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Why did the first page load take 30–60 seconds on Render?</summary>
+          <div class="details-body">
+            <p>
+              Render's free tier spins containers down after periods of inactivity. Once awake, demo switching, pathfinding, diligence scoring, and departure simulations respond in milliseconds. Note that free-tier disk storage is ephemeral, so live-extracted caches reset when the container restarts—use <strong>Export ▾ → Temporal JSON</strong> to keep permanent offline copies.
+            </p>
+          </div>
+        </details>
+      </section>
+    </main>
+  </div>
+
+  <footer class="help-footer">
+    <p>Archigraph V2.0 — Temporal Org Chart &amp; Relationship Network Intelligence Platform · <a href="/">Return to Interactive Workspace</a></p>
+  </footer>
+
+  <!-- Interest-Triggered Information Bubbles for Help Page -->
+  <div id="help-hint-layer">
+    <div id="tip-help-back" popover="hint" class="hint-bubble hint-end">
+      <div class="hint-bubble-inner">Return to the main interactive Archigraph graph canvas and intelligence workspace.</div>
+    </div>
+    <div id="tip-help-try-google" popover="hint" class="hint-bubble">
+      <div class="hint-bubble-inner">Open the workspace and immediately load Google's 4-era longitudinal org chart.</div>
+    </div>
+    <div id="tip-help-try-spacex" popover="hint" class="hint-bubble">
+      <div class="hint-bubble-inner">Open the workspace and immediately load SpaceX's 4-era org chart and Impulse Space spinout links.</div>
+    </div>
+    <div id="tip-help-try-replit" popover="hint" class="hint-bubble">
+      <div class="hint-bubble-inner">Open the workspace and inspect Replit's Gemini-extracted Wayback vs. current leadership snapshots.</div>
+    </div>
+    <div id="tip-faq-toggle-all" popover="hint" class="hint-bubble hint-end">
+      <div class="hint-bubble-inner">Expand or collapse every troubleshooting question in this FAQ section at once.</div>
+    </div>
+  </div>
+
+  <!-- Scrollspy & Accordion Expand-All Wiring -->
+  <script type="module">
+    // 1. Scrollspy aria-current synchronization + IntersectionObserver fallback
+    const tocLinks = [...document.querySelectorAll(".help-toc a")];
+    const sections = [...document.querySelectorAll(".help-main > section[id]")];
+
+    if (CSS.supports("scroll-target-group: auto")) {
+      const syncAriaCurrent = () => {
+        let currentLink = null;
+        try {
+          currentLink = document.querySelector(".help-toc a:target-current");
+        } catch (_) {}
+        tocLinks.forEach(link => {
+          link.setAttribute("aria-current", link === currentLink ? "true" : "false");
+        });
+      };
+      syncAriaCurrent();
+      document.addEventListener("scrollend", syncAriaCurrent);
+    } else if ("IntersectionObserver" in window) {
+      const observer = new IntersectionObserver(
+        entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              const id = entry.target.getAttribute("id");
+              tocLinks.forEach(link => {
+                const isActive = link.getAttribute("href") === `#${id}`;
+                link.classList.toggle("target-current", isActive);
+                link.setAttribute("aria-current", String(isActive));
+              });
+            }
+          });
+        },
+        { rootMargin: "-25% 0px -60% 0px", threshold: 0 }
+      );
+      sections.forEach(sec => observer.observe(sec));
+    }
+
+    // 2. Non-exclusive Accordion Expand All / Collapse All (Invoker Command + fallback)
+    const faqSection = document.getElementById("faq");
+    const toggleAllBtn = faqSection?.querySelector('[command="--toggle-all"]');
+
+    function toggleAllFaqItems() {
+      if (!faqSection || !toggleAllBtn) return;
+      const expand = toggleAllBtn.getAttribute("aria-expanded") !== "true";
+      for (const details of faqSection.querySelectorAll(":scope > details")) {
+        details.open = expand;
+      }
+      toggleAllBtn.setAttribute("aria-expanded", String(expand));
+    }
+
+    document.addEventListener(
+      "command",
+      event => {
+        if (event.command !== "--toggle-all") return;
+        toggleAllFaqItems();
+      },
+      { capture: true }
+    );
+
+    if (!Object.hasOwn(HTMLButtonElement.prototype, "commandForElement") && toggleAllBtn) {
+      toggleAllBtn.addEventListener("click", toggleAllFaqItems);
+    }
+
+    document.addEventListener(
+      "toggle",
+      event => {
+        if (!(event.target instanceof HTMLDetailsElement)) return;
+        if (!event.target.matches(".help-accordion > details")) return;
+        if (!faqSection || !toggleAllBtn) return;
+        const items = faqSection.querySelectorAll(":scope > details");
+        const allOpen = Array.prototype.every.call(items, d => d.open);
+        toggleAllBtn.setAttribute("aria-expanded", String(allOpen));
+      },
+      { capture: true }
+    );
+  </script>
+</body>
+</html>

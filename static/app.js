@@ -154,6 +154,39 @@ document.addEventListener("DOMContentLoaded", () => {
   // Deployment capabilities (live extraction may be disabled on hosted instances)
   let liveEnabled = true;
 
+  function setActionDisabled(btn, isDisabled) {
+    if (!btn) return;
+    btn.removeAttribute("disabled");
+    btn.setAttribute("aria-disabled", isDisabled ? "true" : "false");
+  }
+
+  // Block click/Enter/Space/command activation on aria-disabled buttons while
+  // preserving hover and keyboard focus so interest-triggered hint bubbles always appear.
+  document.addEventListener(
+    "click",
+    (e) => {
+      const disabledBtn =
+        e.target instanceof Element ? e.target.closest('button[aria-disabled="true"]') : null;
+      if (disabledBtn) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+      }
+    },
+    true
+  );
+
+  document.addEventListener(
+    "beforetoggle",
+    (e) => {
+      if (e.target && e.target.id === "export-popover" && e.newState === "open") {
+        if (exportMenuBtn && exportMenuBtn.getAttribute("aria-disabled") === "true") {
+          e.preventDefault();
+        }
+      }
+    },
+    true
+  );
+
   fetch("/api/config")
     .then(r => r.json())
     .then(cfg => {
@@ -162,7 +195,7 @@ document.addEventListener("DOMContentLoaded", () => {
         urlInput.value = "";
         urlInput.disabled = true;
         limitSelect.disabled = true;
-        submitBtn.disabled = true;
+        setActionDisabled(submitBtn, true);
         urlInput.placeholder = "Live extraction disabled. Select a demo above.";
       }
     })
@@ -238,7 +271,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       setupTimeline();
       if (intelHubSection) intelHubSection.classList.remove("hidden");
-      if (toggleRadarBtn) toggleRadarBtn.disabled = false;
+      setActionDisabled(toggleRadarBtn, false);
       if (userContacts.length > 0) {
         await refreshNetworkMatches();
       }
@@ -249,7 +282,7 @@ document.addEventListener("DOMContentLoaded", () => {
       selectSnapshot(historicalSnapshots.length > 1 ? historicalSnapshots.length - 1 : 0);
 
       nodeSearchInput.disabled = false;
-      if (exportMenuBtn) exportMenuBtn.disabled = false;
+      setActionDisabled(exportMenuBtn, false);
       canvasLegend.classList.remove("hidden");
       warmPathSection.classList.remove("hidden");
       setLoadingState(false);
@@ -373,13 +406,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function setLoadingState(isLoading) {
     if (isLoading) {
-      submitBtn.disabled = true;
+      setActionDisabled(submitBtn, true);
       btnLoader.classList.remove("hidden");
       loadingView.classList.remove("hidden");
       placeholderView.classList.add("hidden");
       clearCanvas();
     } else {
-      submitBtn.disabled = !liveEnabled;
+      setActionDisabled(submitBtn, !liveEnabled);
       btnLoader.classList.add("hidden");
       loadingView.classList.add("hidden");
     }
@@ -404,24 +437,24 @@ document.addEventListener("DOMContentLoaded", () => {
     searchMatchCursor = 0;
     updateExpandAllButton();
     toggleDepartedBtn.setAttribute("aria-pressed", "false");
-    toggleDepartedBtn.disabled = true;
+    setActionDisabled(toggleDepartedBtn, true);
     if (toggleRadarBtn) {
       showPoachabilityRadar = false;
       toggleRadarBtn.setAttribute("aria-pressed", "false");
-      toggleRadarBtn.disabled = true;
+      setActionDisabled(toggleRadarBtn, true);
     }
     if (toggleJobsBtn) {
       showOpenRoles = false;
       toggleJobsBtn.setAttribute("aria-pressed", "false");
       toggleJobsBtn.innerText = "Open Roles";
-      toggleJobsBtn.disabled = true;
+      setActionDisabled(toggleJobsBtn, true);
     }
     if (intelHubSection) intelHubSection.classList.add("hidden");
     networkMatchReport = null;
     updateNetworkPill();
-    if (exportMenuBtn) exportMenuBtn.disabled = true;
+    setActionDisabled(exportMenuBtn, true);
     stopPlayback();
-    playBtn.disabled = true;
+    setActionDisabled(playBtn, true);
     timelineSlider.disabled = true;
     timelineTicks.innerHTML = "";
     diffKpiBar.innerHTML = "";
@@ -451,7 +484,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function setupTimeline() {
     if (historicalSnapshots.length <= 1) {
       timelineSlider.disabled = true;
-      playBtn.disabled = true;
+      setActionDisabled(playBtn, true);
       timelineSlider.max = 0;
       timelineSlider.value = 0;
 
@@ -462,7 +495,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     timelineSlider.disabled = false;
-    playBtn.disabled = false;
+    setActionDisabled(playBtn, false);
     timelineSlider.max = historicalSnapshots.length - 1;
 
     const formattedDates = historicalSnapshots.map(snap => formatTimestamp(snap.snapshot_timestamp));
@@ -528,12 +561,12 @@ document.addEventListener("DOMContentLoaded", () => {
     displayDate.classList.remove("hidden");
 
     const departedCount = snap.diff_summary?.counts?.departed || 0;
-    toggleDepartedBtn.disabled = departedCount === 0;
+    setActionDisabled(toggleDepartedBtn, departedCount === 0);
     toggleDepartedBtn.innerText = departedCount > 0 ? `Show Departed (${departedCount})` : "Show Departed";
 
     if (toggleJobsBtn) {
       const openCount = snap.hiring_signals?.graph_open_nodes?.length || 0;
-      toggleJobsBtn.disabled = openCount === 0;
+      setActionDisabled(toggleJobsBtn, openCount === 0);
       toggleJobsBtn.innerText = openCount > 0 ? `Open Roles (${openCount})` : "Open Roles";
     }
 
@@ -1368,12 +1401,12 @@ document.addEventListener("DOMContentLoaded", () => {
       profManager.innerText = managerObj ? managerObj.full_name : managerId;
       currentManagerTargetId = managerObj ? managerObj.id : managerId;
       profManager.classList.add("highlight-link");
-      profManager.disabled = false;
+      setActionDisabled(profManager, false);
     } else {
       profManager.innerText = "None (Top Executive / Founder)";
       currentManagerTargetId = null;
       profManager.classList.remove("highlight-link");
-      profManager.disabled = true;
+      setActionDisabled(profManager, true);
     }
 
     // Reporting Line Confidence & Evidence
@@ -1512,7 +1545,7 @@ document.addEventListener("DOMContentLoaded", () => {
     clearBlastSimulation();
     if (simulateDepartureBtn) {
       const canSimulate = !entity._isDeparted && !entity._isOpenRole;
-      simulateDepartureBtn.disabled = !canSimulate;
+      setActionDisabled(simulateDepartureBtn, !canSimulate);
     }
 
     profBio.innerText = entity.bio_summary || "No professional biography extracted for this snapshot.";
@@ -2562,7 +2595,7 @@ document.addEventListener("DOMContentLoaded", () => {
         showOpenRoles = true;
         if (toggleJobsBtn) {
           const openCnt = res.hiring_signals?.graph_open_nodes?.length || 0;
-          toggleJobsBtn.disabled = openCnt === 0;
+          setActionDisabled(toggleJobsBtn, openCnt === 0);
           toggleJobsBtn.innerText = `Open Roles (${openCnt})`;
           toggleJobsBtn.setAttribute("aria-pressed", "true");
         }
@@ -3505,6 +3538,12 @@ document.addEventListener("DOMContentLoaded", () => {
       loadOrganizationByKey("demo", key);
     });
   });
+
+  // Auto-load a demo when navigated from /help?demo=<key> -> /?demo=<key>
+  const initialDemoParam = new URLSearchParams(window.location.search).get("demo");
+  if (initialDemoParam && document.querySelector(`.demo-pill[data-demo="${CSS.escape(initialDemoParam)}"]`)) {
+    loadOrganizationByKey("demo", initialDemoParam);
+  }
 
   // ==========================================================================
   // Cross-Company Portfolio Screener & Alumni Spinout Modal (Sortable Table)
