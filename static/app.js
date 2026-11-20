@@ -983,13 +983,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const nodeCount = root.descendants().length;
     const depthCount = Math.max(1, root.height);
-    const treeHeight = Math.max(height - 90, nodeCount * 82);
+    const legendClearance = 72;
+    const treeHeight = Math.max(height - 90 - legendClearance, nodeCount * 84);
     const treeWidth = Math.max(width - 280, depthCount * 265);
 
     const treeLayout = d3.tree().size([treeHeight, treeWidth]);
     treeLayout(root);
 
-    svg.call(zoomBehavior.transform, d3.zoomIdentity.translate(135, 48).scale(1));
+    svg.call(zoomBehavior.transform, d3.zoomIdentity.translate(135, 36).scale(1));
 
     // 1. Draw connecting link paths
     g.selectAll(".link")
@@ -1286,10 +1287,10 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
     activeSimulation = d3.forceSimulation(nodesData)
-      .force("link", d3.forceLink(linksData).id(d => d.id).distance(d => d.type === "reporting" ? 135 : 185))
-      .force("charge", d3.forceManyBody().strength(-520))
-      .force("center", d3.forceCenter(width / 2, height / 2))
-      .force("collide", d3.forceCollide().radius(68))
+      .force("link", d3.forceLink(linksData).id(d => d.id).distance(d => d.type === "reporting" ? 150 : 205))
+      .force("charge", d3.forceManyBody().strength(-640))
+      .force("center", d3.forceCenter(width / 2, Math.max(200, (height - 56) / 2)))
+      .force("collide", d3.forceCollide().radius(86))
       .on("tick", () => {
         linkElements
           .attr("x1", d => d.source.x)
@@ -3328,9 +3329,17 @@ document.addEventListener("DOMContentLoaded", () => {
     webhookPayloadCode.textContent = JSON.stringify(payload || {}, null, 2);
   }
 
+  let alertsInFlightQs = null;
+  let alertsInFlightPromise = null;
+
   async function refreshAlertsFeed() {
     const enabled = getEnabledAlertRules();
     const qs = enabled !== null ? `?rules=${encodeURIComponent(enabled.join(","))}` : "";
+    if (alertsInFlightPromise && alertsInFlightQs === qs) {
+      return alertsInFlightPromise;
+    }
+    alertsInFlightQs = qs;
+    alertsInFlightPromise = (async () => {
     try {
       const data = await apiJson(`/api/alerts${qs}`);
       currentAlerts = data.alerts || [];
@@ -3411,7 +3420,14 @@ document.addEventListener("DOMContentLoaded", () => {
       renderSelectedAlertWebhook();
     } catch (_) {
       // Non-fatal if alerts fetch fails
+    } finally {
+      if (alertsInFlightQs === qs) {
+        alertsInFlightQs = null;
+        alertsInFlightPromise = null;
+      }
     }
+    })();
+    return alertsInFlightPromise;
   }
 
   // Initial background fetch so header Alerts pill shows live portfolio alert count immediately
