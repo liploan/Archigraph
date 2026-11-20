@@ -1,5 +1,6 @@
 """Input validation and SSRF protection for user-supplied URLs."""
 import ipaddress
+import re
 import socket
 from urllib.parse import urlparse, urljoin
 
@@ -76,6 +77,16 @@ def safe_get(url: str, headers=None, timeout=20) -> requests.Response:
             if len(body) > MAX_RESPONSE_BYTES:
                 resp.close()
                 raise UnsafeURLError("Response too large.")
+        if len(body) <= 8192:
+            snippet = body.decode("utf-8", errors="ignore")
+            meta_match = re.search(
+                r'<meta[^>]+http-equiv=["\']?refresh["\']?[^>]+content=["\'][^"\']*?url=\s*[\'"]?([^\'">\s]+)',
+                snippet,
+                re.I,
+            )
+            if meta_match:
+                current = validate_public_url(urljoin(current, meta_match.group(1)))
+                continue
         resp._content = bytes(body)
         resp._content_consumed = True
         return resp

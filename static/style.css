@@ -2800,6 +2800,9 @@ button[aria-disabled="true"] {
 [interestfor="tip-demo-replit"] { anchor-name: --a-tip-demo-replit; }
 #tip-demo-replit { position-anchor: --a-tip-demo-replit; }
 
+[interestfor="tip-demo-darpa"] { anchor-name: --a-tip-demo-darpa; }
+#tip-demo-darpa { position-anchor: --a-tip-demo-darpa; }
+
 [interestfor="tip-portfolio-btn"] { anchor-name: --a-tip-portfolio-btn; }
 #tip-portfolio-btn { position-anchor: --a-tip-portfolio-btn; }
 
@@ -2909,6 +2912,9 @@ button[aria-disabled="true"] {
 
 [interestfor="tip-help-try-spacex"] { anchor-name: --a-tip-help-try-spacex; }
 #tip-help-try-spacex { position-anchor: --a-tip-help-try-spacex; }
+
+[interestfor="tip-help-try-darpa"] { anchor-name: --a-tip-help-try-darpa; }
+#tip-help-try-darpa { position-anchor: --a-tip-help-try-darpa; }
 
 [interestfor="tip-help-try-replit"] { anchor-name: --a-tip-help-try-replit; }
 #tip-help-try-replit { position-anchor: --a-tip-help-try-replit; }

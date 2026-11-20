@@ -51,7 +51,7 @@ class TestDemos(AppTestCase):
         self.assertEqual(self.client.get("/api/demo/..%2Fmanifest").status_code, 404)
 
     def test_all_demo_people_have_real_names(self):
-        for key in ("google", "meta", "spacex", "palantir", "replit"):
+        for key in ("google", "meta", "spacex", "palantir", "replit", "darpa"):
             for snap in self.client.get(f"/api/demo/{key}").get_json()["data"]:
                 for e in snap["entities"]:
                     self.assertNotEqual(e["full_name"], e["job_title"], f"{key}: {e['id']}")

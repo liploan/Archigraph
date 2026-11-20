@@ -19,7 +19,7 @@ from src.config import (
 )
 from src.ingestor import (
     get_wayback_snapshots, fetch_snapshot_html, clean_html_content,
-    delete_raw_snapshot, get_domain, build_cache_id,
+    delete_raw_snapshot, get_domain, build_cache_id, resolve_team_page_url,
 )
 from src.alerts import generate_watchlist_alerts
 from src.extractor import extract_org_structure
@@ -258,6 +258,7 @@ def api_extract():
         app.logger.error("GEMINI_API_KEY is not configured.")
         return jsonify({"error": "Live extraction is not configured on this server."}), 503
 
+    url = resolve_team_page_url(url)
     domain = get_domain(url)
     app.logger.info("[API] Resolving snapshots for %s", domain)
 

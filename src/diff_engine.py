@@ -10,11 +10,11 @@ from typing import Dict, List, Optional, Tuple
 # Higher number = higher organizational seniority.
 SENIORITY_PATTERNS: List[Tuple[int, re.Pattern]] = [
     (7, re.compile(r"\b(ceo|chief\s+executive\s+officer)\b", re.I)),
-    (6, re.compile(r"\b(president|coo|cfo|cto|cpo|cio|chief\s+\w+\s+officer|co-?founder|founder)\b", re.I)),
+    (6, re.compile(r"\b(president|coo|cfo|cto|cpo|cio|chief\s+\w+\s+officer|co-?founder|founder)\b|^director,\s+(?!.*office)", re.I)),
     (5, re.compile(r"\b(evp|executive\s+vice\s+president|svp|senior\s+vice\s+president)\b", re.I)),
-    (4, re.compile(r"\b(vp|vice\s+president|head\s+of)\b", re.I)),
-    (3, re.compile(r"\b(senior\s+director|director|principal)\b", re.I)),
-    (2, re.compile(r"\b(senior\s+product\s+manager|senior\s+manager|lead|staff|manager)\b", re.I)),
+    (4, re.compile(r"\b(vp|vice\s+president|head\s+of|office\s+director)\b", re.I)),
+    (3, re.compile(r"(?<!assistant\s)(?<!associate\s)\b(senior\s+director|deputy\s+director|program\s+director|director|principal)\b", re.I)),
+    (2, re.compile(r"\b(assistant\s+director|associate\s+director|senior\s+product\s+manager|senior\s+manager|lead|staff|manager)\b", re.I)),
     (1, re.compile(r"\b(product\s+manager|pm|engineer|scientist|designer|analyst)\b", re.I)),
 ]
 

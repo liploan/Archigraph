@@ -29,6 +29,12 @@
     "prefix": "replit_com",
     "kind": "extracted"
   },
+  "darpa": {
+    "label": "DARPA (extracted)",
+    "domain": "darpa.mil",
+    "prefix": "darpa_mil",
+    "kind": "extracted"
+  },
   "impulse": {
     "label": "Impulse Space",
     "domain": "impulsespace.com",

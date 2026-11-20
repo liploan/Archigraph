@@ -1,0 +1,349 @@
+{
+  "snapshot_timestamp": "current",
+  "organization_name": "darpa.mil",
+  "entities": [
+    {
+      "id": "stephen-winchell",
+      "full_name": "Stephen Winchell",
+      "job_title": "Director, DARPA",
+      "reporting_confidence": "none",
+      "expertise_keywords": [
+        "Autonomy",
+        "Robotics",
+        "Uncrewed"
+      ],
+      "bio_summary": "Stephen Winchell is the director of the Defense Advanced Research Projects Agency (DARPA).",
+      "department": "Director's Office",
+      "manager_name_or_id": null,
+      "reporting_evidence": null
+    },
+    {
+      "id": "tyler-mcquade",
+      "full_name": "Tyler McQuade",
+      "job_title": "Deputy Director, DARPA",
+      "reporting_confidence": "high",
+      "expertise_keywords": [
+        "Executive Leadership",
+        "Program Management",
+        "Advanced Research"
+      ],
+      "bio_summary": "Tyler McQuade rejoined DARPA in August 2025 as the agency’s deputy director.",
+      "department": "Director's Office",
+      "manager_name_or_id": "stephen-winchell",
+      "reporting_evidence": "The Deputy Director, DARPA reports directly to the Director, DARPA."
+    },
+    {
+      "id": "michael-koeris",
+      "full_name": "Michael Koeris",
+      "job_title": "Office Director, Biological Technologies Office",
+      "reporting_confidence": "high",
+      "expertise_keywords": [
+        "Agriculture",
+        "Casualty Care",
+        "Chemistry",
+        "Manufacturing",
+        "Microbiome Medicines"
+      ],
+      "bio_summary": "Michael Koeris, Ph.D., focuses his research and teaching on all aspects of chemistry, manufacturing, and control for microbiome medicines; advanced cell and gene therapy approaches; and casualty care.",
+      "department": "Biological Technologies Office",
+      "manager_name_or_id": "stephen-winchell",
+      "reporting_evidence": "Every Office Director reports to the Director, DARPA."
+    },
+    {
+      "id": "catherine-campbell",
+      "full_name": "Catherine Campbell",
+      "job_title": "Deputy Director, Biological Technologies Office",
+      "reporting_confidence": "high",
+      "expertise_keywords": [
+        "Agriculture",
+        "Biological",
+        "Maritime",
+        "Materials Science",
+        "Supply Chain and Logistics"
+      ],
+      "bio_summary": "Catherine Campbell, Ph.D., has interests that focus on the analysis of population-based experiments designed to study both human and animal models of disease.",
+      "department": "Biological Technologies Office",
+      "manager_name_or_id": "michael-koeris",
+      "reporting_evidence": "Within each Technical Office, the Deputy Director reports to that Office's Office Director."
+    },
+    {
+      "id": "ryann-glaccum",
+      "full_name": "Ryann Glaccum",
+      "job_title": "Assistant Director Program Management, Biological Technologies Office",
+      "reporting_confidence": "high",
+      "expertise_keywords": [
+        "Program Management",
+        "Management Consulting",
+        "Cybersecurity",
+        "Operations"
+      ],
+      "bio_summary": "Prior to joining DARPA in 2020, Ryann Glaccum worked at a cybersecurity startup and spent most of her career in management consulting for U.S. government clients.",
+      "department": "Biological Technologies Office",
+      "manager_name_or_id": "michael-koeris",
+      "reporting_evidence": "Within each Technical Office, the Assistant Director Program Management reports to that Office's Office Director."
+    },
+    {
+      "id": "bartlett-russell",
+      "full_name": "Bartlett Russell",
+      "job_title": "Office Director, Defense Sciences Office",
+      "reporting_confidence": "high",
+      "expertise_keywords": [
+        "Autonomy",
+        "Neuroscience",
+        "Resilience"
+      ],
+      "bio_summary": "Bartlett Russell, Ph.D., served as DSO’s deputy director from August 2022 - January 2025 and joined DARPA as a program manager in April 2019.",
+      "department": "Defense Sciences Office",
+      "manager_name_or_id": "stephen-winchell",
+      "reporting_evidence": "Every Office Director reports to the Director, DARPA."
+    },
+    {
+      "id": "jim-gimlett",
+      "full_name": "Jim Gimlett",
+      "job_title": "Deputy Director, Defense Sciences Office",
+      "reporting_confidence": "high",
+      "expertise_keywords": [
+        "Artificial Intelligence (AI)",
+        "Complexity",
+        "Quantum",
+        "Quantum Sensing",
+        "Nanoscale Materials"
+      ],
+      "bio_summary": "Jim Gimlett, Ph.D., has research interests which include quantum sensing and metrology, nanoscale engineered materials, collaborative autonomous systems for harsh environments, and novel data-efficient AI for modeling and controlling complex dynamic systems.",
+      "department": "Defense Sciences Office",
+      "manager_name_or_id": "bartlett-russell",
+      "reporting_evidence": "Within each Technical Office, the Deputy Director reports to that Office's Office Director."
+    },
+    {
+      "id": "scott-wenzel",
+      "full_name": "Scott Wenzel",
+      "job_title": "Assistant Director Program Management, Defense Sciences Office",
+      "reporting_confidence": "high",
+      "expertise_keywords": [
+        "Program Management",
+        "Enterprise Information Systems",
+        "Operations",
+        "Defense Acquisitions"
+      ],
+      "bio_summary": "Prior to joining DARPA, Scott Wenzel held multiple positions in the Department of the Army Program Executive Office, Enterprise Information Systems.",
+      "department": "Defense Sciences Office",
+      "manager_name_or_id": "bartlett-russell",
+      "reporting_evidence": "Within each Technical Office, the Assistant Director Program Management reports to that Office's Office Director."
+    },
+    {
+      "id": "patrick-lincoln",
+      "full_name": "Patrick Lincoln",
+      "job_title": "Office Director, Information Processing Techniques Office",
+      "reporting_confidence": "high",
+      "expertise_keywords": [
+        "Artificial Intelligence (AI)",
+        "Cyber",
+        "Formal Methods",
+        "Information Domain",
+        "Privacy and Security"
+      ],
+      "bio_summary": "Patrick Lincoln, Ph.D., leads program managers who are funding the development of programs, technologies, and capabilities to ensure a surprising information advantage for the United States and its allies.",
+      "department": "Information Processing Techniques Office",
+      "manager_name_or_id": "stephen-winchell",
+      "reporting_evidence": "Every Office Director reports to the Director, DARPA."
+    },
+    {
+      "id": "john-francis-mergen",
+      "full_name": "John-Francis Mergen",
+      "job_title": "Deputy Director, Information Processing Techniques Office",
+      "reporting_confidence": "high",
+      "expertise_keywords": [
+        "Adaptability",
+        "Cyber",
+        "Hardware",
+        "Information Advantage"
+      ],
+      "bio_summary": "John-Francis Mergen provides technical leadership and works with program managers to envision, create, and transition capabilities that ensure enduring information advantage for the United States and its allies.",
+      "department": "Information Processing Techniques Office",
+      "manager_name_or_id": "patrick-lincoln",
+      "reporting_evidence": "Within each Technical Office, the Deputy Director reports to that Office's Office Director."
+    },
+    {
+      "id": "nicholas-haeuptle",
+      "full_name": "Nicholas Haeuptle",
+      "job_title": "Assistant Director Program Management, Information Processing Techniques Office",
+      "reporting_confidence": "high",
+      "expertise_keywords": [
+        "Program Management",
+        "Program Analysis",
+        "Operations",
+        "Strategic Technology"
+      ],
+      "bio_summary": "Nicholas Haeuptle is the assistant director for program management (ADPM) for the Information Processing Techniques Office. He was previously a Program Analyst for the Strategic Technology Office.",
+      "department": "Information Processing Techniques Office",
+      "manager_name_or_id": "patrick-lincoln",
+      "reporting_evidence": "Within each Technical Office, the Assistant Director Program Management reports to that Office's Office Director."
+    },
+    {
+      "id": "whitney-mason",
+      "full_name": "Whitney Mason",
+      "job_title": "Office Director, Multi X Office",
+      "reporting_confidence": "high",
+      "expertise_keywords": [
+        "Electronics",
+        "Sensors",
+        "Imaging Sensors",
+        "Multifunction Capability"
+      ],
+      "bio_summary": "Whitney Mason, Ph.D., has research interests which include imaging sensors that provide multifunction capability.",
+      "department": "Multi X Office",
+      "manager_name_or_id": "stephen-winchell",
+      "reporting_evidence": "Every Office Director reports to the Director, DARPA."
+    },
+    {
+      "id": "jonathan-hoffman",
+      "full_name": "Jonathan Hoffman",
+      "job_title": "Deputy Director, Multi X Office",
+      "reporting_confidence": "high",
+      "expertise_keywords": [
+        "Photonics",
+        "Positioning Navigation Timing (PNT)",
+        "Quantum",
+        "Sensors",
+        "Optics"
+      ],
+      "bio_summary": "Jonathan Hoffman, Ph.D., has research interests that include quantum sensing and information science, PNT, optics, and photonics.",
+      "department": "Multi X Office",
+      "manager_name_or_id": "whitney-mason",
+      "reporting_evidence": "Within each Technical Office, the Deputy Director reports to that Office's Office Director."
+    },
+    {
+      "id": "wendy-smith",
+      "full_name": "Wendy Smith",
+      "job_title": "Assistant Director Program Management, Multi X Office",
+      "reporting_confidence": "high",
+      "expertise_keywords": [
+        "Financial Management",
+        "Program Management",
+        "Systems Accounting",
+        "Business Operations"
+      ],
+      "bio_summary": "Wendy Smith serves as the overall business/financial manager for the Microsystems Technology Office. Prior to coming to DARPA, Smith served as a Systems and Operating Accountant at the Office of Naval Research.",
+      "department": "Multi X Office",
+      "manager_name_or_id": "whitney-mason",
+      "reporting_evidence": "Within each Technical Office, the Assistant Director Program Management reports to that Office's Office Director."
+    },
+    {
+      "id": "jennifer-thabet",
+      "full_name": "Jennifer Thabet",
+      "job_title": "Program Director, Small Business Programs Office",
+      "reporting_confidence": "high",
+      "expertise_keywords": [
+        "Small Business Innovation Research (SBIR)",
+        "Small Business Technology Transfer (STTR)",
+        "Technology Transition",
+        "Small Business Strategy"
+      ],
+      "bio_summary": "Jennifer Thabet, J.D., is the program director for DARPA’s Small Business Programs Office (SBPO). She is dedicated to enhancing the ability of the small business community to create and transition revolutionary technologies that benefit the warfighter,…",
+      "department": "Small Business Programs Office",
+      "manager_name_or_id": "stephen-winchell",
+      "reporting_evidence": "Every Program Director reports to the Director, DARPA."
+    },
+    {
+      "id": "john-s-paschkewitz",
+      "full_name": "John S. Paschkewitz",
+      "job_title": "Office Director, Strategic Technology Office",
+      "reporting_confidence": "high",
+      "expertise_keywords": [
+        "Complexity",
+        "Operations Research",
+        "Materials Science",
+        "Manufacturing",
+        "Human-Machine Teaming"
+      ],
+      "bio_summary": "John S. Paschkewitz, Ph.D., served as a program manager in the Defense Sciences and Strategic Technology offices from 2015 - 2021, with a diverse portfolio spanning operations research, materials science and manufacturing, human-machine teaming, and complex…",
+      "department": "Strategic Technology Office",
+      "manager_name_or_id": "stephen-winchell",
+      "reporting_evidence": "Every Office Director reports to the Director, DARPA."
+    },
+    {
+      "id": "adam-bryant",
+      "full_name": "Adam Bryant",
+      "job_title": "Deputy Director, Strategic Technology Office",
+      "reporting_confidence": "high",
+      "expertise_keywords": [
+        "Maritime",
+        "Sensors",
+        "Systems",
+        "Radar Remote Sensing",
+        "Satellite Constellations"
+      ],
+      "bio_summary": "Adam Bryant, Ph.D., has research interests in radar remote sensing, space-based sensing capabilities, and satellite constellation architectures and capabilities.",
+      "department": "Strategic Technology Office",
+      "manager_name_or_id": "john-s-paschkewitz",
+      "reporting_evidence": "Within each Technical Office, the Deputy Director reports to that Office's Office Director."
+    },
+    {
+      "id": "jessica-marsh",
+      "full_name": "Jessica Marsh",
+      "job_title": "Assistant Director Program Management, Strategic Technology Office",
+      "reporting_confidence": "high",
+      "expertise_keywords": [
+        "Program Management",
+        "SETA Support",
+        "Systems Engineering",
+        "Technical Assistance"
+      ],
+      "bio_summary": "Prior to joining the DARPA staff, Jessica Marsh provided scientific, engineering and technical assistance (SETA) support for 10 years across various DARPA offices.",
+      "department": "Strategic Technology Office",
+      "manager_name_or_id": "john-s-paschkewitz",
+      "reporting_evidence": "Within each Technical Office, the Assistant Director Program Management reports to that Office's Office Director."
+    },
+    {
+      "id": "aaron-lazarus",
+      "full_name": "Aaron Lazarus",
+      "job_title": "Office Director, Tactical Technology Office",
+      "reporting_confidence": "high",
+      "expertise_keywords": [
+        "Military Hardware Design",
+        "Hardware Development",
+        "Test and Evaluation",
+        "Manufacturing",
+        "Sustainment"
+      ],
+      "bio_summary": "Aaron Lazarus, Ph.D., oversees efforts to reimagine every aspect of military hardware design, development, test, manufacture, and sustainment.",
+      "department": "Tactical Technology Office",
+      "manager_name_or_id": "stephen-winchell",
+      "reporting_evidence": "Every Office Director reports to the Director, DARPA."
+    },
+    {
+      "id": "john-main",
+      "full_name": "John Main",
+      "job_title": "Deputy Director, Tactical Technology Office",
+      "reporting_confidence": "high",
+      "expertise_keywords": [
+        "Manufacturing",
+        "Research Administration",
+        "Tactical Systems",
+        "Technology Development"
+      ],
+      "bio_summary": "John Main is deputy director of the Tactical Technology Office, a role he assumed in July 2023. Prior to this assignment, he was associate vice president of research at George Mason University.",
+      "department": "Tactical Technology Office",
+      "manager_name_or_id": "aaron-lazarus",
+      "reporting_evidence": "Within each Technical Office, the Deputy Director reports to that Office's Office Director."
+    },
+    {
+      "id": "melissa-pfau",
+      "full_name": "Melissa Pfau",
+      "job_title": "Assistant Director Program Management, Tactical Technology Office",
+      "reporting_confidence": "high",
+      "expertise_keywords": [
+        "Program Management",
+        "Space Systems Acquisition",
+        "Launch Vehicles",
+        "Satellites",
+        "Space Situational Awareness"
+      ],
+      "bio_summary": "Prior to joining DARPA, Melissa Pfau spent her career supporting the U.S. Air Force space mission in the acquisition and management of launch vehicle, satellite, ground station, and space control and space situational awareness programs.",
+      "department": "Tactical Technology Office",
+      "manager_name_or_id": "aaron-lazarus",
+      "reporting_evidence": "Within each Technical Office, the Assistant Director Program Management reports to that Office's Office Director."
+    }
+  ],
+  "source_url": "https://www.darpa.mil/about/people"
+}

@@ -86,6 +86,12 @@ SAMPLE_INVESTOR_NETWORK: List[dict] = [
         "role": "Former Starlink Avionics Manager",
         "relationship": "Executive Search Referrer",
     },
+    {
+        "name": "Kathleen Fisher",
+        "company": "DARPA (Alumni)",
+        "role": "Former Office Director, Information Innovation Office",
+        "relationship": "Defense & AI Advisor",
+    },
 ]
 
 

@@ -1,0 +1,343 @@
+{
+  "snapshot_timestamp": "20241215215934",
+  "organization_name": "darpa.mil",
+  "entities": [
+    {
+      "id": "stefanie-tompkins",
+      "full_name": "Stefanie Tompkins",
+      "job_title": "Director, DARPA",
+      "reporting_confidence": "none",
+      "expertise_keywords": [
+        "defense research",
+        "technology transfer",
+        "strategic management",
+        "applied science"
+      ],
+      "bio_summary": "Dr. Stefanie Tompkins is the director of the Defense Advanced Research Projects Agency (DARPA). Prior to this assignment, she was the vice president for research and technology transfer at Colorado School of Mines.",
+      "department": "Director's Office",
+      "manager_name_or_id": null,
+      "reporting_evidence": null
+    },
+    {
+      "id": "rob-mchenry",
+      "full_name": "Rob McHenry",
+      "job_title": "Deputy Director, DARPA",
+      "reporting_confidence": "high",
+      "expertise_keywords": [
+        "optical microdevices",
+        "advanced manufacturing",
+        "technology transition",
+        "commercialization"
+      ],
+      "bio_summary": "Mr. Rob McHenry is the deputy director of the Defense Advanced Research Projects Agency (DARPA). He rejoined DARPA in September 2022 after serving as founder and chief executive officer of Bright Silicon Technologies.",
+      "department": "Director's Office",
+      "manager_name_or_id": "stefanie-tompkins",
+      "reporting_evidence": "The Deputy Director, DARPA reports directly to the Director, DARPA."
+    },
+    {
+      "id": "michael-koeris",
+      "full_name": "Michael Koeris",
+      "job_title": "Office Director, Biological Technologies Office",
+      "reporting_confidence": "high",
+      "expertise_keywords": [
+        "Chemistry",
+        "Manufacturing",
+        "microbiome medicines",
+        "cell and gene therapy"
+      ],
+      "bio_summary": "Dr. Michael Koeris joined DARPA as the director of the Biological Technologies Office in April 2024. His research and teaching focus on all aspects of chemistry, manufacturing, and control for microbiome medicines, as well as advanced cell and gene therapy.",
+      "department": "Biological Technologies Office",
+      "manager_name_or_id": "stefanie-tompkins",
+      "reporting_evidence": "Technical Office Directors report directly to the Director, DARPA."
+    },
+    {
+      "id": "rob-saperstein",
+      "full_name": "Rob Saperstein",
+      "job_title": "Deputy Director, Biological Technologies Office",
+      "reporting_confidence": "high",
+      "expertise_keywords": [
+        "novel sensing",
+        "biological technologies",
+        "optical sensors",
+        "integrated photonics"
+      ],
+      "bio_summary": "Dr. Rob Saperstein is the Deputy Director of DARPA's Biological Technologies Office. He most recently served as a program manager for the Strategic Technology Office starting in June 2018.",
+      "department": "Biological Technologies Office",
+      "manager_name_or_id": "michael-koeris",
+      "reporting_evidence": "The Deputy Director of a technical office reports to that Office's Office Director."
+    },
+    {
+      "id": "ryann-glaccum",
+      "full_name": "Ryann Glaccum",
+      "job_title": "Assistant Director Program Management, Biological Technologies Office",
+      "reporting_confidence": "high",
+      "expertise_keywords": [
+        "program management",
+        "defense operations",
+        "budget execution",
+        "financial analysis"
+      ],
+      "bio_summary": "Ms. Ryann Glaccum is the assistant director for program management (ADPM) in the Biological Technologies Office.",
+      "department": "Biological Technologies Office",
+      "manager_name_or_id": "michael-koeris",
+      "reporting_evidence": "The Assistant Director for Program Management reports to the Office Director."
+    },
+    {
+      "id": "jinendra-ranka",
+      "full_name": "Jinendra Ranka",
+      "job_title": "Office Director, Defense Sciences Office",
+      "reporting_confidence": "high",
+      "expertise_keywords": [
+        "defense sciences",
+        "electro-optics",
+        "sensors",
+        "laser systems"
+      ],
+      "bio_summary": "Dr. Jinendra Ranka joined DARPA as the director of the Defense Sciences Office in February 2022. Prior to joining DARPA, he was the CEO and a founding partner of JASR Systems.",
+      "department": "Defense Sciences Office",
+      "manager_name_or_id": "stefanie-tompkins",
+      "reporting_evidence": "Technical Office Directors report directly to the Director, DARPA."
+    },
+    {
+      "id": "bartlett-russell",
+      "full_name": "Bartlett Russell",
+      "job_title": "Deputy Director, Defense Sciences Office",
+      "reporting_confidence": "high",
+      "expertise_keywords": [
+        "Autonomy",
+        "Neuroscience",
+        "Resilience",
+        "human performance"
+      ],
+      "bio_summary": "Dr. Bartlett Russell became DSO’s deputy director in August of 2022 and joined DARPA as a program manager in April of 2019. Her career has focused on the human domain and human effectiveness in military contexts.",
+      "department": "Defense Sciences Office",
+      "manager_name_or_id": "jinendra-ranka",
+      "reporting_evidence": "The Deputy Director of a technical office reports to that Office's Office Director."
+    },
+    {
+      "id": "scott-wenzel",
+      "full_name": "Scott Wenzel",
+      "job_title": "Assistant Director Program Management, Defense Sciences Office",
+      "reporting_confidence": "high",
+      "expertise_keywords": [
+        "program management",
+        "defense sciences",
+        "project scheduling",
+        "resource management"
+      ],
+      "bio_summary": "Scott Wenzel is the Assistant Director for Program Management (ADPM) in the Defense Sciences Office (DSO).",
+      "department": "Defense Sciences Office",
+      "manager_name_or_id": "jinendra-ranka",
+      "reporting_evidence": "The Assistant Director for Program Management reports to the Office Director."
+    },
+    {
+      "id": "kathleen-fisher",
+      "full_name": "Kathleen Fisher",
+      "job_title": "Office Director, Information Innovation Office",
+      "reporting_confidence": "high",
+      "expertise_keywords": [
+        "Cyber",
+        "Data",
+        "formal methods",
+        "programming languages"
+      ],
+      "bio_summary": "Dr. Kathleen Fisher assumed the role of office director for DARPA’s Information Innovation Office (I2O) in May 2022. In this position, she leads program managers who are funding the development of programs, technologies, and capabilities.",
+      "department": "Information Innovation Office",
+      "manager_name_or_id": "stefanie-tompkins",
+      "reporting_evidence": "Technical Office Directors report directly to the Director, DARPA."
+    },
+    {
+      "id": "matt-turek",
+      "full_name": "Matt Turek",
+      "job_title": "Deputy Director, Information Innovation Office",
+      "reporting_confidence": "high",
+      "expertise_keywords": [
+        "Algorithms",
+        "Analytics",
+        "computer vision",
+        "artificial intelligence"
+      ],
+      "bio_summary": "Dr. Matt Turek assumed the role of deputy office director for DARPA's Information Innovation Office (I2O) in May 2022. In this position, he provides technical leadership and works with program managers.",
+      "department": "Information Innovation Office",
+      "manager_name_or_id": "kathleen-fisher",
+      "reporting_evidence": "The Deputy Director of a technical office reports to that Office's Office Director."
+    },
+    {
+      "id": "courtney-tomlinson",
+      "full_name": "Courtney Tomlinson",
+      "job_title": "Assistant Director Program Management, Information Innovation Office",
+      "reporting_confidence": "high",
+      "expertise_keywords": [
+        "program management",
+        "business operations",
+        "contract administration",
+        "acquisition strategy"
+      ],
+      "bio_summary": "Ms. Courtney Tomlinson is the assistant director for program management (ADPM) in the Information Innovation Office.",
+      "department": "Information Innovation Office",
+      "manager_name_or_id": "kathleen-fisher",
+      "reporting_evidence": "The Assistant Director for Program Management reports to the Office Director."
+    },
+    {
+      "id": "whitney-mason",
+      "full_name": "Whitney Mason",
+      "job_title": "Office Director, Microsystems Technology Office",
+      "reporting_confidence": "high",
+      "expertise_keywords": [
+        "Sensors",
+        "microsystems",
+        "electro-optics",
+        "photonics"
+      ],
+      "bio_summary": "Dr. Whitney Mason is the director of the Microsystems Technology Office (MTO). Previously, she held the deputy director role in the agency’s Strategic Technology Office (STO) from June 2022 to October 2023.",
+      "department": "Microsystems Technology Office",
+      "manager_name_or_id": "stefanie-tompkins",
+      "reporting_evidence": "Technical Office Directors report directly to the Director, DARPA."
+    },
+    {
+      "id": "mike-geertsen",
+      "full_name": "Mike Geertsen",
+      "job_title": "Deputy Director, Microsystems Technology Office",
+      "reporting_confidence": "high",
+      "expertise_keywords": [
+        "Artificial Intelligence (AI)",
+        "Machine Learning (ML)",
+        "Microsystems",
+        "hardware development"
+      ],
+      "bio_summary": "Mike Geertsen is the deputy director of the Microsystems Technology Office. His career spans a wide range of organizations and industries with his primary focus on taking technology from concept to product.",
+      "department": "Microsystems Technology Office",
+      "manager_name_or_id": "whitney-mason",
+      "reporting_evidence": "The Deputy Director of a technical office reports to that Office's Office Director."
+    },
+    {
+      "id": "wendy-smith",
+      "full_name": "Wendy Smith",
+      "job_title": "Assistant Director Program Management, Microsystems Technology Office",
+      "reporting_confidence": "high",
+      "expertise_keywords": [
+        "financial management",
+        "business management",
+        "program management",
+        "defense procurement"
+      ],
+      "bio_summary": "Mrs. Wendy Smith joined the DARPA Microsystems Technology Office as the assistant director for program management (ADPM) in August 2015. She serves as the overall business/financial manager for the office.",
+      "department": "Microsystems Technology Office",
+      "manager_name_or_id": "whitney-mason",
+      "reporting_evidence": "The Assistant Director for Program Management reports to the Office Director."
+    },
+    {
+      "id": "jennifer-thabet",
+      "full_name": "Jennifer Thabet",
+      "job_title": "Office Director, Small Business Programs Office",
+      "reporting_confidence": "high",
+      "expertise_keywords": [
+        "Small Business Innovation Research (SBIR)",
+        "Small Business Technology Transfer (STTR)",
+        "commercial transition",
+        "acquisition policy"
+      ],
+      "bio_summary": "Ms. Jennifer Thabet is an experienced program manager with an extensive background supporting DARPA and the Department of Defense (DoD). Enhancing the ability of the small business community to create and transition revolutionary technologies.",
+      "department": "Small Business Programs Office",
+      "manager_name_or_id": "stefanie-tompkins",
+      "reporting_evidence": "Technical/Program Office Directors report directly to the Director, DARPA."
+    },
+    {
+      "id": "philip-root",
+      "full_name": "Philip Root",
+      "job_title": "Office Director, Strategic Technology Office",
+      "reporting_confidence": "high",
+      "expertise_keywords": [
+        "strategic technology",
+        "unmanned systems",
+        "aerospace systems",
+        "defense planning"
+      ],
+      "bio_summary": "Army Lt. Col. (ret) Philip Root, PhD, was named director of the Strategic Technology Office (STO) in February 2022. He previously served as the Defense Sciences Office’s (DSO's) deputy director and acting director.",
+      "department": "Strategic Technology Office",
+      "manager_name_or_id": "stefanie-tompkins",
+      "reporting_evidence": "Technical Office Directors report directly to the Director, DARPA."
+    },
+    {
+      "id": "matthew-higgins",
+      "full_name": "Matthew Higgins",
+      "job_title": "Deputy Director, Strategic Technology Office",
+      "reporting_confidence": "high",
+      "expertise_keywords": [
+        "Electronics",
+        "Sensors",
+        "RF systems",
+        "electronic warfare"
+      ],
+      "bio_summary": "Dr. Matthew Higgins is the Acting Deputy Director in STO. He joined DARPA in October 2020 as a program manager in the Strategic Technology Office.",
+      "department": "Strategic Technology Office",
+      "manager_name_or_id": "philip-root",
+      "reporting_evidence": "The Deputy Director of a technical office reports to that Office's Office Director."
+    },
+    {
+      "id": "jessica-marsh",
+      "full_name": "Jessica Marsh",
+      "job_title": "Assistant Director Program Management, Strategic Technology Office",
+      "reporting_confidence": "high",
+      "expertise_keywords": [
+        "program management",
+        "strategic technology",
+        "program analysis",
+        "operational planning"
+      ],
+      "bio_summary": "Ms. Jessica P. Marsh is the Assistant Director, Program Management for the Strategic Technology Office. She was previously a Program Analyst for the Strategic Technology Office.",
+      "department": "Strategic Technology Office",
+      "manager_name_or_id": "philip-root",
+      "reporting_evidence": "The Assistant Director for Program Management reports to the Office Director."
+    },
+    {
+      "id": "ken-plaks",
+      "full_name": "Ken Plaks",
+      "job_title": "Office Director, Tactical Technology Office",
+      "reporting_confidence": "high",
+      "expertise_keywords": [
+        "Cyber",
+        "tactical systems",
+        "electronic warfare",
+        "aeronautics"
+      ],
+      "bio_summary": "Dr. Ken Plaks is director of the Tactical Technology Office, a role he assumed in June 2023.",
+      "department": "Tactical Technology Office",
+      "manager_name_or_id": "stefanie-tompkins",
+      "reporting_evidence": "Technical Office Directors report directly to the Director, DARPA."
+    },
+    {
+      "id": "john-main",
+      "full_name": "John Main",
+      "job_title": "Deputy Director, Tactical Technology Office",
+      "reporting_confidence": "high",
+      "expertise_keywords": [
+        "Manufacturing",
+        "tactical systems",
+        "materials engineering",
+        "adaptive structures"
+      ],
+      "bio_summary": "Dr. John Main is deputy director of the Tactical Technology Office, a role he assumed in July 2023. Prior to this assignment, he was associate vice president of research at George Mason University.",
+      "department": "Tactical Technology Office",
+      "manager_name_or_id": "ken-plaks",
+      "reporting_evidence": "The Deputy Director of a technical office reports to that Office's Office Director."
+    },
+    {
+      "id": "melissa-pfau",
+      "full_name": "Melissa Pfau",
+      "job_title": "Assistant Director Program Management, Tactical Technology Office",
+      "reporting_confidence": "high",
+      "expertise_keywords": [
+        "program management",
+        "tactical technology",
+        "program analysis",
+        "budget coordination"
+      ],
+      "bio_summary": "Ms. Melissa Pfau is the Program Analyst in the Tactical Technology Office.",
+      "department": "Tactical Technology Office",
+      "manager_name_or_id": "ken-plaks",
+      "reporting_evidence": "The Assistant Director for Program Management reports to the Office Director."
+    }
+  ],
+  "source_url": "https://web.archive.org/web/20241215215934/https://www.darpa.mil/about/people"
+}
