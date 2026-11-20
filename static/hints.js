@@ -218,3 +218,54 @@ async function initOverlayPolyfills() {
 }
 
 initOverlayPolyfills();
+
+// 5. Two-state Light / Dark Theme Toggle (syncs <meta name="color-scheme"> + localStorage)
+function getSchemeMeta() {
+  return document.querySelector('meta[name="color-scheme"]');
+}
+
+function getSystemScheme() {
+  return window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+
+function getRenderedScheme() {
+  const metaVal = getSchemeMeta()?.content?.trim();
+  if (metaVal === "light" || metaVal === "dark") return metaVal;
+  try {
+    const stored = localStorage.getItem("color-scheme");
+    if (stored === "light" || stored === "dark") return stored;
+  } catch {}
+  return getSystemScheme();
+}
+
+function toggleColorScheme() {
+  const current = getRenderedScheme();
+  const target = current === "dark" ? "light" : "dark";
+  const system = getSystemScheme();
+  const nextMeta = target === system ? "light dark" : target;
+
+  const meta = getSchemeMeta();
+  if (meta) meta.content = nextMeta;
+
+  try {
+    if (target === system) {
+      localStorage.removeItem("color-scheme");
+    } else {
+      localStorage.setItem("color-scheme", target);
+    }
+  } catch {}
+}
+
+document.addEventListener("click", event => {
+  const btn = event.target instanceof Element ? event.target.closest("[data-theme-toggle]") : null;
+  if (!btn) return;
+  toggleColorScheme();
+});
+
+window.addEventListener("storage", event => {
+  if (event.key !== "color-scheme") return;
+  const meta = getSchemeMeta();
+  if (!meta) return;
+  const val = event.newValue;
+  meta.content = val === "light" || val === "dark" ? val : "light dark";
+});

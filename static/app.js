@@ -896,12 +896,12 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function getDiffTagColor(status) {
-    if (status === "hiring") return "#34d399";
-    if (status === "joined") return "#6ee7b7";
-    if (status === "promoted") return "#fcd34d";
-    if (status === "moved") return "#7dd3fc";
-    if (status === "departed") return "#fda4af";
-    return "#94a3b8";
+    if (status === "hiring") return "var(--color-status-hiring)";
+    if (status === "joined") return "var(--color-status-joined)";
+    if (status === "promoted") return "var(--color-status-promoted)";
+    if (status === "moved") return "var(--color-status-moved)";
+    if (status === "departed") return "var(--color-status-departed)";
+    return "var(--text-color-muted)";
   }
 
   function decorateNodeIntelligenceOverlays(nodeEl, entityData, baseRadius) {
@@ -913,7 +913,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (netConns && netConns.length > 0) {
       nodeEl.append("circle")
         .attr("class", "node-network-ring")
-        .attr("r", baseRadius + 4.5);
+        .attr("r", baseRadius + 5.5);
     }
 
     // 2. Poachability Radar Halo & Score Pill
@@ -922,14 +922,13 @@ document.addEventListener("DOMContentLoaded", () => {
       if (rec.tier === "high" || rec.tier === "watch") {
         nodeEl.append("circle")
           .attr("class", `node-radar-halo tier-${rec.tier}`)
-          .attr("r", baseRadius + (netConns?.length ? 8.5 : 5));
+          .attr("r", baseRadius + (netConns?.length ? 10.5 : 6));
 
         nodeEl.append("text")
-          .attr("class", "node-radar-score-tag")
-          .attr("dy", "30px")
+          .attr("class", `node-radar-score-tag tier-${rec.tier}`)
+          .attr("dy", "41px")
           .attr("x", 0)
           .attr("text-anchor", "middle")
-          .style("fill", rec.tier === "high" ? "#fda4af" : "#fcd34d")
           .text(`🎯 ${rec.score} · ${rec.tier_label}`);
       }
     }
@@ -983,13 +982,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     const nodeCount = root.descendants().length;
-    const treeHeight = Math.max(height - 100, nodeCount * 46);
-    const treeWidth = Math.max(width - 260, 520);
+    const depthCount = Math.max(1, root.height);
+    const treeHeight = Math.max(height - 90, nodeCount * 82);
+    const treeWidth = Math.max(width - 280, depthCount * 265);
 
     const treeLayout = d3.tree().size([treeHeight, treeWidth]);
     treeLayout(root);
 
-    svg.call(zoomBehavior.transform, d3.zoomIdentity.translate(90, 40).scale(0.88));
+    svg.call(zoomBehavior.transform, d3.zoomIdentity.translate(135, 48).scale(1));
 
     // 1. Draw connecting link paths
     g.selectAll(".link")
@@ -1046,10 +1046,10 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
     nodes.append("circle")
-      .attr("r", d => d.data._isVirtualRoot ? 10 : 8);
+      .attr("r", d => d.data._isVirtualRoot ? 14 : 11.5);
 
     nodes.each(function (d) {
-      decorateNodeIntelligenceOverlays(d3.select(this), d.data, 8);
+      decorateNodeIntelligenceOverlays(d3.select(this), d.data, 11.5);
     });
 
     // Interactive Collapse/Expand badge on nodes with children
@@ -1057,12 +1057,12 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!d._hasChildren || d.data._isVirtualRoot) return;
       const isCollapsed = collapsedNodeIds.has(d.data.id);
       const badgeLabel = isCollapsed ? `+${d._totalDescendants}` : "−";
-      const badgeWidth = isCollapsed ? Math.max(20, String(badgeLabel).length * 6 + 8) : 16;
+      const badgeWidth = isCollapsed ? Math.max(28, String(badgeLabel).length * 7.5 + 12) : 22;
 
       const badge = d3.select(this)
         .append("g")
         .attr("class", "node-collapse-badge")
-        .attr("transform", "translate(18, 0)")
+        .attr("transform", "translate(25, 0)")
         .on("click", (event) => {
           event.stopPropagation();
           toggleSubtreeCollapse(d.data.id);
@@ -1076,13 +1076,13 @@ document.addEventListener("DOMContentLoaded", () => {
       badge.append("rect")
         .attr("class", "node-collapse-bg")
         .attr("x", -badgeWidth / 2)
-        .attr("y", -7)
+        .attr("y", -10)
         .attr("width", badgeWidth)
-        .attr("height", 14);
+        .attr("height", 20);
 
       badge.append("text")
         .attr("class", "node-collapse-text")
-        .attr("dy", "3px")
+        .attr("dy", "0.35em")
         .attr("x", 0)
         .attr("text-anchor", "middle")
         .text(badgeLabel);
@@ -1096,8 +1096,8 @@ document.addEventListener("DOMContentLoaded", () => {
       if (tagText) {
         d3.select(this)
           .append("text")
-          .attr("class", "node-diff-tag")
-          .attr("dy", "-23px")
+          .attr("class", `node-diff-tag status-${status}`)
+          .attr("dy", "-34px")
           .attr("x", 0)
           .attr("text-anchor", "middle")
           .style("fill", getDiffTagColor(status))
@@ -1107,21 +1107,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Name label
     nodes.append("text")
-      .attr("dy", "-11px")
+      .attr("class", "node-name-label")
+      .attr("dy", "-17px")
       .attr("x", 0)
       .attr("text-anchor", "middle")
       .text(d => d.data.full_name);
 
     // Title label
     nodes.append("text")
-      .attr("dy", "17px")
+      .attr("class", "node-title-label")
+      .attr("dy", "25px")
       .attr("x", 0)
       .attr("text-anchor", "middle")
-      .style("font-size", "9.5px")
-      .style("fill", "var(--text-color-muted)")
       .text(d => {
         const title = d.data.job_title || "";
-        return title.length > 24 ? title.substring(0, 22) + "..." : title;
+        return title.length > 34 ? title.substring(0, 32) + "…" : title;
       });
   }
 
@@ -1247,10 +1247,10 @@ document.addEventListener("DOMContentLoaded", () => {
       );
 
     nodeElements.append("circle")
-      .attr("r", 9);
+      .attr("r", 12.5);
 
     nodeElements.each(function (d) {
-      decorateNodeIntelligenceOverlays(d3.select(this), d, 9);
+      decorateNodeIntelligenceOverlays(d3.select(this), d, 12.5);
     });
 
     nodeElements.each(function (d) {
@@ -1259,8 +1259,8 @@ document.addEventListener("DOMContentLoaded", () => {
       if (tagText) {
         d3.select(this)
           .append("text")
-          .attr("class", "node-diff-tag")
-          .attr("dy", "-23px")
+          .attr("class", `node-diff-tag status-${status}`)
+          .attr("dy", "-35px")
           .attr("x", 0)
           .attr("text-anchor", "middle")
           .style("fill", getDiffTagColor(status))
@@ -1269,27 +1269,27 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     nodeElements.append("text")
-      .attr("dy", "-12px")
+      .attr("class", "node-name-label")
+      .attr("dy", "-18px")
       .attr("x", 0)
       .attr("text-anchor", "middle")
       .text(d => d.full_name);
 
     nodeElements.append("text")
-      .attr("dy", "18px")
+      .attr("class", "node-title-label")
+      .attr("dy", "26px")
       .attr("x", 0)
       .attr("text-anchor", "middle")
-      .style("font-size", "9.5px")
-      .style("fill", "var(--text-color-muted)")
       .text(d => {
         const title = d.job_title || "";
-        return title.length > 22 ? title.substring(0, 20) + "..." : title;
+        return title.length > 32 ? title.substring(0, 30) + "…" : title;
       });
 
     activeSimulation = d3.forceSimulation(nodesData)
-      .force("link", d3.forceLink(linksData).id(d => d.id).distance(d => d.type === "reporting" ? 95 : 140))
-      .force("charge", d3.forceManyBody().strength(-340))
+      .force("link", d3.forceLink(linksData).id(d => d.id).distance(d => d.type === "reporting" ? 135 : 185))
+      .force("charge", d3.forceManyBody().strength(-520))
       .force("center", d3.forceCenter(width / 2, height / 2))
-      .force("collide", d3.forceCollide().radius(42))
+      .force("collide", d3.forceCollide().radius(68))
       .on("tick", () => {
         linkElements
           .attr("x1", d => d.source.x)
@@ -1560,8 +1560,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     } else {
       const tag = document.createElement("span");
-      tag.className = "skill-tag";
-      tag.style.opacity = "0.5";
+      tag.className = "skill-tag muted";
       tag.innerText = "None extracted";
       profSkills.appendChild(tag);
     }
@@ -1763,8 +1762,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     warmPathResult.innerHTML = "";
     const header = document.createElement("div");
-    header.style.fontWeight = "600";
-    header.style.marginBottom = "6px";
+    header.className = "warm-path-heading";
     header.innerText = `${path.length - 1} Hop${path.length - 1 === 1 ? "" : "s"} Discovered:`;
     warmPathResult.appendChild(header);
 
@@ -2028,43 +2026,62 @@ document.addEventListener("DOMContentLoaded", () => {
     const width = svgEl.getAttribute("width") || 800;
     const height = svgEl.getAttribute("height") || 550;
 
+    const isDarkExport =
+      getComputedStyle(document.documentElement).colorScheme === "dark" ||
+      (getComputedStyle(document.documentElement).colorScheme !== "light" &&
+        window.matchMedia?.("(prefers-color-scheme: dark)").matches);
+
+    const bgHex = isDarkExport ? "#0f172a" : "#f8fafc";
+    const nameHex = isDarkExport ? "#f8fafc" : "#0f172a";
+    const titleHex = isDarkExport ? "#cbd5e1" : "#475569";
+    const nodeFill = isDarkExport ? "#1e293b" : "#ffffff";
+    const linkHex = isDarkExport ? "rgba(96, 165, 250, 0.55)" : "rgba(37, 99, 235, 0.42)";
+    const inferredHex = isDarkExport ? "rgba(148, 163, 184, 0.55)" : "rgba(100, 116, 139, 0.52)";
+
     const styleEl = document.createElementNS("http://www.w3.org/2000/svg", "style");
     styleEl.textContent = `
-      text { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; fill: #cbd5e1; font-size: 11px; }
-      .link { fill: none; stroke: rgba(99, 102, 241, 0.45); stroke-width: 1.75px; }
-      .link.confidence-inferred { stroke-dasharray: 5, 4; stroke: rgba(148, 163, 184, 0.48); }
-      .link.mesh-skill-link { stroke-dasharray: 2, 4; stroke: rgba(168, 85, 247, 0.35); stroke-width: 1.2px; }
-      .link.departed-link { stroke-dasharray: 3, 4; stroke: rgba(251, 113, 133, 0.42); }
-      .link.hiring-link { stroke-dasharray: 4, 3; stroke: rgba(52, 211, 153, 0.55); }
-      .link.org-root-link { stroke-dasharray: 3, 3; stroke: rgba(129, 140, 248, 0.38); }
-      .link.warm-path-link { stroke: #ec4899; stroke-width: 3.2px; }
-      .node circle { fill: #111827; stroke: #6366f1; stroke-width: 2.2px; }
-      .node.dept-Executive circle { stroke: #fb7185; }
-      .node.dept-Design circle { stroke: #fbbf24; }
-      .node.dept-Engineering circle { stroke: #38bdf8; }
-      .node.dept-Product circle { stroke: #34d399; }
-      .node.dept-Artificial circle, .node.dept-AI circle, .node.dept-Research circle { stroke: #c084fc; }
-      .node.diff-joined circle { stroke: #10b981; }
-      .node.diff-promoted circle { stroke: #f59e0b; }
-      .node.diff-moved circle { stroke: #38bdf8; }
-      .node.diff-departed circle { stroke: #fb7185; stroke-dasharray: 3, 2; fill: #1f1224; }
-      .node.diff-hiring circle { stroke: #34d399; stroke-dasharray: 3, 2; fill: #072622; }
-      .node.node-org-root circle { fill: #1e1b4b; stroke: #818cf8; stroke-dasharray: 2, 2; }
-      .node-diff-tag { font-size: 8.5px; font-weight: 700; }
-      .node-collapse-bg { fill: #1e293b; stroke: rgba(99, 102, 241, 0.55); stroke-width: 1.2px; rx: 7px; ry: 7px; }
-      .node-collapse-text { font-size: 8.5px; font-weight: 700; fill: #e2e8f0; }
-      .node-network-ring { fill: none; stroke: #2dd4bf; stroke-width: 2.2px; }
-      .node-radar-halo { fill: none; stroke-width: 2px; stroke-dasharray: 3, 2; }
-      .node-radar-halo.tier-high { stroke: #f43f5e; }
-      .node-radar-halo.tier-watch { stroke: #f59e0b; }
-      .node-radar-score-tag { font-size: 8.5px; font-weight: 700; }
+      text { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; fill: ${nameHex}; font-size: 0.9375rem; font-weight: 600; paint-order: stroke; stroke: ${bgHex}; stroke-width: 4px; stroke-linejoin: round; }
+      .node-title-label { fill: ${titleHex}; font-size: 0.8125rem; font-weight: 500; }
+      .link { fill: none; stroke: ${linkHex}; stroke-width: 2px; }
+      .link.confidence-inferred { stroke-dasharray: 5, 4; stroke: ${inferredHex}; }
+      .link.mesh-skill-link { stroke-dasharray: 2, 4; stroke: rgba(124, 58, 237, 0.35); stroke-width: 1.4px; }
+      .link.departed-link { stroke-dasharray: 3, 4; stroke: rgba(225, 29, 72, 0.45); }
+      .link.hiring-link { stroke-dasharray: 4, 3; stroke: rgba(5, 150, 105, 0.55); }
+      .link.org-root-link { stroke-dasharray: 3, 3; stroke: ${inferredHex}; }
+      .link.warm-path-link { stroke: #2563eb; stroke-width: 3.4px; }
+      .node circle { fill: ${nodeFill}; stroke: #2563eb; stroke-width: 2.5px; }
+      .node.dept-Executive circle { stroke: #e11d48; }
+      .node.dept-Design circle { stroke: #d97706; }
+      .node.dept-Engineering circle { stroke: #0284c7; }
+      .node.dept-Product circle { stroke: #059669; }
+      .node.dept-Artificial circle, .node.dept-AI circle, .node.dept-Research circle { stroke: #7c3aed; }
+      .node.diff-joined circle { stroke: #059669; }
+      .node.diff-promoted circle { stroke: #d97706; }
+      .node.diff-moved circle { stroke: #0284c7; }
+      .node.diff-departed circle { stroke: #e11d48; stroke-dasharray: 3, 2; }
+      .node.diff-hiring circle { stroke: #059669; stroke-dasharray: 3, 2; }
+      .node.node-org-root circle { fill: ${nodeFill}; stroke: #2563eb; stroke-dasharray: 2, 2; }
+      .node-diff-tag { font-size: 0.75rem; font-weight: 700; }
+      .node-diff-tag.status-joined, .node-diff-tag.status-hiring { fill: #059669; }
+      .node-diff-tag.status-promoted { fill: #d97706; }
+      .node-diff-tag.status-moved { fill: #0284c7; }
+      .node-diff-tag.status-departed { fill: #e11d48; }
+      .node-collapse-bg { fill: ${nodeFill}; stroke: #2563eb; stroke-width: 1.4px; rx: 10px; ry: 10px; }
+      .node-collapse-text { font-size: 0.75rem; font-weight: 700; fill: ${nameHex}; stroke: none; }
+      .node-network-ring { fill: none; stroke: #0d9488; stroke-width: 2.4px; }
+      .node-radar-halo { fill: none; stroke-width: 2.2px; stroke-dasharray: 3, 2; }
+      .node-radar-halo.tier-high { stroke: #e11d48; }
+      .node-radar-halo.tier-watch { stroke: #d97706; }
+      .node-radar-score-tag { font-size: 0.75rem; font-weight: 700; }
+      .node-radar-score-tag.tier-high { fill: #e11d48; }
+      .node-radar-score-tag.tier-watch { fill: #d97706; }
     `;
     clone.insertBefore(styleEl, clone.firstChild);
 
     const bgRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
     bgRect.setAttribute("width", width);
     bgRect.setAttribute("height", height);
-    bgRect.setAttribute("fill", "#080a0f");
+    bgRect.setAttribute("fill", bgHex);
     clone.insertBefore(bgRect, styleEl.nextSibling);
 
     const serializer = new XMLSerializer();
@@ -3535,7 +3552,15 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".demo-pill").forEach(pill => {
     pill.addEventListener("click", () => {
       const key = pill.getAttribute("data-demo");
-      loadOrganizationByKey("demo", key);
+      if (key) loadOrganizationByKey("demo", key);
+    });
+  });
+
+  // Handle Welcome Card Quickstart Buttons
+  document.querySelectorAll("[data-quickstart-demo]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const key = btn.getAttribute("data-quickstart-demo");
+      if (key) loadOrganizationByKey("demo", key);
     });
   });
 

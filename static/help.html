@@ -3,13 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="text-scale" content="scale">
+  <meta name="color-scheme" content="light dark">
+  <script>
+    try {
+      document.querySelector('meta[name="color-scheme"]').content =
+        localStorage.getItem("color-scheme") ?? "light dark";
+    } catch {}
+  </script>
   <meta name="description" content="Archigraph Help & Feature Guide: Learn how to map temporal org charts, interpret VC/PE diligence KPIs and poachability scores, match backchannel networks, and configure watchlist webhooks.">
   <title>Help &amp; Feature Guide | Archigraph</title>
 
-  <!-- Fonts -->
+  <!-- Clean, High-Legibility UI Typefaces -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
 
   <!-- Shared Stylesheet -->
   <link rel="stylesheet" href="/static/style.css">
@@ -21,7 +29,7 @@
     }
   </script>
 
-  <!-- Shared Interest-Triggered Hints & Anchor/Popover Polyfills -->
+  <!-- Shared Interest-Triggered Hints, Theme Toggle & Anchor/Popover Polyfills -->
   <script type="module" src="/static/hints.js"></script>
 </head>
 <body class="help-page">
@@ -29,21 +37,39 @@
 
   <!-- Sticky Top Navigation -->
   <header class="app-header help-header">
-    <div class="logo-area">
-      <a href="/" class="logo-home-link" aria-label="Archigraph Workspace Home">
-        <span class="logo-mark" aria-hidden="true"></span>
-        <span class="logo-text">Archigraph</span>
-      </a>
-      <span class="badge">HELP &amp; DOCS</span>
-    </div>
+    <div class="header-primary-row">
+      <div class="logo-area">
+        <a href="/" class="logo-home-link" aria-label="Archigraph Workspace Home">
+          <span class="logo-mark" aria-hidden="true"></span>
+          <span class="logo-text">Archigraph</span>
+        </a>
+        <span class="badge">Help &amp; Feature Guide</span>
+      </div>
 
-    <div class="help-header-actions">
-      <a href="/?demo=google" class="demo-pill" interestfor="tip-help-try-google">Try Google Demo</a>
-      <a href="/?demo=darpa" class="demo-pill" interestfor="tip-help-try-darpa">Try DARPA (Extracted)</a>
-      <a href="/?demo=replit" class="demo-pill" interestfor="tip-help-try-replit">Try Replit (Extracted)</a>
-      <a href="/" class="secondary-btn help-back-btn" interestfor="tip-help-back">
-        ← Back to Workspace
-      </a>
+      <div class="help-header-actions">
+        <a href="/?demo=google" class="demo-pill" interestfor="tip-help-try-google">Try Google Demo</a>
+        <a href="/?demo=darpa" class="demo-pill" interestfor="tip-help-try-darpa">Try DARPA (Extracted)</a>
+        <a href="/?demo=replit" class="demo-pill" interestfor="tip-help-try-replit">Try Replit (Extracted)</a>
+        <button
+          type="button"
+          id="help-theme-toggle-btn"
+          class="ghost-btn theme-toggle-btn"
+          data-theme-toggle
+          interestfor="tip-help-theme"
+        >
+          <span class="theme-opt theme-to-dark">
+            <span aria-hidden="true">☾</span>
+            <span><span class="visually-hidden">Switch to </span>Dark<span class="visually-hidden"> theme</span></span>
+          </span>
+          <span class="theme-opt theme-to-light">
+            <span aria-hidden="true">☀</span>
+            <span><span class="visually-hidden">Switch to </span>Light<span class="visually-hidden"> theme</span></span>
+          </span>
+        </button>
+        <a href="/" class="secondary-btn help-back-btn" interestfor="tip-help-back">
+          ← Back to Workspace
+        </a>
+      </div>
     </div>
   </header>
 
@@ -131,7 +157,7 @@
             <tbody>
               <tr>
                 <th scope="row">Org Tree / Relationship Mesh</th>
-                <td>Switch between a top-down reporting hierarchy (with collapsible <code>+N</code> / <code>−</code> manager badges and multi-root co-founders) and a force-directed mesh revealing shared-expertise clusters.</td>
+                <td>Switch between a reporting hierarchy (with collapsible <code>+N</code> / <code>−</code> manager badges and multi-root co-founders) and a force-directed mesh revealing shared-expertise clusters.</td>
               </tr>
               <tr>
                 <th scope="row">Show Departed</th>
@@ -309,6 +335,9 @@
   <div id="help-hint-layer">
     <div id="tip-help-back" popover="hint" class="hint-bubble hint-end">
       <div class="hint-bubble-inner">Return to the main interactive Archigraph graph canvas and intelligence workspace.</div>
+    </div>
+    <div id="tip-help-theme" popover="hint" class="hint-bubble hint-end">
+      <div class="hint-bubble-inner">Switch between Clean Light mode and High-Contrast Dark mode.</div>
     </div>
     <div id="tip-help-try-google" popover="hint" class="hint-bubble">
       <div class="hint-bubble-inner">Open the workspace and immediately load Google's 4-era longitudinal org chart.</div>

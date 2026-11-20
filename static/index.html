@@ -3,17 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="text-scale" content="scale">
+  <meta name="color-scheme" content="light dark">
+  <script>
+    try {
+      document.querySelector('meta[name="color-scheme"]').content =
+        localStorage.getItem("color-scheme") ?? "light dark";
+    } catch {}
+  </script>
   <meta name="description" content="Archigraph: Automatically extract, map, and visualize organizational structures and professional relationship networks over time.">
   <title>Archigraph | Temporal Org Network Intelligence</title>
-  
-  <!-- Premium Fonts -->
+
+  <!-- Clean, High-Legibility UI Typefaces -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+
   <!-- Stylesheet -->
   <link rel="stylesheet" href="/static/style.css">
-  
+
   <!-- D3.js Library -->
   <script src="https://d3js.org/d3.v7.min.js"></script>
 
@@ -32,119 +40,197 @@
     }
   </script>
 
-  <!-- Shared Interest-Triggered Hints & Anchor/Popover Polyfills -->
+  <!-- Shared Interest-Triggered Hints, Theme Toggle & Anchor/Popover Polyfills -->
   <script type="module" src="/static/hints.js"></script>
-  
+
   <!-- Client Logic -->
   <script src="/static/app.js" defer></script>
 </head>
 <body>
   <a href="#main-workspace" class="skip-link visually-hidden">Skip to main workspace</a>
 
-  <!-- Top Navigation Header -->
+  <!-- Top Navigation Header (Clean Two-Tier Hierarchy) -->
   <header class="app-header">
-    <div class="logo-area">
-      <div class="logo-mark" aria-hidden="true"></div>
-      <h1 class="logo-text">Archigraph</h1>
-      <span class="badge">V2.0 DILIGENCE &amp; TALENT</span>
-    </div>
-    
-    <!-- Quick Demo Pills -->
-    <div class="demo-pills" role="group" aria-label="Quick Demos">
-      <span class="demo-label">Demos:</span>
-      <button type="button" class="demo-pill" data-demo="google" interestfor="tip-demo-google">Google</button>
-      <button type="button" class="demo-pill" data-demo="meta" interestfor="tip-demo-meta">Meta</button>
-      <button type="button" class="demo-pill" data-demo="spacex" interestfor="tip-demo-spacex">SpaceX</button>
-      <button type="button" class="demo-pill" data-demo="impulse" interestfor="tip-demo-impulse">Impulse Space</button>
-      <button type="button" class="demo-pill" data-demo="palantir" interestfor="tip-demo-palantir">Palantir</button>
-      <button type="button" class="demo-pill" data-demo="replit" interestfor="tip-demo-replit">Replit (extracted)</button>
-      <button type="button" class="demo-pill" data-demo="darpa" interestfor="tip-demo-darpa">DARPA (extracted)</button>
-      <button
-        type="button"
-        id="open-portfolio-btn"
-        class="secondary-btn portfolio-header-btn"
-        command="show-modal"
-        commandfor="portfolio-dialog"
-        interestfor="tip-portfolio-btn"
-      >
-        Portfolio Screener
-      </button>
-      <button
-        type="button"
-        id="open-alerts-btn"
-        class="secondary-btn portfolio-header-btn alerts-header-btn"
-        command="show-modal"
-        commandfor="alerts-dialog"
-        interestfor="tip-alerts-btn"
-      >
-        <span>Alerts</span>
-        <span id="alerts-count-pill" class="alerts-count-pill hidden">0</span>
-      </button>
-      <a
-        href="/help"
-        id="open-help-link"
-        class="secondary-btn portfolio-header-btn help-header-link"
-        interestfor="tip-help-link"
-      >
-        <span class="help-qmark" aria-hidden="true">?</span>
-        <span>Help</span>
-      </a>
-    </div>
-    
-    <!-- Extraction Controller Form -->
-    <form id="extract-form" class="extract-controls">
-      <div class="input-wrapper">
-        <label for="url-input" class="visually-hidden">Target Team Page URL</label>
-        <input 
-          type="url" 
-          id="url-input" 
-          placeholder="https://replit.com/about" 
-          value="https://replit.com/about" 
-          required
-        >
-      </div>
-      
-      <div class="select-wrapper">
-        <label for="limit-select" class="visually-hidden">Snapshot Limit</label>
-        <select id="limit-select">
-          <option value="1">1 Snapshot</option>
-          <option value="2" selected>2 Snapshots</option>
-          <option value="3">3 Snapshots</option>
-          <option value="5">5 Snapshots</option>
-        </select>
+    <div class="header-primary-row">
+      <div class="logo-area">
+        <div class="logo-mark" aria-hidden="true"></div>
+        <h1 class="logo-text">Archigraph</h1>
+        <span class="badge">Org &amp; Talent Intelligence</span>
       </div>
 
-      <button
-        type="button"
-        id="extract-info-btn"
-        class="info-toggletip"
-        interestfor="tip-extract-info"
-        popovertarget="tip-extract-info"
-        popovertargetaction="show"
-        aria-label="More about live URL extraction"
-      >?</button>
-      <div id="tip-extract-info" popover="hint" class="hint-bubble hint-end">
-        <div class="hint-bubble-inner">Enter any public team or leadership URL and choose 1–5 historical Wayback snapshots to extract reporting lines with Gemini.</div>
+      <!-- Extraction Controller Form -->
+      <form id="extract-form" class="extract-controls">
+        <div class="input-wrapper">
+          <label for="url-input" class="visually-hidden">Target Team Page URL</label>
+          <input
+            type="url"
+            id="url-input"
+            placeholder="https://replit.com/about"
+            value="https://replit.com/about"
+            required
+          >
+        </div>
+
+        <div class="select-wrapper">
+          <label for="limit-select" class="visually-hidden">Snapshot Limit</label>
+          <select id="limit-select">
+            <option value="1">1 Snapshot</option>
+            <option value="2" selected>2 Snapshots</option>
+            <option value="3">3 Snapshots</option>
+            <option value="5">5 Snapshots</option>
+          </select>
+        </div>
+
+        <button
+          type="button"
+          id="extract-info-btn"
+          class="info-toggletip"
+          interestfor="tip-extract-info"
+          popovertarget="tip-extract-info"
+          popovertargetaction="show"
+          aria-label="More about live URL extraction"
+        >?</button>
+        <div id="tip-extract-info" popover="hint" class="hint-bubble hint-end">
+          <div class="hint-bubble-inner">Enter any public team or leadership URL and choose 1–5 historical Wayback snapshots to extract reporting lines with Gemini.</div>
+        </div>
+
+        <button type="submit" id="submit-btn" class="gradient-btn" interestfor="tip-extract-submit">
+          <span class="btn-text">Extract Network</span>
+          <div class="loader-ring hidden" id="btn-loader" aria-hidden="true"></div>
+        </button>
+      </form>
+
+      <!-- Global Workspace Actions -->
+      <div class="header-global-actions">
+        <button
+          type="button"
+          id="open-portfolio-btn"
+          class="secondary-btn portfolio-header-btn"
+          command="show-modal"
+          commandfor="portfolio-dialog"
+          interestfor="tip-portfolio-btn"
+        >
+          Portfolio Screener
+        </button>
+        <button
+          type="button"
+          id="open-alerts-btn"
+          class="secondary-btn portfolio-header-btn alerts-header-btn"
+          command="show-modal"
+          commandfor="alerts-dialog"
+          interestfor="tip-alerts-btn"
+        >
+          <span>Alerts</span>
+          <span id="alerts-count-pill" class="alerts-count-pill hidden">0</span>
+        </button>
+        <a
+          href="/help"
+          id="open-help-link"
+          class="ghost-btn portfolio-header-btn help-header-link"
+          interestfor="tip-help-link"
+        >
+          <span class="help-qmark" aria-hidden="true">?</span>
+          <span>Help</span>
+        </a>
+        <button
+          type="button"
+          id="theme-toggle-btn"
+          class="ghost-btn theme-toggle-btn"
+          data-theme-toggle
+          interestfor="tip-theme-toggle"
+        >
+          <span class="theme-opt theme-to-dark">
+            <span aria-hidden="true">☾</span>
+            <span><span class="visually-hidden">Switch to </span>Dark<span class="visually-hidden"> theme</span></span>
+          </span>
+          <span class="theme-opt theme-to-light">
+            <span aria-hidden="true">☀</span>
+            <span><span class="visually-hidden">Switch to </span>Light<span class="visually-hidden"> theme</span></span>
+          </span>
+        </button>
       </div>
-      
-      <button type="submit" id="submit-btn" class="gradient-btn" interestfor="tip-extract-submit">
-        <span class="btn-text">Extract Network</span>
-        <div class="loader-ring hidden" id="btn-loader" aria-hidden="true"></div>
-      </button>
-    </form>
+    </div>
+
+    <!-- Quick Demo Selector Strip -->
+    <div class="header-demo-row">
+      <div class="demo-pills" role="group" aria-label="Quick Demos">
+        <span class="demo-label">Sample Organizations:</span>
+        <button type="button" class="demo-pill" data-demo="google" interestfor="tip-demo-google">Google</button>
+        <button type="button" class="demo-pill" data-demo="meta" interestfor="tip-demo-meta">Meta</button>
+        <button type="button" class="demo-pill" data-demo="spacex" interestfor="tip-demo-spacex">SpaceX</button>
+        <button type="button" class="demo-pill" data-demo="impulse" interestfor="tip-demo-impulse">Impulse Space</button>
+        <button type="button" class="demo-pill" data-demo="palantir" interestfor="tip-demo-palantir">Palantir</button>
+        <button type="button" class="demo-pill" data-demo="replit" interestfor="tip-demo-replit">Replit (extracted)</button>
+        <button type="button" class="demo-pill" data-demo="darpa" interestfor="tip-demo-darpa">DARPA (extracted)</button>
+      </div>
+    </div>
   </header>
 
   <!-- Main Application Workspace -->
   <main id="main-workspace" class="app-workspace" tabindex="-1">
-    
+
     <!-- Left: Network Interactive Area -->
     <section class="visualization-panel" aria-label="Organization structure visualization">
       <div class="panel-header">
-        <div class="active-metadata">
-          <span class="domain-label">Domain:</span>
-          <span id="display-domain" class="highlight-text">No active target</span>
-          <span id="display-date" class="date-badge hidden">Current</span>
-          <div id="diff-kpi-bar" class="diff-kpi-bar hidden" aria-label="Snapshot change counts"></div>
+        <div class="panel-top-bar">
+          <div class="active-metadata">
+            <span class="domain-label">Organization:</span>
+            <span id="display-domain" class="highlight-text">No active target</span>
+            <span id="display-date" class="date-badge hidden">Current</span>
+            <div id="diff-kpi-bar" class="diff-kpi-bar hidden" aria-label="Snapshot change counts"></div>
+          </div>
+
+          <div class="panel-search-export">
+            <search class="search-overlay-container">
+              <label for="node-search" class="visually-hidden">Search expertise, role, or name</label>
+              <input type="search" id="node-search" autocorrect="off" autocapitalize="none" spellcheck="false" placeholder="Filter by skill, role, or name (Enter to zoom)…" disabled>
+              <span id="search-match-count" class="search-match-badge hidden" aria-live="polite"></span>
+              <button
+                type="button"
+                id="search-info-btn"
+                class="info-toggletip"
+                interestfor="tip-search-info"
+                popovertarget="tip-search-info"
+                popovertargetaction="show"
+                aria-label="More about graph search filter"
+              >?</button>
+              <div id="tip-search-info" popover="hint" class="hint-bubble hint-end">
+                <div class="hint-bubble-inner">Type a skill, title, or person's name to highlight matches across the graph; press Enter to auto-expand collapsed branches and zoom in.</div>
+              </div>
+            </search>
+
+            <div class="export-control-wrapper">
+              <button
+                type="button"
+                id="export-menu-btn"
+                class="mode-btn export-trigger-btn"
+                commandfor="export-popover"
+                command="toggle-popover"
+                aria-disabled="true"
+                interestfor="tip-export-menu"
+              >
+                Export ▾
+              </button>
+              <div id="export-popover" popover="auto" class="export-popover-panel" role="group" aria-label="Export options">
+                <button type="button" id="export-brief-btn" class="export-option-btn" interestfor="tip-export-brief">
+                  <span class="export-opt-title">VC &amp; Search Brief (.md)</span>
+                  <span class="export-opt-desc">Diligence memo, KPIs &amp; prime targets</span>
+                </button>
+                <button type="button" id="export-json-btn" class="export-option-btn" interestfor="tip-export-json">
+                  <span class="export-opt-title">Temporal JSON</span>
+                  <span class="export-opt-desc">All snapshots, diffs &amp; intelligence</span>
+                </button>
+                <button type="button" id="export-csv-btn" class="export-option-btn" interestfor="tip-export-csv">
+                  <span class="export-opt-title">Snapshot Roster (CSV)</span>
+                  <span class="export-opt-desc">Roster, diff status &amp; poachability</span>
+                </button>
+                <button type="button" id="export-svg-btn" class="export-option-btn" interestfor="tip-export-svg">
+                  <span class="export-opt-title">Graph Vector (SVG)</span>
+                  <span class="export-opt-desc">Standalone vector diagram of canvas</span>
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="canvas-controls">
@@ -180,70 +266,27 @@
           <button type="button" id="expand-all-btn" class="mode-btn hidden" interestfor="tip-expand-all">
             Expand All
           </button>
-
-          <search class="search-overlay-container">
-            <label for="node-search" class="visually-hidden">Search expertise, role, or name</label>
-            <input type="search" id="node-search" autocorrect="off" autocapitalize="none" spellcheck="false" placeholder="Filter by skill, role, or name (Enter to zoom)..." disabled>
-            <span id="search-match-count" class="search-match-badge hidden" aria-live="polite"></span>
-            <button
-              type="button"
-              id="search-info-btn"
-              class="info-toggletip"
-              interestfor="tip-search-info"
-              popovertarget="tip-search-info"
-              popovertargetaction="show"
-              aria-label="More about graph search filter"
-            >?</button>
-            <div id="tip-search-info" popover="hint" class="hint-bubble hint-end">
-              <div class="hint-bubble-inner">Type a skill, title, or person's name to highlight matches across the graph; press Enter to auto-expand collapsed branches and zoom in.</div>
-            </div>
-          </search>
-
-          <div class="export-control-wrapper">
-            <button
-              type="button"
-              id="export-menu-btn"
-              class="mode-btn export-trigger-btn"
-              commandfor="export-popover"
-              command="toggle-popover"
-              aria-disabled="true"
-              interestfor="tip-export-menu"
-            >
-              Export ▾
-            </button>
-            <div id="export-popover" popover="auto" class="export-popover-panel" role="group" aria-label="Export options">
-              <button type="button" id="export-brief-btn" class="export-option-btn" interestfor="tip-export-brief">
-                <span class="export-opt-title">VC &amp; Search Brief (.md)</span>
-                <span class="export-opt-desc">Diligence memo, KPIs &amp; prime targets</span>
-              </button>
-              <button type="button" id="export-json-btn" class="export-option-btn" interestfor="tip-export-json">
-                <span class="export-opt-title">Temporal JSON</span>
-                <span class="export-opt-desc">All snapshots, diffs &amp; intelligence</span>
-              </button>
-              <button type="button" id="export-csv-btn" class="export-option-btn" interestfor="tip-export-csv">
-                <span class="export-opt-title">Snapshot Roster (CSV)</span>
-                <span class="export-opt-desc">Roster, diff status &amp; poachability</span>
-              </button>
-              <button type="button" id="export-svg-btn" class="export-option-btn" interestfor="tip-export-svg">
-                <span class="export-opt-title">Graph Vector (SVG)</span>
-                <span class="export-opt-desc">Standalone vector diagram of canvas</span>
-              </button>
-            </div>
-          </div>
         </div>
       </div>
-      
+
       <div class="sample-banner hidden" id="sample-banner" role="status" aria-live="polite"></div>
-      
+
       <!-- Visualization Canvas -->
       <div class="canvas-wrapper" id="canvas-container">
         <!-- SVG Tree/Mesh will be injected here -->
         <div class="placeholder-overlay" id="placeholder-view">
-          <div class="placeholder-icon" aria-hidden="true"></div>
-          <h2>Select a Demo or Enter a Target URL</h2>
-          <p>Archigraph maps organizational hierarchies across time, highlights promotions, re-orgs, and departures, and discovers warm connection paths.</p>
+          <div class="placeholder-card">
+            <div class="placeholder-icon" aria-hidden="true"></div>
+            <h2>Select a Sample Organization or Enter a Team URL</h2>
+            <p>Archigraph maps leadership hierarchies across historical eras, highlights promotions, re-orgs, and departures, and uncovers warm introduction paths.</p>
+            <div class="placeholder-quickstart">
+              <button type="button" class="secondary-btn" data-quickstart-demo="google">Explore Google Timeline</button>
+              <button type="button" class="secondary-btn" data-quickstart-demo="spacex">SpaceX → Impulse Spinout</button>
+              <button type="button" class="ghost-btn" data-quickstart-demo="darpa">DARPA Live Extraction</button>
+            </div>
+          </div>
         </div>
-        
+
         <!-- Processing loading state indicator -->
         <div class="loading-overlay hidden" id="loading-view">
           <div class="spinner" aria-hidden="true"></div>
@@ -263,7 +306,7 @@
         </div>
       </div>
     </section>
-    
+
     <!-- Right: Contextual Details & Temporal Intelligence Sidebar -->
     <aside class="detail-sidebar" id="detail-panel" aria-label="Contextual node details and temporal analysis">
 
@@ -300,102 +343,104 @@
         </div>
       </div>
 
-      <div class="sidebar-header">
-        <h2>Node Profile</h2>
-      </div>
-      
-      <div class="profile-card-empty" id="profile-empty">
-        <div class="empty-icon" aria-hidden="true"></div>
-        <p>Click any person in the graph or in the Temporal Changes list below to inspect their reporting line, confidence evidence, and career shifts.</p>
-      </div>
-      
-      <div class="profile-card hidden" id="profile-card">
-        <div class="profile-header">
-          <div class="avatar" id="prof-avatar" aria-hidden="true"></div>
-          <div class="title-block">
-            <div class="name-badge-row">
-              <h3 id="prof-name">John Doe</h3>
-              <span id="prof-diff-badge" class="diff-badge hidden">Baseline</span>
-            </div>
-            <p id="prof-title">Senior VP of Product</p>
-          </div>
+      <div class="sidebar-section">
+        <div class="sidebar-header">
+          <h2>Leader Profile</h2>
         </div>
 
-        <div id="prof-diff-summary" class="prof-diff-box hidden"></div>
-        
-        <div class="profile-details">
-          <div class="detail-row">
-            <span class="detail-label">Department</span>
-            <span class="detail-value" id="prof-dept">Engineering</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Reports To</span>
-            <button type="button" class="link-btn" id="prof-manager" interestfor="tip-prof-manager">Amjad Masad</button>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Line Confidence</span>
-            <span class="confidence-pill" id="prof-confidence">Inferred</span>
-          </div>
+        <div class="profile-card-empty" id="profile-empty">
+          <div class="empty-icon" aria-hidden="true"></div>
+          <p>Click any person in the org graph or in the What Changed list below to inspect their reporting line, source evidence, and career trajectory.</p>
+        </div>
 
-          <div class="cross-org-block hidden" id="prof-cross-org-block">
-            <h4 class="section-title">Cross-Company Trajectory</h4>
-            <div class="cross-org-list" id="prof-cross-org-list"></div>
-          </div>
-
-          <div class="recruiting-signal-block hidden" id="prof-recruiting-block">
-            <div class="recruiting-signal-header">
-              <span class="section-title">Recruiting &amp; Retention Signal</span>
-              <span class="poach-pill" id="prof-poach-pill">Anchored</span>
+        <div class="profile-card hidden" id="profile-card">
+          <div class="profile-header">
+            <div class="avatar" id="prof-avatar" aria-hidden="true"></div>
+            <div class="title-block">
+              <div class="name-badge-row">
+                <h3 id="prof-name">John Doe</h3>
+                <span id="prof-diff-badge" class="diff-badge hidden">Baseline</span>
+              </div>
+              <p id="prof-title">Senior VP of Product</p>
             </div>
-            <ul class="signal-trigger-list" id="prof-poach-triggers" role="list"></ul>
           </div>
 
-          <div class="network-signal-block hidden" id="prof-network-block">
-            <h4 class="section-title">Your Network &amp; Backchannels</h4>
-            <ul class="network-node-list" id="prof-network-list" role="list"></ul>
-          </div>
-          
-          <div class="evidence-block">
-            <div class="evidence-header-row">
-              <h4 class="section-title">Extraction Evidence</h4>
-              <a id="prof-source-link" class="source-verify-link hidden" href="#" target="_blank" rel="noopener noreferrer" interestfor="tip-prof-source">
-                Verify Snapshot Source ↗
-              </a>
+          <div id="prof-diff-summary" class="prof-diff-box hidden"></div>
+
+          <div class="profile-details">
+            <div class="detail-row">
+              <span class="detail-label">Department</span>
+              <span class="detail-value" id="prof-dept">Engineering</span>
             </div>
-            <p id="prof-evidence" class="evidence-text">Inferred from organizational hierarchy and title tier.</p>
-          </div>
-
-          <div class="bio-block">
-            <h4 class="section-title">Biography Summary</h4>
-            <p id="prof-bio">No bio available for this snapshot.</p>
-          </div>
-          
-          <div class="skills-block">
-            <h4 class="section-title">Extracted Expertise</h4>
-            <div class="tags-container" id="prof-skills"></div>
-          </div>
-
-          <div class="career-timeline-block" id="prof-career-block">
-            <h4 class="section-title">Career Timeline Across Snapshots</h4>
-            <ol class="career-timeline-list" id="prof-career-timeline"></ol>
-          </div>
-
-          <div class="profile-actions">
-            <button type="button" id="trace-from-root-btn" class="secondary-btn" interestfor="tip-trace-root">
-              Warm Path from Top Exec
-            </button>
-            <button type="button" id="simulate-departure-btn" class="ghost-btn blast-sim-btn" aria-pressed="false" interestfor="tip-simulate-departure">
-              Simulate Departure
-            </button>
-          </div>
-
-          <div class="simulation-block hidden" id="prof-simulation-block">
-            <div class="recruiting-signal-header">
-              <span class="section-title">Departure Blast Radius (What-If)</span>
-              <span class="poach-pill high" id="prof-sim-pill">Critical</span>
+            <div class="detail-row">
+              <span class="detail-label">Reports To</span>
+              <button type="button" class="link-btn" id="prof-manager" interestfor="tip-prof-manager">Amjad Masad</button>
             </div>
-            <p id="prof-sim-summary" class="sim-summary-text"></p>
-            <ul class="signal-trigger-list" id="prof-sim-details" role="list"></ul>
+            <div class="detail-row">
+              <span class="detail-label">Line Confidence</span>
+              <span class="confidence-pill" id="prof-confidence">Inferred</span>
+            </div>
+
+            <div class="cross-org-block hidden" id="prof-cross-org-block">
+              <h4 class="section-title">Cross-Company Trajectory</h4>
+              <div class="cross-org-list" id="prof-cross-org-list"></div>
+            </div>
+
+            <div class="recruiting-signal-block hidden" id="prof-recruiting-block">
+              <div class="recruiting-signal-header">
+                <span class="section-title">Recruiting &amp; Retention Signal</span>
+                <span class="poach-pill" id="prof-poach-pill">Anchored</span>
+              </div>
+              <ul class="signal-trigger-list" id="prof-poach-triggers" role="list"></ul>
+            </div>
+
+            <div class="network-signal-block hidden" id="prof-network-block">
+              <h4 class="section-title">Your Network &amp; Backchannels</h4>
+              <ul class="network-node-list" id="prof-network-list" role="list"></ul>
+            </div>
+
+            <div class="evidence-block">
+              <div class="evidence-header-row">
+                <h4 class="section-title">Extraction Evidence</h4>
+                <a id="prof-source-link" class="source-verify-link hidden" href="#" target="_blank" rel="noopener noreferrer" interestfor="tip-prof-source">
+                  Verify Snapshot Source ↗
+                </a>
+              </div>
+              <p id="prof-evidence" class="evidence-text">Inferred from organizational hierarchy and title tier.</p>
+            </div>
+
+            <div class="bio-block">
+              <h4 class="section-title">Biography Summary</h4>
+              <p id="prof-bio">No bio available for this snapshot.</p>
+            </div>
+
+            <div class="skills-block">
+              <h4 class="section-title">Extracted Expertise</h4>
+              <div class="tags-container" id="prof-skills"></div>
+            </div>
+
+            <div class="career-timeline-block" id="prof-career-block">
+              <h4 class="section-title">Career Timeline Across Snapshots</h4>
+              <ol class="career-timeline-list" id="prof-career-timeline"></ol>
+            </div>
+
+            <div class="profile-actions">
+              <button type="button" id="trace-from-root-btn" class="secondary-btn" interestfor="tip-trace-root">
+                Warm Path from Top Exec
+              </button>
+              <button type="button" id="simulate-departure-btn" class="ghost-btn blast-sim-btn" aria-pressed="false" interestfor="tip-simulate-departure">
+                Simulate Departure
+              </button>
+            </div>
+
+            <div class="simulation-block hidden" id="prof-simulation-block">
+              <div class="recruiting-signal-header">
+                <span class="section-title">Departure Blast Radius (What-If)</span>
+                <span class="poach-pill high" id="prof-sim-pill">Critical</span>
+              </div>
+              <p id="prof-sim-summary" class="sim-summary-text"></p>
+              <ul class="signal-trigger-list" id="prof-sim-details" role="list"></ul>
+            </div>
           </div>
         </div>
       </div>
@@ -456,15 +501,15 @@
           <div class="hint-bubble-inner">Scrub or press Play to travel across historical snapshots and watch hires, promotions, re-orgs, and departures unfold chronologically.</div>
         </div>
       </div>
-      
+
       <div class="slider-wrapper">
         <label for="timeline-slider" class="visually-hidden">Snapshot timeline position</label>
-        <input 
-          type="range" 
-          id="timeline-slider" 
-          min="0" 
-          max="0" 
-          value="0" 
+        <input
+          type="range"
+          id="timeline-slider"
+          min="0"
+          max="0"
+          value="0"
           disabled
         >
         <div class="timeline-ticks" id="timeline-ticks">
@@ -707,14 +752,17 @@
     <div id="tip-alerts-btn" popover="hint" class="hint-bubble">
       <div class="hint-bubble-inner">Configure portfolio watchlist trigger rules and inspect ready-to-send Slack Block Kit or CRM/ATS webhook JSON payloads.</div>
     </div>
-    <div id="tip-help-link" popover="hint" class="hint-bubble">
+    <div id="tip-help-link" popover="hint" class="hint-bubble hint-end">
       <div class="hint-bubble-inner">Open the Archigraph Help &amp; Feature Guide for metric formulas, workflow walkthroughs, and troubleshooting FAQs.</div>
+    </div>
+    <div id="tip-theme-toggle" popover="hint" class="hint-bubble hint-end">
+      <div class="hint-bubble-inner">Switch between Clean Light mode and High-Contrast Dark mode.</div>
     </div>
     <div id="tip-extract-submit" popover="hint" class="hint-bubble hint-end">
       <div class="hint-bubble-inner">Crawl Wayback Machine captures for the target URL and run Gemini structured extraction to build a temporal org graph.</div>
     </div>
     <div id="tip-mode-tree" popover="hint" class="hint-bubble">
-      <div class="hint-bubble-inner">Display a top-down reporting hierarchy with collapsible +N manager subtrees and multi-root co-founder support.</div>
+      <div class="hint-bubble-inner">Display a left-to-right reporting hierarchy with collapsible +N manager subtrees and multi-root co-founder support.</div>
     </div>
     <div id="tip-mode-mesh" popover="hint" class="hint-bubble">
       <div class="hint-bubble-inner">Switch to a force-directed network layout highlighting cross-functional skill clusters and informal bridges.</div>
